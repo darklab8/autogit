@@ -1,0 +1,9 @@
+{
+  "terminal.integrated.env.linux": {
+    "DEBUG": "true"
+  },
+  // Show .git folder
+    "files.exclude": {
+      "**/.git": false
+  }
+}
