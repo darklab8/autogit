@@ -1,0 +1,55 @@
+version: '3'
+tasks:
+  tag:
+    cmds:
+      - git tag v{{.TAG}}
+    vars:
+      TAG:
+        sh: git-conventional-commits version
+
+  tag-push:
+    cmds:
+      - git push origin v{{.TAG}}
+    vars:
+      TAG:
+        sh: git-conventional-commits version
+
+  deploy:
+    cmds:
+      - task: tag
+      - task: tag-push
+
+  version:
+    cmds:
+      - git-conventional-commits version
+
+  build-version:
+    cmds:
+      - git-conventional-commits version > settings/version.txt || echo 'not installed git-conventional-commits' > settings/version.txt
+  build:
+    cmds:
+      - task: build-version
+      - mkdir -p dist
+      - rm dist/* | true
+      - GOOS=windows GOARCH=amd64 go build -v -o dist/darkvers-windows-amd64.exe main.go
+      - GOOS=linux GOARCH=amd64 go build -v -o dist/darkvers-linux-amd64 main.go
+      - GOOS=darwin GOARCH=amd64 go build -v -o dist/darkvers-macos-amd64 main.go
+
+      - GOOS=windows GOARCH=386 go build -v -o dist/darkvers-windows-386.exe main.go
+      - GOOS=linux GOARCH=386 go build -v -o dist/darkvers-linux-386 main.go
+
+      - GOOS=windows GOARCH=arm64 go build -v -o dist/darkvers-windows-arm64.exe main.go
+      - GOOS=linux GOARCH=arm64 go build -v -o dist/darkvers-linux-arm64 main.go
+      - GOOS=darwin GOARCH=arm64 go build -v -o dist/darkvers-macos-arm64 main.go
+
+  test:
+    cmds:
+      - go test ./... {{.CLI_ARGS}}
+
+  doc-web:
+    cmds:
+      - godoc -http=:6060
+
+  changelog:
+    cmds:
+      - git-conventional-commits changelog {{.CLI_ARGS}}

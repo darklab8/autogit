@@ -1,0 +1,6 @@
+/darkvers
+/dist
+__debug_bin
+**/tempdata/*
+!.gitkeep
+version.txt
