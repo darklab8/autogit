@@ -53,3 +53,11 @@ tasks:
   changelog:
     cmds:
       - git-conventional-commits changelog {{.CLI_ARGS}}
+
+  hook:dev:
+    cmds:
+      - git config core.hooksPath .git-hooks-dev
+
+  hook:prod:
+    cmds:
+      - git config core.hooksPath .git-hooks-prod

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# fix for windows systems
+PATH="/c/Program Files/nodejs:$HOME/AppData/Roaming/npm/:$PATH"
+
+cd /home/naa/repos/pet_projects/darklab_darkvers && go run . hook commitMsg "$1"
+echo "$1"
+exit 1
