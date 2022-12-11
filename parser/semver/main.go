@@ -25,7 +25,7 @@ type SemVer struct {
 
 func ParseToInt(msg string) int {
 	number, err := strconv.Atoi(msg)
-	utils.CheckFatal(err)
+	utils.CheckPanic(err)
 	return number
 }
 

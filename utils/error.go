@@ -9,3 +9,11 @@ func CheckFatal(err error, msgs ...string) {
 
 	log.Fatal(msgs)
 }
+
+func CheckPanic(err error, msgs ...string) {
+	if err == nil {
+		return
+	}
+
+	log.Panic(msgs)
+}
