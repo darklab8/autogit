@@ -4,7 +4,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"autogit/hook"
+	"autogit/actions"
 
 	"github.com/spf13/cobra"
 )
@@ -12,20 +12,14 @@ import (
 // commitMsgCmd represents the commitMsg command
 var commitMsgCmd = &cobra.Command{
 	Use:   "commitMsg",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "git hook for commit-msg. Not for human usage.",
 	Run: func(cmd *cobra.Command, args []string) {
-		hook.Run(args)
+		actions.CommmitMsg(args)
 	},
 }
 
 func init() {
-	hookCmd.AddCommand(commitMsgCmd)
+	rootCmd.AddCommand(commitMsgCmd)
 
 	// Here you will define your flags and configuration settings.
 

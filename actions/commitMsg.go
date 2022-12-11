@@ -1,4 +1,4 @@
-package hook
+package actions
 
 import (
 	"autogit/utils"
@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func Run(args []string) {
+func CommmitMsg(args []string) {
 	fmt.Printf("commitMsg called, with args=%v\n", args)
 	fmt.Println(len(os.Args), os.Args)
 	commit_msg_file := args[0]
