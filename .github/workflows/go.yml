@@ -25,5 +25,9 @@ jobs:
       with:
         go-version: 1.19
 
+    - name: Setu pdeps
+      run: |
+        echo 'ci version' > settings/version.txt
+
     - name: Test
       run: task test
