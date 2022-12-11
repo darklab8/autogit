@@ -5,7 +5,12 @@ import (
 	"runtime"
 )
 
-func GetCurrrentFolder(folder_name string) string {
+func GetCurrentFile() string {
+	_, filename, _, _ := runtime.Caller(1)
+	return filename
+}
+
+func GetCurrrentFolder() string {
 	_, filename, _, _ := runtime.Caller(1)
 	directory := filepath.Dir(filename)
 	return directory
