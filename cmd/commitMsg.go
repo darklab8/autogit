@@ -4,7 +4,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"darkvers/hook"
+	"autogit/hook"
 
 	"github.com/spf13/cobra"
 )

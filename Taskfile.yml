@@ -31,16 +31,16 @@ tasks:
       - task: build-version
       - mkdir -p dist
       - rm dist/* | true
-      - GOOS=windows GOARCH=amd64 go build -v -o dist/darkvers-windows-amd64.exe main.go
-      - GOOS=linux GOARCH=amd64 go build -v -o dist/darkvers-linux-amd64 main.go
-      - GOOS=darwin GOARCH=amd64 go build -v -o dist/darkvers-macos-amd64 main.go
+      - GOOS=windows GOARCH=amd64 go build -v -o dist/autogit-windows-amd64.exe main.go
+      - GOOS=linux GOARCH=amd64 go build -v -o dist/autogit-linux-amd64 main.go
+      - GOOS=darwin GOARCH=amd64 go build -v -o dist/autogit-macos-amd64 main.go
 
-      - GOOS=windows GOARCH=386 go build -v -o dist/darkvers-windows-386.exe main.go
-      - GOOS=linux GOARCH=386 go build -v -o dist/darkvers-linux-386 main.go
+      - GOOS=windows GOARCH=386 go build -v -o dist/autogit-windows-386.exe main.go
+      - GOOS=linux GOARCH=386 go build -v -o dist/autogit-linux-386 main.go
 
-      - GOOS=windows GOARCH=arm64 go build -v -o dist/darkvers-windows-arm64.exe main.go
-      - GOOS=linux GOARCH=arm64 go build -v -o dist/darkvers-linux-arm64 main.go
-      - GOOS=darwin GOARCH=arm64 go build -v -o dist/darkvers-macos-arm64 main.go
+      - GOOS=windows GOARCH=arm64 go build -v -o dist/autogit-windows-arm64.exe main.go
+      - GOOS=linux GOARCH=arm64 go build -v -o dist/autogit-linux-arm64 main.go
+      - GOOS=darwin GOARCH=arm64 go build -v -o dist/autogit-macos-arm64 main.go
 
   test:
     cmds:

@@ -2,6 +2,7 @@ package utils
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 )
 
@@ -37,4 +38,17 @@ func (f *File) FileReadLines() []string {
 	f.OpenToReadF()
 	defer f.Close()
 	return f.ReadLines()
+}
+
+func (f *File) CreateToWriteF() *File {
+	file, err := os.Create(f.Filepath)
+	f.file = file
+	CheckFatal(err, "failed to open ", f.Filepath)
+
+	return f
+}
+func (f *File) WritelnF(msg string) {
+	_, err := f.file.WriteString(fmt.Sprintf("%v\n", msg))
+
+	CheckFatal(err, "failed to write string to file")
 }
