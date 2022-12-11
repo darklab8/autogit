@@ -22,6 +22,18 @@ tasks:
   version:
     cmds:
       - git-conventional-commits version
+  log:
+    cmds:
+      - git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit {{.CLI_ARGS}}
+
+  tag-latest:
+    cmds:
+      - git describe --tags
+
+  tag-all:
+    cmds:
+      - git fetch --all --tags # fetching remote tags
+      - git tag # list tags
 
   build-version:
     cmds:
