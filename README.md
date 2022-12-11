@@ -6,6 +6,7 @@ Solution for
 - git conventional commits validations
 - automatic semantic versioning generation
 - auto generating changelogs
+
 ## Dev Requirements
 
 - cobra generator https://github.com/spf13/cobra-cli/blob/main/README.md
