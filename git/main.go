@@ -52,18 +52,37 @@ func (r *Repository) GetLogs() {
 	CheckIfError(err)
 }
 
-func (r *Repository) GetTags() {
-	iter, err := r.repo.Tags()
-	if err != nil {
-		// Handle error
-	}
+type Tag struct {
+	Hash    plumbing.Hash
+	Name    string
+	Message string
+}
 
-	err = iter.ForEach(func(ref *plumbing.Reference) error {
+func (r *Repository) GetTags() []Tag {
+	var results []Tag
+	iter, err := r.repo.Tags()
+	CheckIfError(err)
+
+	// ref, err := iter.Next()
+	// obj, err := r.repo.TagObject(ref.Hash())
+	// results = append(results, Tag{Hash: obj.Hash, Name: obj.Name, Message: obj.Message})
+
+	// if err := iter.ForEach(func(ref *plumbing.Reference) error {
+	// 	obj, err := r.repo.TagObject(ref.Hash())
+	// 	results = append(results, Tag{Hash: obj.Hash, Name: obj.Name, Message: obj.Message})
+	// 	return err
+	// }); err != nil {
+	// 	CheckIfError(err)
+	// }
+
+	if err := iter.ForEach(func(ref *plumbing.Reference) error {
 		obj, err := r.repo.TagObject(ref.Hash())
 		fmt.Printf("%s-%s-%s\n", obj.Name, obj.Hash, obj.Message)
 		switch err {
 		case nil:
 			// Tag object present
+			results = append(results, Tag{Hash: obj.Hash, Name: obj.Name, Message: obj.Message})
+			fmt.Printf("tag=%v\n", obj)
 		case plumbing.ErrObjectNotFound:
 			// Not a tag object
 		default:
@@ -71,7 +90,9 @@ func (r *Repository) GetTags() {
 			return err
 		}
 		return nil
-	})
-	CheckIfError(err)
+	}); err != nil {
+		CheckIfError(err)
+	}
 
+	return results
 }

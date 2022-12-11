@@ -2,6 +2,7 @@ package git
 
 import (
 	"autogit/utils"
+	"fmt"
 	"testing"
 
 	"github.com/go-git/go-billy/v5/memfs"
@@ -43,12 +44,20 @@ func (r *TestRepository) Commit(msg string) plumbing.Hash {
 	return hash
 }
 
+func (r *TestRepository) CreateTag(name string, hash plumbing.Hash) {
+	ref, err := r.repo.CreateTag(name, hash, &git.CreateTagOptions{Tagger: r.author, Message: "123"})
+	fmt.Printf("%v,%v", ref, err)
+}
+
 func TestSaveRecycleParams(t *testing.T) {
 	repo := (&TestRepository{}).New()
 	repo.Commit("feat: test")
-	repo.Commit("fix: thing")
-	repo.Commit("feat{api): test")
+	repo.CreateTag("v0.0.1", repo.Commit("fix: thing"))
+	repo.Commit("feat(api): test")
+	repo.CreateTag("v0.0.2", repo.Commit("feat(api): test2"))
+	repo.Commit("fix: test1")
+	repo.Commit("fix: test2")
 	repo.GetLogs()
-
-	assert.True(t, true)
+	tags := repo.GetTags()
+	assert.Equal(t, 2, len(tags))
 }
