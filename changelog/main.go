@@ -8,5 +8,6 @@ import (
 )
 
 func Run() {
-	(&git.Repository{}).GetRepoInWorkDir().GetLogs()
+
+	(&git.Repository{}).GetRepoInWorkDir().GetLogs(git.HEAD_Hash)
 }

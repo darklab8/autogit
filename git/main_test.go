@@ -46,18 +46,42 @@ func (r *TestRepository) Commit(msg string) plumbing.Hash {
 
 func (r *TestRepository) CreateTag(name string, hash plumbing.Hash) {
 	ref, err := r.repo.CreateTag(name, hash, &git.CreateTagOptions{Tagger: r.author, Message: "123"})
-	fmt.Printf("%v,%v", ref, err)
+	fmt.Printf("CreateTag=%v,%v\n", ref, err)
 }
 
-func TestSaveRecycleParams(t *testing.T) {
+func (r *Repository) GetChangelogByTag(tagName string) []Log {
+	if tagName == "" {
+		return r.GetLogs(HEAD_Hash)
+	}
+
+	tag_ref, _ := r.repo.Tag(tagName)
+	tag_obj, _ := r.repo.TagObject(tag_ref.Hash())
+	logs := r.GetLogs(tag_obj.Target)
+	return logs
+}
+
+func TestGitRepo(t *testing.T) {
 	repo := (&TestRepository{}).New()
 	repo.Commit("feat: test")
+	repo.Commit("feat: test3")
+	repo.Commit("feat: test5")
 	repo.CreateTag("v0.0.1", repo.Commit("fix: thing"))
 	repo.Commit("feat(api): test")
 	repo.CreateTag("v0.0.2", repo.Commit("feat(api): test2"))
 	repo.Commit("fix: test1")
 	repo.Commit("fix: test2")
-	repo.GetLogs()
+	repo.Commit("fix: test3")
+
 	tags := repo.GetTags()
+	fmt.Printf("tags=%v\n", tags)
 	assert.Equal(t, 2, len(tags))
+
+	logs1 := repo.GetChangelogByTag("")
+	assert.Len(t, logs1, 3)
+
+	logs2 := repo.GetChangelogByTag("v0.0.2")
+	assert.Len(t, logs2, 2)
+
+	logs3 := repo.GetChangelogByTag("v0.0.1")
+	assert.Len(t, logs3, 4)
 }

@@ -8,7 +8,6 @@ import (
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
-	"github.com/go-git/go-git/v5/plumbing/object"
 )
 
 func CheckIfError(err error) {
@@ -32,57 +31,76 @@ func (r *Repository) GetRepoInWorkDir() *Repository {
 	return r
 }
 
-func (r *Repository) GetLogs() {
+type Log struct {
+	Hash plumbing.Hash
+	Msg  string
+}
 
+var HEAD_Hash plumbing.Hash
+
+func (r *Repository) GetLogs(From plumbing.Hash) []Log {
+	var logs []Log
 	// retrieves the branch pointed by HEAD
-	ref, err := r.repo.Head()
+	if From.IsZero() {
+		var err error
+		ref, err := r.repo.Head()
+		CheckIfError(err)
+		From = ref.Hash()
+	}
 
 	// get the commit object, pointed by ref
 	// commit, err := r.CommitObject(ref.Hash())
 
 	// ... retrieves the commit history
-	cIter, err := r.repo.Log(&git.LogOptions{From: ref.Hash()})
+	cIter, err := r.repo.Log(&git.LogOptions{From: From})
 	CheckIfError(err)
 
+	tags := r.GetTags()
 	// ... just iterates over the commits, printing it
-	err = cIter.ForEach(func(c *object.Commit) error {
-		fmt.Println(c)
-		return nil
-	})
+	c, _ := cIter.Next()
+	for ; c != nil; c, _ = cIter.Next() {
+
+		// iterating until next tag
+		if From != c.Hash {
+			for _, tag := range tags {
+				if tag.Target == c.Hash {
+					return logs
+				}
+			}
+
+		}
+
+		logs = append(logs, Log{Hash: c.Hash, Msg: c.Message})
+	}
 	CheckIfError(err)
+
+	return logs
 }
 
 type Tag struct {
 	Hash    plumbing.Hash
+	Target  plumbing.Hash
+	Ref     *plumbing.Reference
 	Name    string
 	Message string
 }
 
+// brings tags, from latest to new ones
 func (r *Repository) GetTags() []Tag {
 	var results []Tag
 	iter, err := r.repo.Tags()
 	CheckIfError(err)
 
-	// ref, err := iter.Next()
-	// obj, err := r.repo.TagObject(ref.Hash())
-	// results = append(results, Tag{Hash: obj.Hash, Name: obj.Name, Message: obj.Message})
-
-	// if err := iter.ForEach(func(ref *plumbing.Reference) error {
-	// 	obj, err := r.repo.TagObject(ref.Hash())
-	// 	results = append(results, Tag{Hash: obj.Hash, Name: obj.Name, Message: obj.Message})
-	// 	return err
-	// }); err != nil {
-	// 	CheckIfError(err)
-	// }
-
 	if err := iter.ForEach(func(ref *plumbing.Reference) error {
 		obj, err := r.repo.TagObject(ref.Hash())
-		fmt.Printf("%s-%s-%s\n", obj.Name, obj.Hash, obj.Message)
+		// fmt.Printf("%s-%s-%s\n", obj.Name, obj.Hash, obj.Message)
 		switch err {
 		case nil:
 			// Tag object present
-			results = append(results, Tag{Hash: obj.Hash, Name: obj.Name, Message: obj.Message})
-			fmt.Printf("tag=%v\n", obj)
+			results = append(results, Tag{Hash: obj.Hash, Name: obj.Name, Message: obj.Message, Ref: ref, Target: obj.Target})
+			ref.Name()
+			ref.Target()
+			r.repo.Object(plumbing.TagObject, ref.Hash())
 		case plumbing.ErrObjectNotFound:
 			// Not a tag object
 		default:
