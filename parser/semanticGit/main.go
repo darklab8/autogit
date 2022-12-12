@@ -96,7 +96,7 @@ func (g *SemanticGit) GetChangelogByTag(tag string, enable_warnings bool) []conv
 			}
 			continue
 		}
-		parsed_commit.Hash = log_record.Hash.String()
+		parsed_commit.Hash = log_record.Hash.String()[:8]
 		results = append(results, *parsed_commit)
 	}
 

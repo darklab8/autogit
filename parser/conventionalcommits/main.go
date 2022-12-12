@@ -42,7 +42,7 @@ func init() {
 
 	utils.InitRegexExpression(&conventionalRegex,
 		// type, scope, subject, the rest
-		`^([a-z]+)(?:\(([\w]+)\))?: (?:([ -~]+))(?:\n\n([ -~]*)|[\n])?\z`)
+		`^([a-z]+)(?:\(([\w]+)\))?: (?:([a-zA-Z 0-9-.]+))(?:\n\n([\s -~]*)|[\n])?\z`)
 
 	// everything except : which is between 9 and ;
 	utils.InitRegexExpression(&FooterRegex,
