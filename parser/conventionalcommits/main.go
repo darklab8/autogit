@@ -79,6 +79,40 @@ func ParseCommit(msg string) (*ConventionalCommit, error) {
 	return &result, nil
 }
 
+var validTypes = [...]string{
+	"build",
+	"chore",
+}
+
+type InvalidType struct{}
+
+func (m InvalidType) Error() string {
+	return "invalid conventional commit Type"
+}
+
+func (c *ConventionalCommit) Validate() error {
+	for _, type_ := range validTypes {
+		if c.Type == type_ {
+			return nil
+		}
+	}
+	return InvalidType{}
+}
+
+func NewCommit(msg string) (*ConventionalCommit, error) {
+	commit, err := ParseCommit(msg)
+	if err != nil {
+		return commit, err
+	}
+
+	err = commit.Validate()
+	if err != nil {
+		return commit, err
+	}
+
+	return commit, nil
+}
+
 func (c ConventionalCommit) MajorChange() bool {
 	return false
 }

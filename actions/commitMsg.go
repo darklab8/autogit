@@ -1,29 +1,41 @@
 package actions
 
 import (
+	"autogit/parser/conventionalcommits"
 	"autogit/utils"
 	"fmt"
-	"log"
-	"os"
+	"io/ioutil"
 )
 
 func CommmitMsg(args []string) {
-	fmt.Printf("commitMsg called, with args=%v\n", args)
-	fmt.Println(len(os.Args), os.Args)
-	commit_msg_file := args[0]
+	inputFile := args[0]
 
-	path, err := os.Getwd()
+	file, err := ioutil.ReadFile(inputFile)
 	if err != nil {
-		log.Println(err)
+		fmt.Printf("Could not read the file due to this %s error \n", err)
 	}
-	fmt.Println(path) // for example /home/user
+	// convert the file binary into a string using string
+	fileContent := string(file)
 
-	fmt.Printf("commit_msg_file=%s\n", commit_msg_file)
+	commit, err := conventionalcommits.NewCommit(fileContent)
 
-	file := utils.File{Filepath: commit_msg_file}
-	lines := file.FileReadLines()
-
-	for _, line := range lines {
-		fmt.Printf(";%s\n", line)
+	if err != nil {
+		utils.CheckFatal(err, "unable to parse commit to conventional commits standard")
 	}
+
+	fmt.Println("parsed commit")
+	fmt.Printf("type=%s\n", commit.Type)
+	if commit.Scope != "" {
+		fmt.Printf("scope=%s\n", commit.Scope)
+	}
+	fmt.Printf("subject=%s\n", commit.Subject)
+
+	if commit.Body != "" {
+		fmt.Printf("body=%s\n", commit.Body)
+	}
+
+	for index, footer := range commit.Footers {
+		fmt.Printf("footer #%d - token: %s, content: %s\n", index, footer.Token, footer.Content)
+	}
+
 }
