@@ -6,8 +6,10 @@ package semanticgit
 
 import (
 	"autogit/git"
+	"autogit/parser/conventionalcommits"
 	"autogit/parser/semver"
 	"autogit/utils"
+	"log"
 )
 
 type SemanticGit struct {
@@ -46,4 +48,21 @@ func (g *SemanticGit) GetNextVersion() *semver.SemVer {
 	vers = g.CalculateNextVersion(vers)
 
 	return vers
+}
+
+func (g *SemanticGit) GetChangelogByTag(tag string) []conventionalcommits.ConventionalCommit {
+	logs := g.git.TestGetChangelogByTag(tag)
+
+	var results []conventionalcommits.ConventionalCommit
+
+	for _, log_record := range logs {
+		parsed_commit, err := conventionalcommits.ParseCommit(log_record.Msg)
+		if err != nil {
+			log.Println("WARN unable to parse commit with hash={%s}", log_record.Hash.String())
+			continue
+		}
+		results = append(results, *parsed_commit)
+	}
+
+	return results
 }
