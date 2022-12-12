@@ -34,7 +34,7 @@ func Changelog() string {
 
 	err = yaml.Unmarshal(file, &config)
 	if err != nil {
-		log.Fatal("error: %v", err)
+		log.Fatal("error: ", err)
 	}
 	// fmt.Printf("--- t:\n%v\n\n", config)
 

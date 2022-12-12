@@ -41,10 +41,11 @@ func init() {
 
 	utils.InitRegexExpression(&conventionalRegex,
 		// type, scope, subject, the rest
-		`^([a-z]+)(?:\(([\w]+)\))?: (?:([a-zA-Z 0-9-.]+))(?:\n\n([\w\s\-\:\#]*)|[\n])?\z`)
+		`^([a-z]+)(?:\(([\w]+)\))?: (?:([ -~]+))(?:\n\n([ -~]*)|[\n])?\z`)
 
+	// everything except : which is between 9 and ;
 	utils.InitRegexExpression(&FooterRegex,
-		`(?:([a-zA-Z 0-9-.]+))\: (?:([a-zA-Z 0-9-.]+))`)
+		`(?:([ -9;-~]+))\: (?:([ -9;-~]+))`)
 }
 
 type NotParsed struct{}

@@ -92,7 +92,7 @@ func (g *SemanticGit) GetChangelogByTag(tag string, enable_warnings bool) []conv
 		parsed_commit, err := conventionalcommits.ParseCommit(log_record.Msg)
 		if err != nil {
 			if enable_warnings {
-				log.Println("WARN unable to parse commit with hash={%s}", log_record.Hash.String())
+				log.Println("WARN unable to parse commit with hash=", log_record.Hash.String())
 			}
 			continue
 		}
