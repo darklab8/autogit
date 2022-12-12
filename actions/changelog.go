@@ -6,5 +6,5 @@ import (
 )
 
 func Changelog() string {
-	return fmt.Sprintf("%v", (&git.Repository{}).GetRepoInWorkDir().GetLogs(git.HEAD_Hash))
+	return fmt.Sprintf("%v", (&git.Repository{}).NewRepoInWorkDir().GetLogs(git.HEAD_Hash))
 }

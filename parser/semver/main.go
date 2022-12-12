@@ -29,14 +29,18 @@ func ParseToInt(msg string) int {
 	return number
 }
 
-func Parse(msg string) SemVer {
+func Parse(msg string) (*SemVer, error) {
 	matched := semVerRegex.FindStringSubmatch(msg)
-	_ = matched
-	return SemVer{
+
+	if len(matched) == 0 {
+		return nil, NotParsed{}
+	}
+
+	return &SemVer{
 		Major:      ParseToInt(matched[1]),
 		Minor:      ParseToInt(matched[2]),
 		Patch:      ParseToInt(matched[3]),
 		Prerelease: matched[4],
 		Build:      matched[5],
-	}
+	}, nil
 }
