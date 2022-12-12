@@ -2,17 +2,17 @@ version: '3'
 tasks:
   tag:
     cmds:
-      - git tag v{{.TAG}}
+      - git tag {{.TAG}}
     vars:
       TAG:
-        sh: git-conventional-commits version
+        sh: autogit version
 
   tag-push:
     cmds:
-      - git push origin v{{.TAG}}
+      - git push origin {{.TAG}}
     vars:
       TAG:
-        sh: git-conventional-commits version
+        sh: autogit version
 
   deploy:
     cmds:
@@ -21,7 +21,7 @@ tasks:
 
   version:
     cmds:
-      - git-conventional-commits version
+      - autogit version
   log:
     cmds:
       - git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit {{.CLI_ARGS}}
@@ -37,7 +37,7 @@ tasks:
 
   build-version:
     cmds:
-      - git-conventional-commits version > settings/version.txt || echo 'not installed git-conventional-commits' > settings/version.txt
+      - autogit version > settings/version.txt || echo 'not installed autogit' > settings/version.txt
   build:
     cmds:
       - task: build-version
@@ -65,7 +65,7 @@ tasks:
 
   changelog:
     cmds:
-      - git-conventional-commits changelog {{.CLI_ARGS}}
+      - autogit changelog {{.CLI_ARGS}}
 
   hook:dev:
     cmds:
@@ -73,4 +73,8 @@ tasks:
 
   hook:prod:
     cmds:
+      - sudo ln -s {{.PWD}}/dist/autogit-linux-amd64 /usr/local/bin/autogit
       - git config core.hooksPath .git-hooks-prod
+    vars:
+      PWD:
+        sh: echo "$(pwd)"

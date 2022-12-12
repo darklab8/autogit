@@ -1,0 +1,3 @@
+#!/bin/sh
+
+autogit hook commitMsg "$1"
