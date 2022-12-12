@@ -41,7 +41,7 @@ func init() {
 
 	utils.InitRegexExpression(&conventionalRegex,
 		// type, scope, subject, the rest
-		`^([a-z]+)(?:\(([\w]+)\))?: (?:([a-zA-Z 0-9-.]+))(?:\n\n([\w\s\-\:]*)|[\n])?\z`)
+		`^([a-z]+)(?:\(([\w]+)\))?: (?:([a-zA-Z 0-9-.]+))(?:\n\n([\w\s\-\:\#]*)|[\n])?\z`)
 
 	utils.InitRegexExpression(&FooterRegex,
 		`(?:([a-zA-Z 0-9-.]+))\: (?:([a-zA-Z 0-9-.]+))`)

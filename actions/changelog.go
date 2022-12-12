@@ -10,7 +10,7 @@ import (
 func Changelog() string {
 	g := (&sGit.SemanticGit{}).NewRepo((&git.Repository{}).NewRepoInWorkDir())
 
-	logs := g.GetChangelogByTag("")
+	logs := g.GetChangelogByTag("", true)
 
 	var sb strings.Builder
 

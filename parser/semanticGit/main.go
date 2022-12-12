@@ -38,7 +38,40 @@ func (g *SemanticGit) GetCurrentVersion() *semver.SemVer {
 }
 
 func (g *SemanticGit) CalculateNextVersion(vers *semver.SemVer) *semver.SemVer {
-	// Calculate next version from changelog additions
+
+	logs := g.GetChangelogByTag("", false)
+
+	var major_change, minor_change, patch_change bool
+	for _, record := range logs {
+
+		if record.Exclamation {
+			if vers.Major != 0 {
+				major_change = true
+			}
+		}
+
+		if record.Type == "feat" {
+			minor_change = true
+		}
+
+		if record.Type == "fix" {
+			patch_change = true
+		}
+	}
+
+	if major_change {
+		vers.Major += 1
+		return vers
+	}
+	if minor_change {
+		vers.Minor += 1
+		return vers
+	}
+	if patch_change {
+		vers.Patch += 1
+		return vers
+	}
+
 	return vers
 }
 
@@ -50,7 +83,7 @@ func (g *SemanticGit) GetNextVersion() *semver.SemVer {
 	return vers
 }
 
-func (g *SemanticGit) GetChangelogByTag(tag string) []conventionalcommits.ConventionalCommit {
+func (g *SemanticGit) GetChangelogByTag(tag string, enable_warnings bool) []conventionalcommits.ConventionalCommit {
 	logs := g.git.TestGetChangelogByTag(tag)
 
 	var results []conventionalcommits.ConventionalCommit
@@ -58,7 +91,9 @@ func (g *SemanticGit) GetChangelogByTag(tag string) []conventionalcommits.Conven
 	for _, log_record := range logs {
 		parsed_commit, err := conventionalcommits.ParseCommit(log_record.Msg)
 		if err != nil {
-			log.Println("WARN unable to parse commit with hash={%s}", log_record.Hash.String())
+			if enable_warnings {
+				log.Println("WARN unable to parse commit with hash={%s}", log_record.Hash.String())
+			}
 			continue
 		}
 		results = append(results, *parsed_commit)
