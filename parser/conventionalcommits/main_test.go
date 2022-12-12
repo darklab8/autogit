@@ -57,7 +57,7 @@ func TestParse6(t *testing.T) {
 }
 
 func TestParse7(t *testing.T) {
-	commit, err := NewCommit(`feat: rendered changelog for task #1`)
+	commit, err := NewCommit(`feat: rendered changelog for task #1, #2, #3`)
 	utils.CheckPanic(err)
 	assert.Equal(t, "1", commit.Issue)
 }

@@ -20,7 +20,7 @@ type ConventionalCommit struct {
 	Body        string
 	Footers     []Footer
 	Hash        string
-	Issue       string
+	Issue       []string
 }
 
 func Check(err error, strict bool, msgs ...string) {
@@ -72,9 +72,9 @@ func ParseCommit(msg string) (*ConventionalCommit, error) {
 	result.Scope = main_match[2]
 	result.Subject = main_match[3]
 
-	IssueMatch := IssueRegex.FindStringSubmatch(main_match[0])
-	if len(IssueMatch) > 0 {
-		result.Issue = IssueMatch[1]
+	IssueMatch := IssueRegex.FindAllStringSubmatch(main_match[0], -1)
+	for _, match := range IssueMatch {
+		result.Issue = append(result.Issue, match[1])
 	}
 
 	msgs := strings.Split(main_match[4], "\n\n")

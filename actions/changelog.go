@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"strings"
 	"text/template"
 	"time"
 
@@ -62,12 +63,12 @@ func Changelog() string {
 	}
 
 	for _, record := range logs {
-		issue_rendered := ""
-		if record.Issue != "" {
-			issue_rendered = fmt.Sprintf(", [#%s](%s)", record.Issue, Render(IssueUrl, struct{ Issue string }{Issue: record.Issue}))
+		var issue_rendered strings.Builder
+		for _, issue_n := range record.Issue {
+			issue_rendered.WriteString(fmt.Sprintf(", [#%s](%s)", issue_n, Render(IssueUrl, struct{ Issue string }{Issue: issue_n})))
 		}
 		formatted_url := Render(commitUrl, commitRecord{Commit: record.Hash})
-		formatted := fmt.Sprintf("* %s ([%s](%s)%s)\n", record.Subject, record.Hash, formatted_url, issue_rendered)
+		formatted := fmt.Sprintf("* %s ([%s](%s)%s)\n", record.Subject, record.Hash, formatted_url, issue_rendered.String())
 		if record.Type == "feat" {
 			templateData.Features = append(templateData.Features, formatted)
 		} else if record.Type == "fix" {
