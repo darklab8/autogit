@@ -55,3 +55,9 @@ func TestParse6(t *testing.T) {
 	_, err := NewCommit(`refactor: autogit version into about`)
 	utils.CheckPanic(err)
 }
+
+func TestParse7(t *testing.T) {
+	commit, err := NewCommit(`feat: rendered changelog for task #1`)
+	utils.CheckPanic(err)
+	assert.Equal(t, "1", commit.Issue)
+}

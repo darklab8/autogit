@@ -42,7 +42,7 @@ func Changelog() string {
 
 	var commitUrl *template.Template = initTemplate(config.Changelog.CommitURL)
 	var commitRangeUrl *template.Template = initTemplate(config.Changelog.CommitRangeURL)
-	// var IssueUrl *template.Template = initTemplate(config.View.IssueURL)
+	var IssueUrl *template.Template = initTemplate(config.Changelog.IssueURL)
 
 	var Range struct {
 		From string
@@ -62,13 +62,15 @@ func Changelog() string {
 	}
 
 	for _, record := range logs {
+		issue_rendered := ""
+		if record.Issue != "" {
+			issue_rendered = fmt.Sprintf(", [#%s](%s)", record.Issue, Render(IssueUrl, struct{ Issue string }{Issue: record.Issue}))
+		}
+		formatted_url := Render(commitUrl, commitRecord{Commit: record.Hash})
+		formatted := fmt.Sprintf("* %s ([%s](%s)%s)\n", record.Subject, record.Hash, formatted_url, issue_rendered)
 		if record.Type == "feat" {
-			formatted_url := Render(commitUrl, commitRecord{Commit: record.Hash})
-			formatted := fmt.Sprintf("* %s ([%s](%s))\n", record.Subject, record.Hash, formatted_url)
 			templateData.Features = append(templateData.Features, formatted)
 		} else if record.Type == "fix" {
-			formatted_url := Render(commitUrl, commitRecord{Commit: record.Hash})
-			formatted := fmt.Sprintf("* %s ([%s](%s))\n", record.Subject, record.Hash, formatted_url)
 			templateData.Fixes = append(templateData.Fixes, formatted)
 		}
 	}

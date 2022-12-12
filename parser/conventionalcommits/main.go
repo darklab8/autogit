@@ -20,6 +20,7 @@ type ConventionalCommit struct {
 	Body        string
 	Footers     []Footer
 	Hash        string
+	Issue       string
 }
 
 func Check(err error, strict bool, msgs ...string) {
@@ -36,17 +37,21 @@ func Check(err error, strict bool, msgs ...string) {
 
 var conventionalRegex *regexp.Regexp
 var FooterRegex *regexp.Regexp
+var IssueRegex *regexp.Regexp
 
 func init() {
 	// copied from https://gist.github.com/marcojahn/482410b728c31b221b70ea6d2c433f0c
 
 	utils.InitRegexExpression(&conventionalRegex,
 		// type, scope, subject, the rest
-		`^([a-z]+)(?:\(([\w]+)\))?: (?:([a-zA-Z 0-9-.]+))(?:\n\n([\s -~]*)|[\n])?\z`)
+		`^([a-z]+)(?:\(([\w]+)\))?: (?:([ -~]+))(?:\n\n([\s -~]*)|[\n])?\z`)
 
 	// everything except : which is between 9 and ;
 	utils.InitRegexExpression(&FooterRegex,
 		`(?:([ -9;-~]+))\: (?:([ -9;-~]+))`)
+
+	utils.InitRegexExpression(&IssueRegex,
+		`\#([0-9]+)`)
 }
 
 type NotParsed struct{}
@@ -66,6 +71,11 @@ func ParseCommit(msg string) (*ConventionalCommit, error) {
 	result.Type = main_match[1]
 	result.Scope = main_match[2]
 	result.Subject = main_match[3]
+
+	IssueMatch := IssueRegex.FindStringSubmatch(main_match[0])
+	if len(IssueMatch) > 0 {
+		result.Issue = IssueMatch[1]
+	}
 
 	msgs := strings.Split(main_match[4], "\n\n")
 
