@@ -19,6 +19,7 @@ type ConventionalCommit struct {
 	Subject     string
 	Body        string
 	Footers     []Footer
+	Hash        string
 }
 
 func Check(err error, strict bool, msgs ...string) {

@@ -2,7 +2,6 @@ package actions
 
 import (
 	"autogit/git"
-	"autogit/parser/conventionalcommits"
 	sGit "autogit/parser/semanticGit"
 	"autogit/utils"
 	"bytes"
@@ -10,7 +9,6 @@ import (
 	"html/template"
 	"io/ioutil"
 	"log"
-	"strings"
 
 	_ "embed"
 
@@ -36,47 +34,50 @@ func Changelog() string {
 	if err != nil {
 		log.Fatal("error: ", err)
 	}
-	// fmt.Printf("--- t:\n%v\n\n", config)
 
 	g := (&sGit.SemanticGit{}).NewRepo((&git.Repository{}).NewRepoInWorkDir())
 
 	logs := g.GetChangelogByTag("", true)
 
-	var features []conventionalcommits.ConventionalCommit
-	var fixes []conventionalcommits.ConventionalCommit
+	templateData := changelogData{
+		Version: fmt.Sprintf("## **%s**", g.GetNextVersion().ToString()),
+	}
+
+	var commitUrl *template.Template = initTemplate(config.View.CommitURL)
+	// var commitRangeUrl *template.Template = initTemplate(config.View.CommitRangeURL)
+	// var IssueUrl *template.Template = initTemplate(config.View.IssueURL)
+
+	type commitRecord struct {
+		Commit string
+	}
 
 	for _, record := range logs {
 		if record.Type == "feat" {
-			features = append(features, record)
+			formatted_url := Render(commitUrl, commitRecord{Commit: record.Hash})
+			formatted := fmt.Sprintf("* %s ([%s](%s))\n", record.Subject, record.Hash, formatted_url)
+			templateData.Features = append(templateData.Features, formatted)
 		} else if record.Type == "fix" {
-			fixes = append(fixes, record)
+			formatted_url := Render(commitUrl, commitRecord{Commit: record.Hash})
+			formatted := fmt.Sprintf("* %s ([%s](%s))\n", record.Subject, record.Hash, formatted_url)
+			templateData.Fixes = append(templateData.Fixes, formatted)
 		}
 	}
 
-	var sb strings.Builder
-	sb.WriteString(Render(HeaderTemplate, headerData{Version: g.GetNextVersion().ToString()}))
-
-	// if len(features) > 0 {
-	// 	sb.WriteString("### Features")
-	// }
-
-	// if len(fixes) > 0 {
-	// 	sb.WriteString("### Bug Fixes")
-	// }
-
-	return sb.String()
+	return Render(changelogTemplate, templateData)
 }
 
-type headerData struct {
-	Version string
+type changelogData struct {
+	Version  string
+	Features []string
+	Fixes    []string
 }
 
-//go:embed templates/header.md
-var headerMarkup string
-var HeaderTemplate *template.Template
+//go:embed templates/changelog.md
+var changelogMarkup string
+var changelogTemplate *template.Template
 
 func init() {
-	initTemplate(&HeaderTemplate, headerMarkup)
+	changelogTemplate = initTemplate(changelogMarkup)
 }
 
 func Render(templateRef *template.Template, data interface{}) string {
@@ -86,8 +87,9 @@ func Render(templateRef *template.Template, data interface{}) string {
 	return header.String()
 }
 
-func initTemplate(templateRef **template.Template, content string) {
+func initTemplate(content string) *template.Template {
 	var err error
-	*templateRef, err = template.New("test").Parse(content)
+	templateRef, err := template.New("test").Parse(content)
 	utils.CheckFatal(err)
+	return templateRef
 }
