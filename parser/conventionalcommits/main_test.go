@@ -50,3 +50,8 @@ body message
 footer-key: tralala`)
 	assert.True(t, err != nil)
 }
+
+func TestParse6(t *testing.T) {
+	_, err := NewCommit(`refactor: autogit version into about`)
+	utils.CheckPanic(err)
+}

@@ -4,30 +4,31 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"autogit/actions"
 	"fmt"
 
 	"github.com/spf13/cobra"
 )
 
-// versionCmd represents the version command
-var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "next semantic version",
+// aboutCmd represents the about command
+var aboutCmd = &cobra.Command{
+	Use:   "about",
+	Short: "Info about autogit",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("calling version")
+		fmt.Printf("%s", actions.About())
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(versionCmd)
+	rootCmd.AddCommand(aboutCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// versionCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// aboutCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// versionCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// aboutCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

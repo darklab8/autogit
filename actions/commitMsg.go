@@ -23,7 +23,7 @@ func CommmitMsg(args []string) {
 	commit, err := conventionalcommits.NewCommit(fileContent)
 
 	if err != nil {
-		utils.CheckFatal(err, "unable to parse commit to conventional commits standard")
+		utils.CheckFatal(err, "unable to parse commit to conventional commits standard", err.Error())
 	}
 
 	fmt.Println("parsed commit")
