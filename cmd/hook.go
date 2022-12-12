@@ -14,7 +14,7 @@ var hookCmd = &cobra.Command{
 	Use:   "hook",
 	Short: "git hooks entry points",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("hook called")
+		fmt.Println("OK autogit hook called")
 	},
 }
 
