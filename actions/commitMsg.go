@@ -10,12 +10,15 @@ import (
 func CommmitMsg(args []string) {
 	inputFile := args[0]
 
+	fmt.Printf("commitFile=%s\n", inputFile)
+
 	file, err := ioutil.ReadFile(inputFile)
 	if err != nil {
 		fmt.Printf("Could not read the file due to this %s error \n", err)
 	}
 	// convert the file binary into a string using string
 	fileContent := string(file)
+	fmt.Printf("fileContent=%s", fileContent)
 
 	commit, err := conventionalcommits.NewCommit(fileContent)
 
@@ -37,5 +40,4 @@ func CommmitMsg(args []string) {
 	for index, footer := range commit.Footers {
 		fmt.Printf("footer #%d - token: %s, content: %s\n", index, footer.Token, footer.Content)
 	}
-
 }

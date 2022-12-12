@@ -4,5 +4,3 @@
 PATH="/c/Program Files/nodejs:$HOME/AppData/Roaming/npm/:$PATH"
 
 cd /home/naa/repos/pet_projects/darklab_autogit && go run . hook commitMsg "$1"
-echo "$1"
-exit 1

@@ -8,22 +8,22 @@ import (
 )
 
 func TestParse(t *testing.T) {
-	_, err := ParseCommit("feat: abc")
+	_, err := NewCommit("feat: abc")
 	utils.CheckPanic(err)
 }
 
 func TestParse2(t *testing.T) {
-	_, err := ParseCommit("fix: dsfsdf")
+	_, err := NewCommit("fix: dsfsdf")
 	utils.CheckPanic(err)
 }
 
 func TestParse3(t *testing.T) {
-	_, err := ParseCommit("abcd abc")
+	_, err := NewCommit("abcd abc")
 	assert.True(t, err != nil)
 }
 
 func TestParse4(t *testing.T) {
-	commit, err := ParseCommit(`feat(api): my subject
+	commit, err := NewCommit(`feat(api): my subject
 
 body message
 
@@ -36,4 +36,9 @@ footer-key: tralala`)
 	assert.Equal(t, "body message", commit.Body)
 	assert.Equal(t, "footer-key", commit.Footers[0].Token)
 	assert.Equal(t, "tralala", commit.Footers[0].Content)
+}
+
+func TestParse5(t *testing.T) {
+	_, err := NewCommit("feat: hook commit msg")
+	utils.CheckPanic(err)
 }

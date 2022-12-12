@@ -82,6 +82,16 @@ func ParseCommit(msg string) (*ConventionalCommit, error) {
 var validTypes = [...]string{
 	"build",
 	"chore",
+	"ci",
+	"docs",
+	"feat",
+	"fix",
+	"perf",
+	"refactor",
+	"revert",
+	"style",
+	"test",
+	"merge",
 }
 
 type InvalidType struct{}
