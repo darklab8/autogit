@@ -1,4 +1,4 @@
-{{.Version}}
+{{.Header}}
 
 {{ if .Features }}### Features{{ end }}
 

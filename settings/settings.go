@@ -7,4 +7,7 @@ import (
 //go:embed version.txt
 var Version string
 
-func init() {}
+func init() {
+	readConfig()
+	validateConfig()
+}
