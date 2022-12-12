@@ -5,7 +5,6 @@ import (
 	"autogit/parser/conventionalcommits"
 	sGit "autogit/parser/semanticGit"
 	"autogit/utils"
-	"bytes"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -42,9 +41,9 @@ func Changelog() string {
 
 	logs := g.GetChangelogByTag("", true)
 
-	var commitUrl *template.Template = initTemplate(config.Changelog.CommitURL)
-	var commitRangeUrl *template.Template = initTemplate(config.Changelog.CommitRangeURL)
-	var IssueUrl *template.Template = initTemplate(config.Changelog.IssueURL)
+	var commitUrl *template.Template = utils.TmpInit(config.Changelog.CommitURL)
+	var commitRangeUrl *template.Template = utils.TmpInit(config.Changelog.CommitRangeURL)
+	var IssueUrl *template.Template = utils.TmpInit(config.Changelog.IssueURL)
 
 	var Range struct {
 		From string
@@ -56,7 +55,7 @@ func Changelog() string {
 	currentTime := time.Now()
 
 	templateData := changelogData{
-		Version: fmt.Sprintf("## **%s** <sub><sub>%s ([%s...%s](%s))</sub></sub>", g.GetNextVersion().ToString(), currentTime.Format("2006-01-02"), Range.From, Range.To, Render(commitRangeUrl, Range)),
+		Version: fmt.Sprintf("## **%s** <sub><sub>%s ([%s...%s](%s))</sub></sub>", g.GetNextVersion().ToString(), currentTime.Format("2006-01-02"), Range.From, Range.To, utils.TmpRender(commitRangeUrl, Range)),
 	}
 
 	type commitRecord struct {
@@ -66,16 +65,16 @@ func Changelog() string {
 	for _, record := range logs {
 		var issue_rendered strings.Builder
 		for _, issue_n := range record.Issue {
-			issue_rendered.WriteString(fmt.Sprintf(", [#%s](%s)", issue_n, Render(IssueUrl, struct{ Issue string }{Issue: issue_n})))
+			issue_rendered.WriteString(fmt.Sprintf(", [#%s](%s)", issue_n, utils.TmpRender(IssueUrl, struct{ Issue string }{Issue: issue_n})))
 		}
 
 		rendered_subject := record.Subject
 		IssueMatch := conventionalcommits.IssueRegex.FindAllStringSubmatch(record.Subject, -1)
 		for _, match := range IssueMatch {
-			rendered_subject = strings.Replace(rendered_subject, match[0], fmt.Sprintf("[#%s](%s)", match[1], Render(IssueUrl, struct{ Issue string }{Issue: match[1]})), -1)
+			rendered_subject = strings.Replace(rendered_subject, match[0], fmt.Sprintf("[#%s](%s)", match[1], utils.TmpRender(IssueUrl, struct{ Issue string }{Issue: match[1]})), -1)
 		}
 
-		formatted_url := Render(commitUrl, commitRecord{Commit: record.Hash})
+		formatted_url := utils.TmpRender(commitUrl, commitRecord{Commit: record.Hash})
 		formatted := fmt.Sprintf("* %s ([%s](%s)%s)\n", rendered_subject, record.Hash, formatted_url, issue_rendered.String())
 		if record.Type == "feat" {
 			templateData.Features = append(templateData.Features, formatted)
@@ -84,7 +83,7 @@ func Changelog() string {
 		}
 	}
 
-	return Render(changelogTemplate, templateData)
+	return utils.TmpRender(changelogTemplate, templateData)
 }
 
 type changelogData struct {
@@ -98,19 +97,5 @@ var changelogMarkup string
 var changelogTemplate *template.Template
 
 func init() {
-	changelogTemplate = initTemplate(changelogMarkup)
-}
-
-func Render(templateRef *template.Template, data interface{}) string {
-	var header bytes.Buffer
-	err := templateRef.Execute(&header, data)
-	utils.CheckFatal(err)
-	return header.String()
-}
-
-func initTemplate(content string) *template.Template {
-	var err error
-	templateRef, err := template.New("test").Parse(content)
-	utils.CheckFatal(err)
-	return templateRef
+	changelogTemplate = utils.TmpInit(changelogMarkup)
 }
