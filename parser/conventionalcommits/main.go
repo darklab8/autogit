@@ -72,7 +72,7 @@ func ParseCommit(msg string) (*ConventionalCommit, error) {
 	result.Scope = main_match[2]
 	result.Subject = main_match[3]
 
-	IssueMatch := IssueRegex.FindAllStringSubmatch(main_match[0], -1)
+	IssueMatch := IssueRegex.FindAllStringSubmatch(main_match[4], -1)
 	for _, match := range IssueMatch {
 		result.Issue = append(result.Issue, match[1])
 	}

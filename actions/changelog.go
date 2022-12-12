@@ -2,6 +2,7 @@ package actions
 
 import (
 	"autogit/git"
+	"autogit/parser/conventionalcommits"
 	sGit "autogit/parser/semanticGit"
 	"autogit/utils"
 	"bytes"
@@ -67,8 +68,15 @@ func Changelog() string {
 		for _, issue_n := range record.Issue {
 			issue_rendered.WriteString(fmt.Sprintf(", [#%s](%s)", issue_n, Render(IssueUrl, struct{ Issue string }{Issue: issue_n})))
 		}
+
+		rendered_subject := record.Subject
+		IssueMatch := conventionalcommits.IssueRegex.FindAllStringSubmatch(record.Subject, -1)
+		for _, match := range IssueMatch {
+			rendered_subject = strings.Replace(rendered_subject, match[0], fmt.Sprintf("[#%s](%s)", match[1], Render(IssueUrl, struct{ Issue string }{Issue: match[1]})), -1)
+		}
+
 		formatted_url := Render(commitUrl, commitRecord{Commit: record.Hash})
-		formatted := fmt.Sprintf("* %s ([%s](%s)%s)\n", record.Subject, record.Hash, formatted_url, issue_rendered.String())
+		formatted := fmt.Sprintf("* %s ([%s](%s)%s)\n", rendered_subject, record.Hash, formatted_url, issue_rendered.String())
 		if record.Type == "feat" {
 			templateData.Features = append(templateData.Features, formatted)
 		} else if record.Type == "fix" {
