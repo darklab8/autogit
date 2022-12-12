@@ -38,6 +38,37 @@ type Log struct {
 
 var HEAD_Hash plumbing.Hash
 
+func (r *Repository) GetLatestTag() Tag {
+	ref, err := r.repo.Head()
+	CheckIfError(err)
+	From := ref.Hash()
+
+	// ... retrieves the commit history
+	cIter, err := r.repo.Log(&git.LogOptions{From: From})
+	CheckIfError(err)
+
+	tags := r.GetTags()
+	// ... just iterates over the commits, printing it
+	c, _ := cIter.Next()
+	for ; c != nil; c, _ = cIter.Next() {
+
+		// iterating until next tag
+		for _, tag := range tags {
+			if tag.Target == c.Hash {
+				return Tag{Hash: tag.Hash, Name: tag.Name, Message: tag.Message, Ref: ref, Target: tag.Target}
+			}
+		}
+
+	}
+	CheckIfError(err)
+
+	return Tag{Name: "v0.0.0", Message: "default"}
+}
+
+func (r *Repository) GetLatestTagString() string {
+	return r.GetLatestTag().Name
+}
+
 func (r *Repository) GetLogs(From plumbing.Hash) []Log {
 	var logs []Log
 	// retrieves the branch pointed by HEAD
