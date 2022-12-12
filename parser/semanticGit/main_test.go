@@ -13,8 +13,10 @@ func TestGitGood(t *testing.T) {
 
 	gitInMemory.TestCommit("feat: test")
 
-	vers := gitSemantic.GetCurrentVersion()
-	assert.Equal(t, 0, vers.Major)
-	assert.Equal(t, 0, vers.Minor)
-	assert.Equal(t, 0, vers.Patch)
+	assert.Equal(t, "v0.0.0", gitSemantic.GetCurrentVersion().ToString())
+
+	gitInMemory.TestCreateTag("v0.0.1", gitInMemory.TestCommit("fix: thing"))
+	gitInMemory.TestCommit("feat: test2")
+
+	assert.Equal(t, "v0.0.1", gitSemantic.GetCurrentVersion().ToString())
 }
