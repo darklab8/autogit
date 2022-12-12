@@ -62,7 +62,7 @@ func (r *Repository) GetLatestTag() Tag {
 	}
 	CheckIfError(err)
 
-	return Tag{Name: "v0.0.0", Message: "default"}
+	return Tag{}
 }
 
 func (r *Repository) GetLatestTagString() string {
