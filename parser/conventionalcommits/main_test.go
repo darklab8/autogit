@@ -42,3 +42,11 @@ func TestParse5(t *testing.T) {
 	_, err := NewCommit("feat: hook commit msg")
 	utils.CheckPanic(err)
 }
+
+func TestNotAllowedNewLineAtSecondLine(t *testing.T) {
+	_, err := NewCommit(`feat(api): my subject
+body message
+
+footer-key: tralala`)
+	assert.True(t, err != nil)
+}
