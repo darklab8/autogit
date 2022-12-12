@@ -4,6 +4,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"autogit/actions"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -14,7 +15,7 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "next semantic version",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("calling version")
+		fmt.Printf("%s", actions.Version())
 	},
 }
 

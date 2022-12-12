@@ -2,7 +2,6 @@
 package git
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -28,8 +27,6 @@ func (r *Repository) NewRepoInWorkDir() *Repository {
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Printf("Getwd=%s", path) // for example /home/user
-
 	r.repo, err = git.PlainOpen(path)
 	return r
 }

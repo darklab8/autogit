@@ -2,8 +2,10 @@ package semver
 
 import (
 	"autogit/utils"
+	"fmt"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 var semVerRegex *regexp.Regexp
@@ -43,4 +45,21 @@ func Parse(msg string) (*SemVer, error) {
 		Prerelease: matched[4],
 		Build:      matched[5],
 	}, nil
+}
+
+func (s SemVer) ToString() string {
+	var sb strings.Builder
+	sb.WriteString(fmt.Sprintf("v%d", s.Major))
+	sb.WriteString(fmt.Sprintf(".%d", s.Minor))
+	sb.WriteString(fmt.Sprintf(".%d", s.Patch))
+
+	if s.Prerelease != "" {
+		sb.WriteString(fmt.Sprintf("-%s", s.Prerelease))
+	}
+
+	if s.Build != "" {
+		sb.WriteString(fmt.Sprintf("+%s", s.Build))
+	}
+
+	return sb.String()
 }
