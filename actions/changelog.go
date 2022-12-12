@@ -6,9 +6,10 @@ import (
 	"autogit/utils"
 	"bytes"
 	"fmt"
-	"html/template"
 	"io/ioutil"
 	"log"
+	"text/template"
+	"time"
 
 	_ "embed"
 
@@ -16,11 +17,11 @@ import (
 )
 
 type ConfigScheme struct {
-	View struct {
+	Changelog struct {
 		CommitURL      string `yaml:"commitUrl"`
 		CommitRangeURL string `yaml:"commitRangeUrl"`
 		IssueURL       string `yaml:"issueUrl"`
-	} `yaml:"view"`
+	} `yaml:"changelog"`
 }
 
 func Changelog() string {
@@ -39,13 +40,22 @@ func Changelog() string {
 
 	logs := g.GetChangelogByTag("", true)
 
-	templateData := changelogData{
-		Version: fmt.Sprintf("## **%s**", g.GetNextVersion().ToString()),
-	}
-
-	var commitUrl *template.Template = initTemplate(config.View.CommitURL)
-	// var commitRangeUrl *template.Template = initTemplate(config.View.CommitRangeURL)
+	var commitUrl *template.Template = initTemplate(config.Changelog.CommitURL)
+	var commitRangeUrl *template.Template = initTemplate(config.Changelog.CommitRangeURL)
 	// var IssueUrl *template.Template = initTemplate(config.View.IssueURL)
+
+	var Range struct {
+		From string
+		To   string
+	}
+	Range.From = logs[len(logs)-1].Hash
+	Range.To = logs[0].Hash
+
+	currentTime := time.Now()
+
+	templateData := changelogData{
+		Version: fmt.Sprintf("## **%s** <sub><sub>%s ([%s...%s](%s))</sub></sub>", g.GetNextVersion().ToString(), currentTime.Format("2006-01-02"), Range.From, Range.To, Render(commitRangeUrl, Range)),
+	}
 
 	type commitRecord struct {
 		Commit string
