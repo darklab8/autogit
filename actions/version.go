@@ -10,5 +10,7 @@ var VersionDisableVFlag *bool
 
 func Version() string {
 	g := (&sGit.SemanticGit{}).NewRepo((&git.Repository{}).NewRepoInWorkDir())
-	return fmt.Sprintf("%s\n", g.GetNextVersion().ToString(!(*VersionDisableVFlag)))
+	vers := g.GetNextVersion()
+	vers.DisableVFlag = (*VersionDisableVFlag)
+	return fmt.Sprintf("%s\n", vers.ToString())
 }

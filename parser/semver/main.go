@@ -17,6 +17,7 @@ func init() {
 }
 
 type SemVer struct {
+	DisableVFlag bool
 	// Official SemVer
 	Major      int
 	Minor      int
@@ -47,9 +48,9 @@ func Parse(msg string) (*SemVer, error) {
 	}, nil
 }
 
-func (s SemVer) ToString(flagv bool) string {
+func (s SemVer) ToString() string {
 	var sb strings.Builder
-	if flagv {
+	if !s.DisableVFlag {
 		sb.WriteString("v")
 	}
 	sb.WriteString(fmt.Sprintf("%d", s.Major))
