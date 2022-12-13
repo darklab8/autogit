@@ -1,8 +1,8 @@
 package changelog
 
 import (
-	"autogit/git"
-	semanticgit "autogit/parser/semanticGit"
+	"autogit/semanticgit"
+	"autogit/semanticgit/git"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

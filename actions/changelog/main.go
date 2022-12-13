@@ -1,8 +1,8 @@
 package changelog
 
 import (
-	"autogit/parser/conventionalcommits"
-	sGit "autogit/parser/semanticGit"
+	"autogit/semanticgit"
+	"autogit/semanticgit/conventionalcommits"
 	"autogit/settings"
 	"autogit/utils"
 	"fmt"
@@ -89,7 +89,7 @@ func (changelog *ChangelogData) AddCommit(record conventionalcommits.Conventiona
 	}
 }
 
-func (changelog ChangelogData) New(g *sGit.SemanticGit) ChangelogData {
+func (changelog ChangelogData) New(g *semanticgit.SemanticGit) ChangelogData {
 	changelog.FeaturesScoped = make(map[string][]string)
 	changelog.FixesScoped = make(map[string][]string)
 

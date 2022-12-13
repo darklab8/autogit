@@ -1,8 +1,8 @@
 package actions
 
 import (
-	"autogit/git"
-	sGit "autogit/parser/semanticGit"
+	"autogit/semanticgit"
+	"autogit/semanticgit/git"
 	"fmt"
 )
 
@@ -10,7 +10,7 @@ var VersionDisableVFlag *bool
 var VersionBuildMeta *string
 
 func Version() string {
-	g := (&sGit.SemanticGit{}).NewRepo((&git.Repository{}).NewRepoInWorkDir())
+	g := (&semanticgit.SemanticGit{}).NewRepo((&git.Repository{}).NewRepoInWorkDir())
 	vers := g.GetNextVersion()
 	vers.DisableVFlag = (*VersionDisableVFlag)
 	vers.Build = *VersionBuildMeta

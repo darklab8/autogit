@@ -5,9 +5,9 @@ and conventional commits to it
 package semanticgit
 
 import (
-	"autogit/git"
-	"autogit/parser/conventionalcommits"
-	"autogit/parser/semver"
+	"autogit/semanticgit/conventionalcommits"
+	"autogit/semanticgit/git"
+	"autogit/semanticgit/semver"
 	"autogit/utils"
 	"log"
 )

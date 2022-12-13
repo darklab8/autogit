@@ -2,13 +2,13 @@ package actions
 
 import (
 	"autogit/actions/changelog"
-	"autogit/git"
-	sGit "autogit/parser/semanticGit"
+	"autogit/semanticgit"
+	"autogit/semanticgit/git"
 )
 
 var ChangelogTag *string
 
 func Changelog() string {
-	g := (&sGit.SemanticGit{}).NewRepo((&git.Repository{}).NewRepoInWorkDir())
+	g := (&semanticgit.SemanticGit{}).NewRepo((&git.Repository{}).NewRepoInWorkDir())
 	return changelog.ChangelogData{Tag: *ChangelogTag}.New(g).Render()
 }

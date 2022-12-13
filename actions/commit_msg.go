@@ -1,7 +1,7 @@
 package actions
 
 import (
-	"autogit/parser/conventionalcommits"
+	"autogit/semanticgit/conventionalcommits"
 	"autogit/utils"
 	"fmt"
 	"io/ioutil"

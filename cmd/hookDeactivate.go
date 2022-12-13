@@ -21,5 +21,5 @@ var deactivateCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(deactivateCmd)
+	hookCmd.AddCommand(deactivateCmd)
 }

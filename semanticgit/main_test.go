@@ -1,7 +1,7 @@
 package semanticgit
 
 import (
-	"autogit/git"
+	"autogit/semanticgit/git"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
