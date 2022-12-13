@@ -61,10 +61,13 @@ func (g *SemanticGit) CalculateNextVersion(vers *semver.SemVer) *semver.SemVer {
 
 	if major_change {
 		vers.Major += 1
+		vers.Minor = 0
+		vers.Patch = 0
 		return vers
 	}
 	if minor_change {
 		vers.Minor += 1
+		vers.Patch = 0
 		return vers
 	}
 	if patch_change {
