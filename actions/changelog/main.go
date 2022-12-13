@@ -55,13 +55,44 @@ func (c commitRecord) Render(record conventionalcommits.ConventionalCommit) stri
 }
 
 type ChangelogData struct {
-	Tag      string // get changelog from this tag to previous
-	Header   string
-	Features []string
-	Fixes    []string
+	Tag            string // get changelog from this tag to previous
+	Header         string
+	Features       []string
+	Fixes          []string
+	FeaturesScoped map[string][]string
+	FixesScoped    map[string][]string
+}
+
+func (changelog *ChangelogData) AddCommit(record conventionalcommits.ConventionalCommit, commit_formatted string) {
+	if record.Type == "feat" {
+		if record.Scope == "" {
+			changelog.Features = append(changelog.Features, commit_formatted)
+		} else {
+			_, ok := changelog.FeaturesScoped[record.Scope]
+			if !ok {
+				changelog.FeaturesScoped[record.Scope] = []string{}
+			}
+
+			changelog.FeaturesScoped[record.Scope] = append(changelog.FeaturesScoped[record.Scope], commit_formatted)
+		}
+	} else if record.Type == "fix" {
+		if record.Scope == "" {
+			changelog.Fixes = append(changelog.Fixes, commit_formatted)
+		} else {
+			_, ok := changelog.FixesScoped[record.Scope]
+			if !ok {
+				changelog.FixesScoped[record.Scope] = []string{}
+			}
+
+			changelog.FixesScoped[record.Scope] = append(changelog.FixesScoped[record.Scope], commit_formatted)
+		}
+	}
 }
 
 func (changelog ChangelogData) New(g *sGit.SemanticGit) ChangelogData {
+	changelog.FeaturesScoped = make(map[string][]string)
+	changelog.FixesScoped = make(map[string][]string)
+
 	logs := g.GetChangelogByTag(changelog.Tag, true)
 
 	if changelog.Tag == "" {
@@ -71,11 +102,7 @@ func (changelog ChangelogData) New(g *sGit.SemanticGit) ChangelogData {
 
 	for _, record := range logs {
 		commit_formatted := commitRecord{Commit: record.Hash}.Render(record)
-		if record.Type == "feat" {
-			changelog.Features = append(changelog.Features, commit_formatted)
-		} else if record.Type == "fix" {
-			changelog.Fixes = append(changelog.Fixes, commit_formatted)
-		}
+		changelog.AddCommit(record, commit_formatted)
 	}
 
 	return changelog
