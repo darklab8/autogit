@@ -80,7 +80,6 @@ func (g *SemanticGit) CalculateNextVersion(vers *semver.SemVer) *semver.SemVer {
 
 func (g *SemanticGit) GetNextVersion() *semver.SemVer {
 	vers := g.GetCurrentVersion()
-
 	vers = g.CalculateNextVersion(vers)
 
 	return vers

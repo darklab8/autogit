@@ -7,6 +7,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// For debug on workdir
+// func TestIngeration(t *testing.T) {
+// 	git := (&git.Repository{}).NewRepoIntegration()
+// 	gitSemantic := (&SemanticGit{}).NewRepo(git)
+// 	vers := gitSemantic.CalculateNextVersion(gitSemantic.GetCurrentVersion()).ToString()
+// 	assert.Equal(t, "v0.2.0", vers)
+// }
+
 func TestGitGood(t *testing.T) {
 	gitInMemory := (&git.Repository{}).NewRepoTest()
 	gitSemantic := (&SemanticGit{}).NewRepo(gitInMemory)

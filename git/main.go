@@ -4,6 +4,7 @@ package git
 import (
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
@@ -22,12 +23,27 @@ type Repository struct {
 	author *object.Signature
 }
 
+func (r *Repository) NewRepoIntegration() *Repository {
+	path, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err, "unable to get workdir")
+	}
+	r.repo, err = git.PlainOpen(filepath.Dir(filepath.Dir(path)))
+	if err != nil {
+		log.Fatal(err, "unable to open git")
+	}
+	return r
+}
+
 func (r *Repository) NewRepoInWorkDir() *Repository {
 	path, err := os.Getwd()
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err, "unable to get workdir")
 	}
 	r.repo, err = git.PlainOpen(path)
+	if err != nil {
+		log.Fatal(err, "unable to open git")
+	}
 	return r
 }
 
@@ -51,11 +67,10 @@ func (r *Repository) GetLatestTag() Tag {
 	// ... just iterates over the commits, printing it
 	c, _ := cIter.Next()
 	for ; c != nil; c, _ = cIter.Next() {
-
 		// iterating until next tag
 		for _, tag := range tags {
-			if tag.Target == c.Hash {
-				return Tag{Hash: tag.Hash, Name: tag.Name, Message: tag.Message, Ref: ref, Target: tag.Target}
+			if tag.Hash == c.Hash {
+				return tag
 			}
 		}
 
@@ -94,7 +109,7 @@ func (r *Repository) GetLogs(From plumbing.Hash) []Log {
 		// iterating until next tag
 		if From != c.Hash {
 			for _, tag := range tags {
-				if tag.Target == c.Hash {
+				if tag.Hash == c.Hash {
 					return logs
 				}
 			}
@@ -109,11 +124,9 @@ func (r *Repository) GetLogs(From plumbing.Hash) []Log {
 }
 
 type Tag struct {
-	Hash    plumbing.Hash
-	Target  plumbing.Hash
-	Ref     *plumbing.Reference
-	Name    string
-	Message string
+	Hash plumbing.Hash
+	Ref  *plumbing.Reference
+	Name string
 }
 
 // brings tags, from latest to new ones
@@ -123,21 +136,15 @@ func (r *Repository) GetTags() []Tag {
 	CheckIfError(err)
 
 	if err := iter.ForEach(func(ref *plumbing.Reference) error {
-		obj, err := r.repo.TagObject(ref.Hash())
-		// fmt.Printf("%s-%s-%s\n", obj.Name, obj.Hash, obj.Message)
-		switch err {
-		case nil:
-			// Tag object present
-			results = append(results, Tag{Hash: obj.Hash, Name: obj.Name, Message: obj.Message, Ref: ref, Target: obj.Target})
-			ref.Name()
-			ref.Target()
-			r.repo.Object(plumbing.TagObject, ref.Hash())
-		case plumbing.ErrObjectNotFound:
-			// Not a tag object
-		default:
-			// Some other error
-			return err
+		if !ref.Name().IsTag() {
+			return nil
 		}
+		tag, err := r.repo.Tag(ref.Name().Short())
+		if err != nil {
+			log.Fatal("failed to get tag ", ref.Name())
+		}
+
+		results = append(results, Tag{Hash: tag.Hash(), Name: tag.Name().Short(), Ref: ref})
 		return nil
 	}); err != nil {
 		CheckIfError(err)
