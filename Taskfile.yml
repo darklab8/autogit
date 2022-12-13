@@ -1,19 +1,5 @@
 version: '3'
 tasks:
-  tag:
-    cmds:
-      - git tag {{.TAG}}
-    vars:
-      TAG:
-        sh: autogit version
-
-  tag-push:
-    cmds:
-      - git push origin {{.TAG}}
-    vars:
-      TAG:
-        sh: autogit version
-
   deploy:
     cmds:
       - task: tag
