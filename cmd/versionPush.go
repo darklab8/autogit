@@ -13,7 +13,7 @@ import (
 
 // tagPushCmd represents the tagPush command
 var tagPushCmd = &cobra.Command{
-	Use:   "tagPush",
+	Use:   "push",
 	Short: "Shortcut to 'git push origin $(autogit version)'",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("OK version push is called")
