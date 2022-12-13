@@ -22,9 +22,11 @@ Solution for
 
 - 1. [download latest release](https://github.com/darklab8/darklab_autogit/releases) and put to env PATH searchable range
 
-  - 1.1 Lunux ubuntu example: `curl -o /usr/local/bin/autogit https://github.com/darklab8/darklab_autogit/releases/download/v0.2.0/autogit-linux-amd64`
+  - 1.1 Linux ubuntu one liner: `curl -o /usr/local/bin/autogit https://github.com/darklab8/darklab_autogit/releases/download/v0.2.0/autogit-linux-amd64 && chmod 777 /usr/local/bin/autogit`
 - 2. copy [autogit.yml](https://github.com/darklab8/darklab_autogit/blob/master/autogit.yml) to root of your folder and adjust settings
 - 3. run `autogit activate`
+
+  - 3.1 if you don't have `git` in PATH way, then copy [.git-hooks](https://github.com/darklab8/darklab_autogit/tree/master/.git-hooks) to your project and run `git config core.hooksPath .git-hooks`
 
 ## Usages
 
