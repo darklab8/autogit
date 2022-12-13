@@ -15,6 +15,7 @@ type ConfigScheme struct {
 		CommitRangeURL string `yaml:"commitRangeUrl"`
 		IssueURL       string `yaml:"issueUrl"`
 	} `yaml:"changelog"`
+	HookPath string `yaml:"hookPath"`
 }
 
 var Config ConfigScheme
