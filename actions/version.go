@@ -14,5 +14,5 @@ func Version() string {
 	vers := g.GetNextVersion()
 	vers.DisableVFlag = (*VersionDisableVFlag)
 	vers.Build = *VersionBuildMeta
-	return fmt.Sprintf("%s\n", vers.ToString())
+	return fmt.Sprintf("%s", vers.ToString())
 }

@@ -15,7 +15,7 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "next semantic version",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("%s", actions.Version())
+		fmt.Printf("%s\n", actions.Version())
 	},
 }
 
@@ -30,6 +30,6 @@ func init() {
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	actions.VersionDisableVFlag = versionCmd.Flags().Bool("no-v", false, "Disable v flag")
-	actions.VersionBuildMeta = versionCmd.Flags().String("build", "", "Build metadata, not affecting semantic versioning. Added as semver+build")
+	actions.VersionDisableVFlag = versionCmd.PersistentFlags().Bool("no-v", false, "Disable v flag")
+	actions.VersionBuildMeta = versionCmd.PersistentFlags().String("build", "", "Build metadata, not affecting semantic versioning. Added as semver+build")
 }
