@@ -64,7 +64,10 @@ type ChangelogData struct {
 func (changelog ChangelogData) New(g *sGit.SemanticGit) ChangelogData {
 	logs := g.GetChangelogByTag(changelog.Tag, true)
 
-	changelog.Header = (&Header{}).New(logs, g.GetNextVersion().ToString()).Render()
+	if changelog.Tag == "" {
+		changelog.Tag = g.GetNextVersion().ToString()
+	}
+	changelog.Header = (&Header{}).New(logs, changelog.Tag).Render()
 
 	for _, record := range logs {
 		commit_formatted := commitRecord{Commit: record.Hash}.Render(record)
