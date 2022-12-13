@@ -22,7 +22,7 @@ func (g *SemanticGit) NewRepo(gitRepo *git.Repository) *SemanticGit {
 }
 
 func (g *SemanticGit) GetCurrentVersion() *semver.SemVer {
-	latest_tag := g.git.GetLatestTagString()
+	latest_tag := g.git.GetLatestTagString(true)
 	if latest_tag == "" {
 		return &semver.SemVer{Major: 0, Minor: 0, Patch: 0}
 	}

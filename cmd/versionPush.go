@@ -17,8 +17,9 @@ var tagPushCmd = &cobra.Command{
 	Short: "Shortcut to 'git push origin $(autogit version)'",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("OK version push is called")
-		utils.ShellRunArgs("git", "push", "origin", actions.Version())
-		fmt.Printf("OK tag=%s is pushed\n", actions.Version())
+		vers := actions.Version()
+		utils.ShellRunArgs("git", "push", "origin", vers)
+		fmt.Printf("OK tag=%s is pushed\n", vers)
 	},
 }
 

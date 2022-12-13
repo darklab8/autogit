@@ -54,7 +54,7 @@ type Log struct {
 
 var HEAD_Hash plumbing.Hash
 
-func (r *Repository) GetLatestTag() Tag {
+func (r *Repository) GetLatestTag(skipLatestCommit bool) Tag {
 	ref, err := r.repo.Head()
 	CheckIfError(err)
 	From := ref.Hash()
@@ -66,10 +66,13 @@ func (r *Repository) GetLatestTag() Tag {
 	tags := r.GetTags()
 	// ... just iterates over the commits, printing it
 	c, _ := cIter.Next()
+	firstCommit := c
 	for ; c != nil; c, _ = cIter.Next() {
 		// iterating until next tag
 		for _, tag := range tags {
-			if tag.Hash == c.Hash {
+			if skipLatestCommit && tag.Hash == firstCommit.Hash {
+				continue
+			} else if tag.Hash == c.Hash {
 				return tag
 			}
 		}
@@ -80,8 +83,8 @@ func (r *Repository) GetLatestTag() Tag {
 	return Tag{}
 }
 
-func (r *Repository) GetLatestTagString() string {
-	return r.GetLatestTag().Name
+func (r *Repository) GetLatestTagString(skipLatestCommit bool) string {
+	return r.GetLatestTag(skipLatestCommit).Name
 }
 
 func (r *Repository) GetLogs(From plumbing.Hash) []Log {

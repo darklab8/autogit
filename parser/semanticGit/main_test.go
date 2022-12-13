@@ -38,4 +38,8 @@ func TestGitGood(t *testing.T) {
 	gitInMemory.TestCommit("feat: test2")
 
 	assert.Equal(t, "v0.2.0", gitSemantic.CalculateNextVersion(gitSemantic.GetCurrentVersion()).ToString())
+
+	// Semantic version should be same if no new comments
+	gitInMemory.TestCreateTag("v0.2.0", gitInMemory.TestCommit("feat: new thing"))
+	assert.Equal(t, "v0.2.0", gitSemantic.CalculateNextVersion(gitSemantic.GetCurrentVersion()).ToString())
 }

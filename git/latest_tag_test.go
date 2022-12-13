@@ -10,18 +10,20 @@ func TestGetLatestTag(t *testing.T) {
 	repo := (&Repository{}).NewRepoTest()
 	repo.TestCommit("feat: test")
 	repo.TestCommit("feat: test5")
-	assert.Equal(t, "", repo.GetLatestTagString())
+	assert.Equal(t, "", repo.GetLatestTagString(false))
 
 	repo.TestCreateTag("v0.0.1", repo.TestCommit("fix: thing"))
-	assert.Equal(t, "v0.0.1", repo.GetLatestTagString())
+	assert.Equal(t, "v0.0.1", repo.GetLatestTagString(false))
 
 	repo.TestCommit("feat(api): test")
-	assert.Equal(t, "v0.0.1", repo.GetLatestTagString())
+	assert.Equal(t, "v0.0.1", repo.GetLatestTagString(false))
 
 	repo.TestCreateTag("v0.0.2", repo.TestCommit("feat(api): test2"))
-	assert.Equal(t, "v0.0.2", repo.GetLatestTagString())
+	assert.Equal(t, "v0.0.2", repo.GetLatestTagString(false))
 	repo.TestCommit("fix: test1")
 	repo.TestCommit("fix: test2")
 	repo.TestCommit("fix: test3")
-	assert.Equal(t, "v0.0.2", repo.GetLatestTagString())
+	assert.Equal(t, "v0.0.2", repo.GetLatestTagString(false))
+	repo.TestCreateTag("v0.0.3", repo.TestCommit("feat(api): test2"))
+	assert.Equal(t, "v0.0.2", repo.GetLatestTagString(true))
 }
