@@ -55,13 +55,14 @@ func (c commitRecord) Render(record conventionalcommits.ConventionalCommit) stri
 }
 
 type ChangelogData struct {
+	Tag      string // get changelog from this tag to previous
 	Header   string
 	Features []string
 	Fixes    []string
 }
 
 func (changelog ChangelogData) New(g *sGit.SemanticGit) ChangelogData {
-	logs := g.GetChangelogByTag("", true)
+	logs := g.GetChangelogByTag(changelog.Tag, true)
 
 	changelog.Header = (&Header{}).New(logs, g.GetNextVersion().ToString()).Render()
 

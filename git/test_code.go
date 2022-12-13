@@ -46,7 +46,10 @@ func (r *Repository) TestGetChangelogByTag(tagName string) []Log {
 	}
 
 	tag_ref, _ := r.repo.Tag(tagName)
-	tag_obj, _ := r.repo.TagObject(tag_ref.Hash())
-	logs := r.GetLogs(tag_obj.Target)
+	tag_obj, err := r.repo.TagObject(tag_ref.Hash())
+	if err == nil {
+		return r.GetLogs(tag_obj.Target)
+	}
+	logs := r.GetLogs(tag_ref.Hash())
 	return logs
 }

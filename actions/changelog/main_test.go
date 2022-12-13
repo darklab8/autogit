@@ -22,7 +22,7 @@ func TestGitGood(t *testing.T) {
 
 	assert.Equal(t, "v0.0.1", gitSemantic.GetCurrentVersion().ToString())
 
-	rendered := ChangelogData{}.New(gitSemantic).Render()
+	rendered := ChangelogData{Tag: "v0.0.1"}.New(gitSemantic).Render()
 	fmt.Println(rendered)
 
 	assert.Contains(t, rendered, "v0.1.0")

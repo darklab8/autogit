@@ -6,7 +6,9 @@ import (
 	sGit "autogit/parser/semanticGit"
 )
 
+var ChangelogTag *string
+
 func Changelog() string {
 	g := (&sGit.SemanticGit{}).NewRepo((&git.Repository{}).NewRepoInWorkDir())
-	return changelog.ChangelogData{}.New(g).Render()
+	return changelog.ChangelogData{Tag: *ChangelogTag}.New(g).Render()
 }
