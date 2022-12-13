@@ -6,6 +6,7 @@ package cmd
 import (
 	"autogit/utils"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -19,14 +20,9 @@ var activateCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("OK activate called")
 		hook_folder := ".git-hooks"
-		_ = os.Mkdir(hook_folder, os.ModePerm)
+		_ = os.Mkdir(hook_folder, 0777)
 		commit_msg_path := filepath.Join(hook_folder, "commit-msg")
-		file := utils.File{Filepath: commit_msg_path}
-		file.CreateToWriteF()
-		file.WritelnF(`#!/bin/sh`)
-		file.WritelnF(``)
-		file.WritelnF(`autogit hook commitMsg "$1"`)
-		file.Close()
+		ioutil.WriteFile(commit_msg_path, []byte("#!/bin/sh\n\nautogit hook commitMsg \"$1\"\n"), 0777)
 		utils.ShellRunArgs("git", "config", "core.hooksPath", hook_folder)
 	},
 }
