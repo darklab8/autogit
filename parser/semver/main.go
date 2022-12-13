@@ -13,7 +13,7 @@ var semVerRegex *regexp.Regexp
 func init() {
 	// copied from https://semver.org/spec/v2.0.0.html
 	utils.InitRegexExpression(&semVerRegex,
-		`^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$`)
+		`^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$`)
 }
 
 type SemVer struct {
@@ -47,9 +47,13 @@ func Parse(msg string) (*SemVer, error) {
 	}, nil
 }
 
-func (s SemVer) ToString() string {
+func (s SemVer) ToString(flagv bool) string {
 	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf("v%d", s.Major))
+	if flagv {
+		sb.WriteString("v")
+	}
+	sb.WriteString(fmt.Sprintf("%d", s.Major))
+
 	sb.WriteString(fmt.Sprintf(".%d", s.Minor))
 	sb.WriteString(fmt.Sprintf(".%d", s.Patch))
 

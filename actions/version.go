@@ -6,7 +6,9 @@ import (
 	"fmt"
 )
 
+var VersionDisableVFlag *bool
+
 func Version() string {
 	g := (&sGit.SemanticGit{}).NewRepo((&git.Repository{}).NewRepoInWorkDir())
-	return fmt.Sprintf("%s\n", g.GetNextVersion().ToString())
+	return fmt.Sprintf("%s\n", g.GetNextVersion().ToString(!(*VersionDisableVFlag)))
 }

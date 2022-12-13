@@ -30,5 +30,5 @@ func init() {
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// versionCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	actions.VersionDisableVFlag = versionCmd.Flags().BoolP("no-v", "v", false, "Disable v flag")
 }
