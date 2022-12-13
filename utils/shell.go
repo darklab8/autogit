@@ -1,12 +1,14 @@
 package utils
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
 )
 
 func ShellRunArgs(program string, args ...string) {
+	fmt.Printf("OK attempting to run: %s %s\n", program, args)
 	executable, _ := exec.LookPath(program)
 
 	args = append([]string{""}, args...)

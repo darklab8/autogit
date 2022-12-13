@@ -60,7 +60,7 @@ tasks:
   hook:prod:
     cmds:
       - sudo ln -s {{.PWD}}/dist/autogit-linux-amd64 /usr/local/bin/autogit
-      - git config core.hooksPath .git-hooks-prod
+      - go run . hook activate
     vars:
       PWD:
         sh: echo "$(pwd)"

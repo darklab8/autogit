@@ -18,13 +18,13 @@ Solution for
 
 ... U a free to help adding more supported versions, by finding gcc compiler from linux to OS Y, Arch Z
 
-## Installation (Draft)
+## Installation
 
-1) [download latest release](https://github.com/darklab8/darklab_autogit/releases)
-1) install binary somewhere accessable to your OS bin path (check PATH env var)
-2) copy [autogit.yml](https://github.com/darklab8/darklab_autogit/blob/master/autogit.yml) to root of your folder and adjust settings
-3) copy folder [].git-hooks](https://github.com/darklab8/darklab_autogit/tree/master/.git-hooks) to your project
-4) run `autogit activate`
+- 1. [download latest release](https://github.com/darklab8/darklab_autogit/releases) and put to env PATH searchable range
+
+  - 1.1 Lunux ubuntu example: `curl -o /usr/local/bin/autogit https://github.com/darklab8/darklab_autogit/releases/download/v0.2.0/autogit-linux-amd64`
+- 2. copy [autogit.yml](https://github.com/darklab8/darklab_autogit/blob/master/autogit.yml) to root of your folder and adjust settings
+- 3. run `autogit activate`
 
 ## Usages
 

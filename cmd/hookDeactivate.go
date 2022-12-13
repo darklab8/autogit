@@ -15,7 +15,7 @@ var deactivateCmd = &cobra.Command{
 	Use:   "deactivate",
 	Short: "Shortcut to run git config --unset core.hooksPath",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("deactivate called")
+		fmt.Println("OK deactivate called")
 		utils.ShellRunArgs("git", "config", "--unset", "core.hooksPath")
 	},
 }
