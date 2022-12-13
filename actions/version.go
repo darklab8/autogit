@@ -3,10 +3,11 @@ package actions
 import (
 	"autogit/semanticgit"
 	"autogit/semanticgit/git"
-	"fmt"
+	"strings"
 )
 
 var VersionDisableVFlag *bool
+var VersionDiableNewLine *bool
 var VersionBuildMeta *string
 
 func Version() string {
@@ -14,5 +15,11 @@ func Version() string {
 	vers := g.GetNextVersion()
 	vers.DisableVFlag = (*VersionDisableVFlag)
 	vers.Build = *VersionBuildMeta
-	return fmt.Sprintf("%s", vers.ToString())
+
+	var sb strings.Builder
+	sb.WriteString(vers.ToString())
+	if !*VersionDiableNewLine {
+		sb.WriteString("\n")
+	}
+	return sb.String()
 }
