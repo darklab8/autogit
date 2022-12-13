@@ -144,6 +144,12 @@ func (r *Repository) GetTags() []Tag {
 			log.Fatal("failed to get tag ", ref.Name())
 		}
 
+		tag_obj, err := r.repo.TagObject(ref.Hash())
+		if err == nil {
+			results = append(results, Tag{Hash: tag_obj.Target, Name: tag_obj.Name, Ref: ref})
+			return nil
+		}
+
 		results = append(results, Tag{Hash: tag.Hash(), Name: tag.Name().Short(), Ref: ref})
 		return nil
 	}); err != nil {
