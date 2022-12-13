@@ -31,4 +31,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	actions.VersionDisableVFlag = versionCmd.Flags().Bool("no-v", false, "Disable v flag")
+	actions.VersionBuildMeta = versionCmd.Flags().String("build", "", "Build metadata, not affecting semantic versioning. Added as semver+build")
 }
