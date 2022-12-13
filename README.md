@@ -20,8 +20,11 @@ Solution for
 
 ## Installation (Draft)
 
-1) u install binary somewhere accessable to your OS bin path
-2) adding commit-msg file to your .git folder lets say
+1) [download latest release](https://github.com/darklab8/darklab_autogit/releases)
+1) u install binary somewhere accessable to your OS bin path (check PATH env var)
+2) copy [autogit.yml](https://github.com/darklab8/darklab_autogit/blob/master/autogit.yml) to root of your folder and adjust settings
+3) copy folder [].git-hooks](https://github.com/darklab8/darklab_autogit/tree/master/.git-hooks) to your project
+4) run `autogit activate`
 
 ## Usages
 
