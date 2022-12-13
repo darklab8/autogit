@@ -46,7 +46,7 @@ func (c commitRecord) Render(record conventionalcommits.ConventionalCommit) stri
 	}
 
 	rendered_subject := record.Subject
-	IssueMatch := conventionalcommits.IssueRegex.FindAllStringSubmatch(record.Subject, -1)
+	IssueMatch := settings.RegexIssue.FindAllStringSubmatch(record.Subject, -1)
 	for _, match := range IssueMatch {
 		rendered_subject = strings.Replace(rendered_subject, match[0], fmt.Sprintf("[#%s](%s)", match[1], utils.TmpRender(settings.Template.IssueUrl, IssueData{Issue: match[1]})), -1)
 	}

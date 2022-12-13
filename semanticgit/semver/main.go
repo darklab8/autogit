@@ -1,20 +1,12 @@
 package semver
 
 import (
+	"autogit/settings"
 	"autogit/utils"
 	"fmt"
-	"regexp"
 	"strconv"
 	"strings"
 )
-
-var semVerRegex *regexp.Regexp
-
-func init() {
-	// copied from https://semver.org/spec/v2.0.0.html
-	utils.InitRegexExpression(&semVerRegex,
-		`^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$`)
-}
 
 type SemVer struct {
 	DisableVFlag bool
@@ -33,7 +25,7 @@ func ParseToInt(msg string) int {
 }
 
 func Parse(msg string) (*SemVer, error) {
-	matched := semVerRegex.FindStringSubmatch(msg)
+	matched := settings.RegexSemVer.FindStringSubmatch(msg)
 
 	if len(matched) == 0 {
 		return nil, NotParsed{}

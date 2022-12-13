@@ -2,3 +2,11 @@ changelog:
   commitUrl: "https://github.com/darklab8/darklab_autogit/commit/{{.Commit}}"
   commitRangeUrl: "https://github.com/darklab8/darklab_autogit/compare/{{.From}}...{{.To}}?diff=split"
   issueUrl: "https://github.com/darklab8/darklab_autogit/issues/{{.Issue}}"
+
+# set to non zero value to have custom definitions
+regex:
+  conventionalCommit:
+    header: ''
+    bodyFooter: ''
+  issue: ''
+  semVer: ''

@@ -1,9 +1,8 @@
 package conventionalcommits
 
 import (
-	"autogit/utils"
+	"autogit/settings"
 	"log"
-	"regexp"
 	"strings"
 )
 
@@ -35,25 +34,6 @@ func Check(err error, strict bool, msgs ...string) {
 	log.Fatal(err, msgs)
 }
 
-var conventionalRegex *regexp.Regexp
-var FooterRegex *regexp.Regexp
-var IssueRegex *regexp.Regexp
-
-func init() {
-	// copied from https://gist.github.com/marcojahn/482410b728c31b221b70ea6d2c433f0c
-
-	utils.InitRegexExpression(&conventionalRegex,
-		// type, scope, subject, the rest
-		`^([a-z]+)(?:\(([\w]+)\))?: (?:([ -~]+))(?:\n\n([\s -~]*)|[\n])?\z`)
-
-	// everything except : which is between 9 and ;
-	utils.InitRegexExpression(&FooterRegex,
-		`(?:([ -9;-~]+))\: (?:([ -9;-~]+))`)
-
-	utils.InitRegexExpression(&IssueRegex,
-		`\#([0-9]+)`)
-}
-
 type NotParsed struct{}
 
 func (m NotParsed) Error() string {
@@ -62,7 +42,7 @@ func (m NotParsed) Error() string {
 
 func ParseCommit(msg string) (*ConventionalCommit, error) {
 	result := ConventionalCommit{}
-	main_match := conventionalRegex.FindStringSubmatch(msg)
+	main_match := settings.RegexConventionalCommit.FindStringSubmatch(msg)
 
 	if len(main_match) == 0 {
 		return nil, NotParsed{}
@@ -72,7 +52,7 @@ func ParseCommit(msg string) (*ConventionalCommit, error) {
 	result.Scope = main_match[2]
 	result.Subject = main_match[3]
 
-	IssueMatch := IssueRegex.FindAllStringSubmatch(main_match[4], -1)
+	IssueMatch := settings.RegexIssue.FindAllStringSubmatch(main_match[4], -1)
 	for _, match := range IssueMatch {
 		result.Issue = append(result.Issue, match[1])
 	}
@@ -80,7 +60,7 @@ func ParseCommit(msg string) (*ConventionalCommit, error) {
 	msgs := strings.Split(main_match[4], "\n\n")
 
 	for index, msg := range msgs {
-		match := FooterRegex.FindStringSubmatch(msg)
+		match := settings.RegexBodyFooter.FindStringSubmatch(msg)
 		if index == 0 && len(match) == 0 {
 			result.Body = msg
 		} else if len(match) > 0 {

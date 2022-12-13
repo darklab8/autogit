@@ -8,6 +8,6 @@ import (
 var Version string
 
 func init() {
-	readConfig()
-	validateConfig()
+	ChangelogInit()
+	RegexInit()
 }
