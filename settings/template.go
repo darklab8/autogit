@@ -13,7 +13,7 @@ var Template struct {
 }
 
 func init() {
-	Template.CommitUrl = utils.TmpInit(ChangelogConfig.Changelog.CommitURL)
-	Template.CommitRangeUrl = utils.TmpInit(ChangelogConfig.Changelog.CommitRangeURL)
-	Template.IssueUrl = utils.TmpInit(ChangelogConfig.Changelog.IssueURL)
+	Template.CommitUrl = utils.TmpInit(Config.Changelog.CommitURL)
+	Template.CommitRangeUrl = utils.TmpInit(Config.Changelog.CommitRangeURL)
+	Template.IssueUrl = utils.TmpInit(Config.Changelog.IssueURL)
 }
