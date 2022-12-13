@@ -7,6 +7,7 @@ import (
 	"autogit/utils"
 	"fmt"
 	"strings"
+	"text/template"
 	"time"
 
 	_ "embed"
@@ -109,5 +110,13 @@ func (changelog ChangelogData) New(g *semanticgit.SemanticGit) ChangelogData {
 }
 
 func (changelog ChangelogData) Render() string {
-	return utils.TmpRender(settings.Template.Changelog, changelog)
+	return utils.TmpRender(changelogTemplate, changelog)
+}
+
+//go:embed templates/changelog.md
+var changelogMarkup string
+var changelogTemplate *template.Template
+
+func init() {
+	changelogTemplate = utils.TmpInit(changelogMarkup)
 }
