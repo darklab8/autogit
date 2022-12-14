@@ -4,6 +4,7 @@ import (
 	"autogit/semanticgit/conventionalcommits"
 	"autogit/settings"
 	"fmt"
+	"strings"
 )
 
 type ErrorInvalidMaxLength struct {
@@ -54,6 +55,14 @@ func (err ErrorCommitScopeMustBeInWhitelist) Error() string {
 	return fmt.Sprintf("commit='%s' must be in whitelist %v, because rule is enabled", err.commit.StringHeader(), settings.Config.Validation.Rules.Header.Scope.Whitelist)
 }
 
+type ErrorCommitSubjectMinWords struct {
+	commit *conventionalcommits.ConventionalCommit
+}
+
+func (err ErrorCommitSubjectMinWords) Error() string {
+	return fmt.Sprintf("commit='%s' must have in subject at least %d words, because rule is enabled", err.commit.StringHeader(), settings.Config.Validation.Rules.Header.Subject.MinWords)
+}
+
 func Validate(commit *conventionalcommits.ConventionalCommit) error {
 
 	if len(commit.StringHeader()) > settings.Config.Validation.Rules.Header.MaxLength {
@@ -96,6 +105,11 @@ func Validate(commit *conventionalcommits.ConventionalCommit) error {
 		if !matchFound {
 			return ErrorCommitScopeMustBeInWhitelist{commit: commit}
 		}
+	}
+
+	words := strings.Split(commit.Subject, " ")
+	if len(words) < settings.Config.Validation.Rules.Header.Subject.MinWords {
+		return ErrorCommitSubjectMinWords{commit: commit}
 	}
 
 	return nil
