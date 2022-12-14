@@ -10,3 +10,26 @@ regex:
     bodyFooter: ''
   issue: ''
   semVer: ''
+
+validation:
+  sections:
+    hook:
+      commitMsg:
+        enabled: true
+    changelog:
+      enabled: false
+  rules:
+    issue:
+      present: true
+    header:
+      maxLength: 72
+      type:
+        lowercase: true
+      scope:
+        present: true
+        lowercase: true
+        whitelist: [
+          '', # to allow all scopes
+        ]
+      subject:
+        minWords: 3

@@ -1,6 +1,7 @@
 package actions
 
 import (
+	"autogit/actions/validation"
 	"autogit/semanticgit/conventionalcommits"
 	"autogit/utils"
 	"fmt"
@@ -9,7 +10,6 @@ import (
 
 func CommmitMsg(args []string) {
 	inputFile := args[0]
-
 	fmt.Printf("commitFile=%s\n", inputFile)
 
 	file, err := ioutil.ReadFile(inputFile)
@@ -21,6 +21,9 @@ func CommmitMsg(args []string) {
 	fmt.Printf("fileContent=%s", fileContent)
 
 	commit, err := conventionalcommits.NewCommit(fileContent)
+
+	validator := validation.Validator{Commits: []*conventionalcommits.ConventionalCommit{commit}}
+	validator.Run()
 
 	if err != nil {
 		utils.CheckFatal(err, "unable to parse commit to conventional commits standard", err.Error())

@@ -2,7 +2,6 @@ package settings
 
 import (
 	"autogit/utils"
-	_ "embed"
 	"regexp"
 )
 
