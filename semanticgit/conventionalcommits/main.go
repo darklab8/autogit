@@ -2,6 +2,7 @@ package conventionalcommits
 
 import (
 	"autogit/settings"
+	"fmt"
 	"log"
 	"strings"
 )
@@ -22,6 +23,38 @@ type ConventionalCommit struct {
 	Footers     []Footer
 	Hash        string
 	Issue       []string
+}
+
+func (commit ConventionalCommit) StringHeader() string {
+	var sb strings.Builder
+	sb.WriteString(fmt.Sprintf("%s", commit.Type))
+
+	if commit.Scope != "" {
+		sb.WriteString(fmt.Sprintf("(%s)", commit.Scope))
+	}
+	sb.WriteString(fmt.Sprintf(": %s", commit.Subject))
+
+	return sb.String()
+}
+
+func (commit ConventionalCommit) StringAnnotated() string {
+	var sb strings.Builder
+	sb.WriteString(fmt.Sprintf("type=%s\n", commit.Type))
+
+	if commit.Scope != "" {
+		sb.WriteString(fmt.Sprintf("scope=%s\n", commit.Scope))
+	}
+	sb.WriteString(fmt.Sprintf("subject=%s\n", commit.Subject))
+
+	if commit.Body != "" {
+		sb.WriteString(fmt.Sprintf("body=%s\n", commit.Body))
+	}
+
+	for index, footer := range commit.Footers {
+		sb.WriteString(fmt.Sprintf("footer #%d - token: %s, content: %s\n", index, footer.Token, footer.Content))
+	}
+
+	return sb.String()
 }
 
 func Check(err error, strict bool, msgs ...string) {

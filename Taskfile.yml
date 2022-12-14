@@ -44,6 +44,9 @@ tasks:
   test:
     cmds:
       - go test ./... {{.CLI_ARGS}}
+    env:
+      AUTOGIT_PROJECT_FOLDER:
+        sh: echo "$(pwd)"
 
   doc-web:
     cmds:

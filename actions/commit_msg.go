@@ -3,6 +3,7 @@ package actions
 import (
 	"autogit/actions/validation"
 	"autogit/semanticgit/conventionalcommits"
+	"autogit/settings"
 	"autogit/utils"
 	"fmt"
 	"io/ioutil"
@@ -13,34 +14,18 @@ func CommmitMsg(args []string) {
 	fmt.Printf("commitFile=%s\n", inputFile)
 
 	file, err := ioutil.ReadFile(inputFile)
-	if err != nil {
-		fmt.Printf("Could not read the file due to this %s error \n", err)
-	}
+	utils.CheckFatal(err, "Could not read the file due to this %s error \n")
+
 	// convert the file binary into a string using string
 	fileContent := string(file)
 	fmt.Printf("fileContent=%s", fileContent)
 
 	commit, err := conventionalcommits.NewCommit(fileContent)
+	utils.CheckFatal(err, "unable to parse commit to conventional commits standard")
 
-	validator := validation.Validator{Commits: []*conventionalcommits.ConventionalCommit{commit}}
-	validator.Run()
-
-	if err != nil {
-		utils.CheckFatal(err, "unable to parse commit to conventional commits standard", err.Error())
+	if settings.Config.Validation.Sections.Hook.CommitMsg.Enabled {
+		validation.Validate(commit)
 	}
 
-	fmt.Println("parsed commit")
-	fmt.Printf("type=%s\n", commit.Type)
-	if commit.Scope != "" {
-		fmt.Printf("scope=%s\n", commit.Scope)
-	}
-	fmt.Printf("subject=%s\n", commit.Subject)
-
-	if commit.Body != "" {
-		fmt.Printf("body=%s\n", commit.Body)
-	}
-
-	for index, footer := range commit.Footers {
-		fmt.Printf("footer #%d - token: %s, content: %s\n", index, footer.Token, footer.Content)
-	}
+	fmt.Printf("parsed commit:\n%s\n", commit.StringAnnotated())
 }

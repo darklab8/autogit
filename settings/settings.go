@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
+	"path/filepath"
 	"reflect"
 
 	"gopkg.in/yaml.v3"
@@ -22,16 +24,15 @@ type ConfigScheme struct {
 
 var Config ConfigScheme
 
+var AutogitSettingsPath string
+
 func ConfigRead() {
-	file, err := ioutil.ReadFile("autogit.yml")
-	if err != nil {
-		fmt.Printf("Could not read the file due to this %s error \n", err)
-	}
+
+	file, err := ioutil.ReadFile(AutogitSettingsPath)
+	utils.CheckFatal(err, "Could not read the file due to error, autogit_path=%s\n", AutogitSettingsPath)
 
 	err = yaml.Unmarshal(file, &Config)
-	if err != nil {
-		log.Fatal("error: ", err)
-	}
+	utils.CheckFatal(err, "unable to unmarshal settings")
 }
 
 // yml package has no way to validate that there is no unknown undeclared fields
@@ -39,7 +40,8 @@ func validateSettingsScheme() {
 	var config ConfigScheme
 	var err error
 
-	file, _ := ioutil.ReadFile("autogit.yml")
+	file, err := ioutil.ReadFile(AutogitSettingsPath)
+	utils.CheckFatal(err, "Could not read the file due to error, autogit_path=%s\n", AutogitSettingsPath)
 
 	// Marshal file to struct
 	err = yaml.Unmarshal(file, &config)
@@ -47,9 +49,7 @@ func validateSettingsScheme() {
 
 	// Unmarshal struct to bytes
 	m, err := yaml.Marshal(&config)
-	if err != nil {
-		log.Fatalf("error: %v", err)
-	}
+	utils.CheckFatal(err, "unable to unmarshal settings")
 
 	// Marshal bytes to map
 	utils.CheckFatal(err)
@@ -66,10 +66,20 @@ func validateSettingsScheme() {
 		fmt.Printf("ERR autogit.yml contains not registered keys. Check your version of autogit, and documentation related to settings\n")
 		fmt.Printf("--- expected:\n%v\n\n", a)
 		fmt.Printf("--- actual:\n%v\n\n", b)
+		os.Exit(1)
 	}
 }
 
 func init() {
+	workdir, _ := os.Getwd()
+	project_folder := os.Getenv("AUTOGIT_PROJECT_FOLDER")
+	if project_folder != "" {
+		log.Println("OK AUTOGIT_PROJECT_FOLDER is not empty, changing search settings to ", project_folder)
+		workdir = project_folder
+	}
+
+	AutogitSettingsPath = filepath.Join(workdir, "autogit.yml")
+
 	ConfigRead()
 	ChangelogInit()
 	RegexInit()
