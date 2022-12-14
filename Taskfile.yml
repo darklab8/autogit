@@ -31,15 +31,17 @@ tasks:
       - rm dist/* | true
 
       - GOOS=linux GOARCH=amd64 go build -v -o dist/autogit-linux-amd64 main.go
+      - GOOS=linux GOARCH=arm64 go build -v -o dist/autogit-linux-arm64 main.go
+      - GOOS=linux GOARCH=386 go build -v -o dist/autogit-linux-386 main.go
+      - GOOS=linux GOARCH=arm go build -v -o dist/autogit-linux-arm main.go
 
-      # apt-cache search mingw
-      # sudo apt-get install gcc-mingw-w64
-      # i686-w64-mingw32-gcc-win32
-      # ls /usr/bin/ | grep "mingw"
-      - CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc GOOS=windows GOARCH=amd64 go build -v -o dist/autogit-windows-amd64.exe main.go
+      - GOOS=windows GOARCH=amd64 go build -v -o dist/autogit-windows-amd64.exe main.go
+      - GOOS=windows GOARCH=386 go build -v -o dist/autogit-windows-386.exe main.go
+      - GOOS=windows GOARCH=arm64 go build -v -o dist/autogit-windows-arm64.exe main.go
+      - GOOS=windows GOARCH=arm go build -v -o dist/autogit-windows-arm.exe main.go
       
-      # sudo apt install gcc make gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
-      - CGO_ENABLED=1 CC=aarch64-linux-gnu-gcc GOOS=linux GOARCH=arm64 go build -v -o dist/autogit-linux-arm64 main.go
+      - GOOS=darwin GOARCH=amd64 go build -v -o dist/autogit-macos-amd64 main.go
+      - GOOS=darwin GOARCH=arm64 go build -v -o dist/autogit-macos-arm64 main.go
 
   test:
     cmds:
