@@ -34,7 +34,6 @@ validation:
         present: true
         lowercase: true
         whitelist: [
-          "validation"
         ]
       subject:
         minWords: 3
