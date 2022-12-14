@@ -56,12 +56,14 @@ func (c commitRecord) Render(record conventionalcommits.ConventionalCommit) stri
 }
 
 type ChangelogData struct {
-	Tag            string // get changelog from this tag to previous
-	Header         string
-	Features       []string
-	Fixes          []string
-	FeaturesScoped map[string][]string
-	FixesScoped    map[string][]string
+	Tag              string // get changelog from this tag to previous
+	Header           string
+	Features         []string
+	Fixes            []string
+	FeaturesScoped   map[string][]string
+	FixesScoped      map[string][]string
+	AreThereFeatures bool
+	AreThereFixes    bool
 }
 
 func (changelog *ChangelogData) AddCommit(record conventionalcommits.ConventionalCommit, commit_formatted string) {
@@ -105,6 +107,9 @@ func (changelog ChangelogData) New(g *semanticgit.SemanticGit) ChangelogData {
 		commit_formatted := commitRecord{Commit: record.Hash}.Render(record)
 		changelog.AddCommit(record, commit_formatted)
 	}
+
+	changelog.AreThereFeatures = len(changelog.Features) > 0 || len(changelog.FeaturesScoped) > 0
+	changelog.AreThereFixes = len(changelog.Fixes) > 0 || len(changelog.FixesScoped) > 0
 
 	return changelog
 }
