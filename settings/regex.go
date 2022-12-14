@@ -10,14 +10,24 @@ type RegexScheme struct {
 		Header     string `yaml:"header"`
 		BodyFooter string `yaml:"bodyFooter"`
 	} `yaml:"conventionalCommit"`
-	Issue  string `yaml:"issue"`
-	SemVer string `yaml:"semVer"`
+	Issue      string `yaml:"issue"`
+	SemVer     string `yaml:"semVer"`
+	Validation struct {
+		Scope struct {
+			Lowercase string `yaml:"lowercase"`
+		} `yaml:"scope"`
+		Type struct {
+			Lowercase string `yaml:"lowercase"`
+		} `yaml:"type"`
+	} `yaml:"validation"`
 }
 
 var RegexConventionalCommit *regexp.Regexp
 var RegexBodyFooter *regexp.Regexp
 var RegexIssue *regexp.Regexp
 var RegexSemVer *regexp.Regexp
+var RegexScope *regexp.Regexp
+var RegexType *regexp.Regexp
 
 func RegexSetDefaults() {
 	if Config.Regex.ConventionalCommit.Header == "" {
@@ -36,6 +46,14 @@ func RegexSetDefaults() {
 		// copied from https://semver.org/spec/v2.0.0.html
 		Config.Regex.SemVer = `^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$`
 	}
+
+	if Config.Regex.Validation.Scope.Lowercase == "" {
+		Config.Regex.Validation.Scope.Lowercase = `^[a-z]+$`
+	}
+
+	if Config.Regex.Validation.Type.Lowercase == "" {
+		Config.Regex.Validation.Type.Lowercase = `^[a-z]+$`
+	}
 }
 
 func RegexCompile() {
@@ -43,6 +61,8 @@ func RegexCompile() {
 	utils.InitRegexExpression(&RegexBodyFooter, Config.Regex.ConventionalCommit.BodyFooter)
 	utils.InitRegexExpression(&RegexIssue, Config.Regex.Issue)
 	utils.InitRegexExpression(&RegexSemVer, Config.Regex.SemVer)
+	utils.InitRegexExpression(&RegexScope, Config.Regex.Validation.Scope.Lowercase)
+	utils.InitRegexExpression(&RegexType, Config.Regex.Validation.Type.Lowercase)
 }
 
 func RegexInit() {

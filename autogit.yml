@@ -10,6 +10,11 @@ regex:
     bodyFooter: ''
   issue: ''
   semVer: ''
+  validation:
+    scope:
+      lowercase: ''
+    type:
+      lowercase: ''
 
 validation:
   sections:
@@ -29,7 +34,7 @@ validation:
         present: true
         lowercase: true
         whitelist: [
-          '', # to allow all scopes
+          "validation"
         ]
       subject:
         minWords: 3
