@@ -23,4 +23,5 @@ func init() {
 	rootCmd.AddCommand(changelogCmd)
 
 	actions.ChangelogTag = changelogCmd.PersistentFlags().String("tag", "", "Select from which tag")
+	actions.ChangelogValidate = changelogCmd.PersistentFlags().Bool("validate", false, "Validate to rules")
 }
