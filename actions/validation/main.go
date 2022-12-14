@@ -11,7 +11,7 @@ type ErrorInvalidMaxLength struct {
 }
 
 func (err ErrorInvalidMaxLength) Error() string {
-	return fmt.Sprintf("commit.header='%s' has length greater than maxLength=%d", err.commit.StringHeader(), settings.Config.Validation.Rules.Header.MaxLength)
+	return fmt.Sprintf("commit.header='%s' must have length shorter than maxLength=%d, because rule is enabled", err.commit.StringHeader(), settings.Config.Validation.Rules.Header.MaxLength)
 }
 
 type ErrorNotFoundIssue struct {
@@ -19,7 +19,15 @@ type ErrorNotFoundIssue struct {
 }
 
 func (err ErrorNotFoundIssue) Error() string {
-	return fmt.Sprintf("commit='%s' has no linked issue with regex %s", err.commit.StringHeader(), settings.Config.Regex.Issue)
+	return fmt.Sprintf("commit='%s' must have linked issue regex %s, because rule is enabled", err.commit.StringHeader(), settings.Config.Regex.Issue)
+}
+
+type ErrorCommitScopeMustBeDefined struct {
+	commit *conventionalcommits.ConventionalCommit
+}
+
+func (err ErrorCommitScopeMustBeDefined) Error() string {
+	return fmt.Sprintf("commit='%s' must have defined scope, because rule is enabled", err.commit.StringHeader())
 }
 
 func Validate(commit *conventionalcommits.ConventionalCommit) error {
@@ -33,7 +41,12 @@ func Validate(commit *conventionalcommits.ConventionalCommit) error {
 		if len(IssueMatch) == 0 {
 			return ErrorNotFoundIssue{commit: commit}
 		}
+	}
 
+	if settings.Config.Validation.Rules.Header.Scope.Present {
+		if commit.Scope == "" {
+			return ErrorCommitScopeMustBeDefined{commit: commit}
+		}
 	}
 
 	return nil
