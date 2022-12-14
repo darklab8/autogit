@@ -2,6 +2,7 @@ package validation
 
 import (
 	"autogit/semanticgit/conventionalcommits"
+	"autogit/settings"
 	"autogit/utils"
 	"testing"
 
@@ -9,6 +10,8 @@ import (
 )
 
 func TestMaxLengthHeaderErrorNo(t *testing.T) {
+	settings.Config = settings.ConfigScheme{}
+	settings.Config.Validation.Rules.Header.MaxLength = 72
 	commit, err := conventionalcommits.NewCommit("feat: abc")
 	utils.CheckPanic(err)
 	err = Validate(commit)
@@ -16,6 +19,8 @@ func TestMaxLengthHeaderErrorNo(t *testing.T) {
 }
 
 func TestMaxLengthHeaderErrorYes(t *testing.T) {
+	settings.Config = settings.ConfigScheme{}
+	settings.Config.Validation.Rules.Header.MaxLength = 72
 	commit, err := conventionalcommits.NewCommit("feat: writing long on purpose commit, which should be way beyond 72 characters")
 	utils.CheckPanic(err)
 	err = Validate(commit)
