@@ -13,7 +13,7 @@ type Footer struct {
 }
 
 type ConventionalCommit struct {
-	_Original string
+	Original string
 
 	Type        string
 	Exclamation bool
@@ -77,7 +77,7 @@ func (m NotParsed) Error() string {
 
 func ParseCommit(msg string) (*ConventionalCommit, error) {
 	result := ConventionalCommit{}
-	result._Original = msg
+	result.Original = msg
 	main_match := settings.RegexConventionalCommit.FindStringSubmatch(msg)
 
 	if len(main_match) == 0 {
