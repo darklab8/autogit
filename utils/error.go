@@ -7,7 +7,7 @@ func CheckFatal(err error, msgs ...string) {
 		return
 	}
 
-	log.Fatal(err, msgs, err.Error())
+	log.Fatal(err, msgs)
 }
 
 func CheckPanic(err error, msgs ...string) {
@@ -15,5 +15,5 @@ func CheckPanic(err error, msgs ...string) {
 		return
 	}
 
-	log.Panic(err, msgs, err.Error())
+	log.Panic(err, msgs)
 }

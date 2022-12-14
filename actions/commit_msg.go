@@ -24,7 +24,8 @@ func CommmitMsg(args []string) {
 	utils.CheckFatal(err, "unable to parse commit to conventional commits standard")
 
 	if settings.Config.Validation.Sections.Hook.CommitMsg.Enabled {
-		validation.Validate(commit)
+		err := validation.Validate(commit)
+		utils.CheckFatal(err)
 	}
 
 	fmt.Printf("parsed commit:\n%s\n", commit.StringAnnotated())

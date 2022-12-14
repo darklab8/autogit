@@ -11,7 +11,7 @@ type ErrorInvalidMaxLength struct {
 }
 
 func (err ErrorInvalidMaxLength) Error() string {
-	return fmt.Sprintf("length(commit.header)=%s is greater than maxLength=%d", err.commit.StringHeader(), settings.Config.Validation.Rules.Header.MaxLength)
+	return fmt.Sprintf("commit.header='%s' has length greater than maxLength=%d", err.commit.StringHeader(), settings.Config.Validation.Rules.Header.MaxLength)
 }
 
 func Validate(commit *conventionalcommits.ConventionalCommit) error {
