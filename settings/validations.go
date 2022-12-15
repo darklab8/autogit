@@ -18,7 +18,8 @@ type ValidationScheme struct {
 		Header struct {
 			MaxLength int `yaml:"maxLength"`
 			Type      struct {
-				Lowercase bool `yaml:"lowercase"`
+				Lowercase bool     `yaml:"lowercase"`
+				Whitelist []string `yaml:"whitelist"`
 			} `yaml:"type"`
 			Scope struct {
 				Present   bool     `yaml:"present"`
@@ -30,4 +31,24 @@ type ValidationScheme struct {
 			} `yaml:"subject"`
 		} `yaml:"header"`
 	} `yaml:"rules"`
+}
+
+func ValidationInit() {
+	if len(Config.Validation.Rules.Header.Type.Whitelist) == 0 {
+		Config.Validation.Rules.Header.Type.Whitelist = append([]string{},
+			"build",
+			"chore",
+			"ci",
+			"docs",
+			"feat",
+			"fix",
+			"perf",
+			"refactor",
+			"revert",
+			"style",
+			"test",
+			"merge",
+			"custom",
+		)
+	}
 }

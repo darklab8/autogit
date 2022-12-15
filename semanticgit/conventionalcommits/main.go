@@ -111,21 +111,6 @@ func ParseCommit(msg string) (*ConventionalCommit, error) {
 	return &result, nil
 }
 
-var validTypes = [...]string{
-	"build",
-	"chore",
-	"ci",
-	"docs",
-	"feat",
-	"fix",
-	"perf",
-	"refactor",
-	"revert",
-	"style",
-	"test",
-	"merge",
-}
-
 type InvalidType struct{}
 
 func (m InvalidType) Error() string {
@@ -133,7 +118,7 @@ func (m InvalidType) Error() string {
 }
 
 func (c *ConventionalCommit) Validate() error {
-	for _, type_ := range validTypes {
+	for _, type_ := range settings.Config.Validation.Rules.Header.Type.Whitelist {
 		if c.Type == type_ {
 			return nil
 		}

@@ -83,5 +83,6 @@ func init() {
 	ConfigRead()
 	ChangelogInit()
 	RegexInit()
+	ValidationInit()
 	validateSettingsScheme()
 }

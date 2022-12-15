@@ -26,15 +26,15 @@ validation:
       enabled: false
   rules:
     issue:
-      present: true
+      present: false
     header:
       maxLength: 72
       type:
         lowercase: true
+        whitelist: []
       scope:
-        present: true
+        present: false
         lowercase: true
-        whitelist: [
-        ]
+        whitelist: []
       subject:
         minWords: 0
