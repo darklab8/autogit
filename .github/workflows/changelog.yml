@@ -15,7 +15,7 @@ jobs:
 
     - name: Install Autogit
       run: |
-        apt install -y wget
+        sudo apt install -y wget
         wget https://github.com/darklab8/darklab_autogit/releases/download/v0.3.0-rc.2/autogit-linux-amd64
         mv autogit-linux-amd64 /usr/local/bin/autogit
         chmod +x /usr/local/bin/autogit
