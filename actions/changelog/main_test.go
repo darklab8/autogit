@@ -3,13 +3,14 @@ package changelog
 import (
 	"autogit/semanticgit"
 	"autogit/semanticgit/git"
+	"autogit/semanticgit/semver"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGitGood(t *testing.T) {
-	gitInMemory := (&git.Repository{}).NewRepoTest()
+	gitInMemory := (&git.Repository{}).TestNewRepo()
 	gitSemantic := (&semanticgit.SemanticGit{}).NewRepo(gitInMemory)
 
 	gitInMemory.TestCommit("feat: test")
@@ -21,10 +22,10 @@ func TestGitGood(t *testing.T) {
 
 	assert.Equal(t, "v0.0.1", gitSemantic.GetCurrentVersion().ToString())
 
-	rendered := ChangelogData{}.New(gitSemantic).Render()
+	rendered := ChangelogData{}.New(gitSemantic, semver.OptionsSemVer{}).Render()
 	assert.Contains(t, rendered, "v0.1.0")
 
 	// historing render
-	rendered = ChangelogData{Tag: "v0.0.1"}.New(gitSemantic).Render()
+	rendered = ChangelogData{Tag: "v0.0.1"}.New(gitSemantic, semver.OptionsSemVer{}).Render()
 	assert.Contains(t, rendered, "v0.0.1")
 }

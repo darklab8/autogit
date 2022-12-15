@@ -4,7 +4,6 @@ package git
 import (
 	"log"
 	"os"
-	"path/filepath"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
@@ -21,18 +20,6 @@ type Repository struct {
 	repo   *git.Repository
 	wt     *git.Worktree
 	author *object.Signature
-}
-
-func (r *Repository) NewRepoIntegration() *Repository {
-	path, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err, "unable to get workdir")
-	}
-	r.repo, err = git.PlainOpen(filepath.Dir(filepath.Dir(path)))
-	if err != nil {
-		log.Fatal(err, "unable to open git")
-	}
-	return r
 }
 
 func (r *Repository) NewRepoInWorkDir() *Repository {
@@ -54,41 +41,38 @@ type Log struct {
 
 var HEAD_Hash plumbing.Hash
 
-func (r *Repository) GetLatestTag(skipLatestCommit bool) Tag {
+func (r *Repository) GetLatestCommitHash() plumbing.Hash {
 	ref, err := r.repo.Head()
 	CheckIfError(err)
-	From := ref.Hash()
+	return ref.Hash()
+}
+
+func (r *Repository) ForeachTag(callback func(tag Tag) bool) {
+	From := r.GetLatestCommitHash()
 
 	// ... retrieves the commit history
 	cIter, err := r.repo.Log(&git.LogOptions{From: From})
 	CheckIfError(err)
 
-	tags := r.GetTags()
+	tags := r.getUnorderedTags()
 	// ... just iterates over the commits, printing it
 	c, _ := cIter.Next()
-	firstCommit := c
 	for ; c != nil; c, _ = cIter.Next() {
 		// iterating until next tag
 		for _, tag := range tags {
-			if skipLatestCommit && tag.Hash == firstCommit.Hash {
-				continue
-			} else if tag.Hash == c.Hash {
-				return tag
+			if tag.Hash == c.Hash {
+				shouldWeStop := callback(tag)
+				if shouldWeStop {
+					return
+				}
 			}
 		}
 
 	}
 	CheckIfError(err)
-
-	return Tag{}
 }
 
-func (r *Repository) GetLatestTagString(skipLatestCommit bool) string {
-	return r.GetLatestTag(skipLatestCommit).Name
-}
-
-func (r *Repository) GetLogs(From plumbing.Hash) []Log {
-	var logs []Log
+func (r *Repository) ForeachLog(From plumbing.Hash, callback func(log Log) bool) {
 	// retrieves the branch pointed by HEAD
 	if From.IsZero() {
 		var err error
@@ -104,26 +88,15 @@ func (r *Repository) GetLogs(From plumbing.Hash) []Log {
 	cIter, err := r.repo.Log(&git.LogOptions{From: From})
 	CheckIfError(err)
 
-	tags := r.GetTags()
 	// ... just iterates over the commits, printing it
 	c, _ := cIter.Next()
 	for ; c != nil; c, _ = cIter.Next() {
-
-		// iterating until next tag
-		if From != c.Hash {
-			for _, tag := range tags {
-				if tag.Hash == c.Hash {
-					return logs
-				}
-			}
-
+		shouldWeStop := callback(Log{Hash: c.Hash, Msg: c.Message})
+		if shouldWeStop {
+			return
 		}
-
-		logs = append(logs, Log{Hash: c.Hash, Msg: c.Message})
 	}
 	CheckIfError(err)
-
-	return logs
 }
 
 type Tag struct {
@@ -133,7 +106,7 @@ type Tag struct {
 }
 
 // brings tags, from latest to new ones
-func (r *Repository) GetTags() []Tag {
+func (r *Repository) getUnorderedTags() []Tag {
 	var results []Tag
 	iter, err := r.repo.Tags()
 	CheckIfError(err)
@@ -160,4 +133,25 @@ func (r *Repository) GetTags() []Tag {
 	}
 
 	return results
+}
+
+func (r *Repository) getHashByTagName(tagName string) plumbing.Hash {
+	if tagName == "" {
+		return HEAD_Hash
+	}
+
+	tag_ref, _ := r.repo.Tag(tagName)
+	tag_obj, err := r.repo.TagObject(tag_ref.Hash())
+	if err == nil {
+		return tag_obj.Target
+	}
+	return tag_ref.Hash()
+}
+
+func (r *Repository) GetLogsFromTag(tagName string, callback func(log Log) bool) {
+	FromHash := r.getHashByTagName(tagName)
+
+	r.ForeachLog(FromHash, func(log Log) bool {
+		return callback(log)
+	})
 }

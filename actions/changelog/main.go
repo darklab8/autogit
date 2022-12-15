@@ -3,6 +3,7 @@ package changelog
 import (
 	"autogit/semanticgit"
 	"autogit/semanticgit/conventionalcommits"
+	"autogit/semanticgit/semver"
 	"autogit/settings"
 	"autogit/utils"
 	"fmt"
@@ -92,14 +93,14 @@ func (changelog *ChangelogData) AddCommit(record conventionalcommits.Conventiona
 	}
 }
 
-func (changelog ChangelogData) New(g *semanticgit.SemanticGit) ChangelogData {
+func (changelog ChangelogData) New(g *semanticgit.SemanticGit, semver_options semver.OptionsSemVer) ChangelogData {
 	changelog.FeaturesScoped = make(map[string][]string)
 	changelog.FixesScoped = make(map[string][]string)
 
-	logs := g.GetChangelogByTag(changelog.Tag, true)
+	logs := g.GetChangelogByTag(changelog.Tag, true).Logs
 
 	if changelog.Tag == "" {
-		changelog.Tag = g.GetNextVersion().ToString()
+		changelog.Tag = g.GetNextVersion(semver_options).ToString()
 	}
 	changelog.Header = (&Header{}).New(logs, changelog.Tag).Render()
 

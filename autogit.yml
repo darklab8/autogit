@@ -10,6 +10,7 @@ regex:
     bodyFooter: ''
   issue: ''
   semVer: ''
+  prerelease: ''
   validation:
     scope:
       lowercase: ''

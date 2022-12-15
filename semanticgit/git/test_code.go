@@ -3,6 +3,9 @@ package git
 import (
 	"autogit/utils"
 	"fmt"
+	"log"
+	"os"
+	"path/filepath"
 
 	"github.com/go-git/go-billy/v5/memfs"
 	"github.com/go-git/go-git/v5"
@@ -11,7 +14,7 @@ import (
 	"github.com/go-git/go-git/v5/storage/memory"
 )
 
-func (r *Repository) NewRepoTest() *Repository {
+func (r *Repository) TestNewRepo() *Repository {
 	var err error
 	fs := memfs.New()
 
@@ -21,6 +24,18 @@ func (r *Repository) NewRepoTest() *Repository {
 	r.wt, err = r.repo.Worktree()
 
 	r.author = &object.Signature{Name: "abc", Email: "abc@example.com"}
+	return r
+}
+
+func (r *Repository) TestNewRepoIntegration() *Repository {
+	path, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err, "unable to get workdir")
+	}
+	r.repo, err = git.PlainOpen(filepath.Dir(filepath.Dir(path)))
+	if err != nil {
+		log.Fatal(err, "unable to open git")
+	}
 	return r
 }
 
@@ -38,18 +53,4 @@ func (r *Repository) TestCommit(msg string) plumbing.Hash {
 func (r *Repository) TestCreateTag(name string, hash plumbing.Hash) {
 	ref, err := r.repo.CreateTag(name, hash, &git.CreateTagOptions{Tagger: r.author, Message: "123"})
 	fmt.Printf("CreateTag=%v,%v\n", ref, err)
-}
-
-func (r *Repository) TestGetChangelogByTag(tagName string) []Log {
-	if tagName == "" {
-		return r.GetLogs(HEAD_Hash)
-	}
-
-	tag_ref, _ := r.repo.Tag(tagName)
-	tag_obj, err := r.repo.TagObject(tag_ref.Hash())
-	if err == nil {
-		return r.GetLogs(tag_obj.Target)
-	}
-	logs := r.GetLogs(tag_ref.Hash())
-	return logs
 }

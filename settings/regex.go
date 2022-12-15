@@ -12,6 +12,7 @@ type RegexScheme struct {
 	} `yaml:"conventionalCommit"`
 	Issue      string `yaml:"issue"`
 	SemVer     string `yaml:"semVer"`
+	Prerelease string `yaml:"prerelease"`
 	Validation struct {
 		Scope struct {
 			Lowercase string `yaml:"lowercase"`
@@ -28,6 +29,7 @@ var RegexIssue *regexp.Regexp
 var RegexSemVer *regexp.Regexp
 var RegexScope *regexp.Regexp
 var RegexType *regexp.Regexp
+var RegexPrerelease *regexp.Regexp
 
 func RegexSetDefaults() {
 	if Config.Regex.ConventionalCommit.Header == "" {
@@ -54,6 +56,10 @@ func RegexSetDefaults() {
 	if Config.Regex.Validation.Type.Lowercase == "" {
 		Config.Regex.Validation.Type.Lowercase = `^[a-z]+$`
 	}
+
+	if Config.Regex.Prerelease == "" {
+		Config.Regex.Prerelease = `(?:a\.([0-9]+))?\.?(?:b\.([0-9]+))?\.?(?:rc\.([0-9]+))?`
+	}
 }
 
 func RegexCompile() {
@@ -63,6 +69,7 @@ func RegexCompile() {
 	utils.InitRegexExpression(&RegexSemVer, Config.Regex.SemVer)
 	utils.InitRegexExpression(&RegexScope, Config.Regex.Validation.Scope.Lowercase)
 	utils.InitRegexExpression(&RegexType, Config.Regex.Validation.Type.Lowercase)
+	utils.InitRegexExpression(&RegexPrerelease, Config.Regex.Prerelease)
 }
 
 func RegexInit() {
