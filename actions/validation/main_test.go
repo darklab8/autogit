@@ -11,6 +11,7 @@ import (
 
 func TestMaxLengthHeaderErrorNo(t *testing.T) {
 	settings.Config = settings.ConfigScheme{}
+	settings.Config.Validation.Rules.Header.Type.Whitelist = []string{"feat"}
 	settings.Config.Validation.Rules.Header.MaxLength = 72
 	commit, err := conventionalcommits.NewCommit("feat: abc")
 	utils.CheckPanic(err)
@@ -20,6 +21,7 @@ func TestMaxLengthHeaderErrorNo(t *testing.T) {
 
 func TestMaxLengthHeaderErrorYes(t *testing.T) {
 	settings.Config = settings.ConfigScheme{}
+	settings.Config.Validation.Rules.Header.Type.Whitelist = []string{"feat"}
 	settings.Config.Validation.Rules.Header.MaxLength = 72
 	commit, err := conventionalcommits.NewCommit("feat: writing long on purpose commit, which should be way beyond 72 characters")
 	utils.CheckPanic(err)
