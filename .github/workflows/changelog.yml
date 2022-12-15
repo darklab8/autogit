@@ -20,4 +20,4 @@ jobs:
 
     - name: Validate changelogs
       run: |
-        autogit changelog -- validate
+        autogit changelog --validate
