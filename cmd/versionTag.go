@@ -17,6 +17,8 @@ var tagCmd = &cobra.Command{
 	Short: "Shortcut to 'git tag $(autogit version)'",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("OK version tag is called")
+		RemoveNewLIne := true
+		actions.VersionDisableNewLine = &RemoveNewLIne
 		vers := actions.Version()
 		utils.ShellRunArgs("git", "tag", vers)
 		fmt.Printf("OK tag=%s is created\n", vers)
