@@ -31,7 +31,7 @@ func Changelog() string {
 
 	if *ChangelogValidate {
 		log_records := g.GetChangelogByTag(*ChangelogTag, false)
-		for _, record := range log_records.Logs {
+		for _, record := range log_records {
 			err := validation.Validate(&record)
 			utils.CheckFatal(err)
 		}

@@ -32,7 +32,7 @@ func (g *SemanticGit) GetCurrentVersion() *semver.SemVer {
 		vers, err := semver.Parse(tag.Name)
 		utils.CheckWarn(err, "WARN failed to parse tag=", tag.Name)
 
-		if tag.Hash == latest_hash && vers.Prerelease == "" {
+		if tag.Hash == latest_hash || (vers.Prerelease == "" && tag.Hash == latest_hash) {
 			return false
 		}
 
@@ -62,10 +62,10 @@ func (g *SemanticGit) GetCurrentVersion() *semver.SemVer {
 
 func (g *SemanticGit) CalculateNextVersion(vers *semver.SemVer) *semver.SemVer {
 
-	changelog := g.GetChangelogByTag("", false)
+	log_records := g.GetChangelogByTag("", false)
 
 	var major_change, minor_change, patch_change bool
-	for _, record := range changelog.Logs {
+	for _, record := range log_records {
 
 		if record.Exclamation {
 			if vers.Major != 0 {
@@ -93,37 +93,14 @@ func (g *SemanticGit) CalculateNextVersion(vers *semver.SemVer) *semver.SemVer {
 		vers.Patch += 1
 	}
 
-	for _, tag_vers := range changelog.Tags {
-		if tag_vers.Alpha > vers.Alpha {
-			vers.Alpha = tag_vers.Alpha
-		}
-		if tag_vers.Beta > vers.Beta {
-			vers.Beta = tag_vers.Beta
-		}
-		if tag_vers.Rc > vers.Rc {
-			vers.Rc = tag_vers.Rc
-		}
-	}
-
-	if vers.Options.Alpha && !vers.Options.Beta && !vers.Options.Rc {
+	if vers.Options.Alpha {
 		vers.Alpha++
 	}
-	if vers.Options.Beta && !vers.Options.Rc {
+	if vers.Options.Beta {
 		vers.Beta++
-
-		if vers.Alpha == 0 {
-			vers.Alpha = 1
-		}
 	}
 	if vers.Options.Rc {
 		vers.Rc++
-
-		if vers.Alpha == 0 {
-			vers.Alpha = 1
-		}
-		if vers.Beta == 0 {
-			vers.Beta = 1
-		}
 	}
 
 	return vers
@@ -137,13 +114,8 @@ func (g *SemanticGit) GetNextVersion(semver_options semver.OptionsSemVer) *semve
 	return vers
 }
 
-type ChangelogByTagResult struct {
-	Logs []conventionalcommits.ConventionalCommit
-	Tags []semver.SemVer
-}
-
-func (g *SemanticGit) GetChangelogByTag(fromTag string, enable_warnings bool) ChangelogByTagResult {
-	result := ChangelogByTagResult{}
+func (g *SemanticGit) GetChangelogByTag(fromTag string, enable_warnings bool) []conventionalcommits.ConventionalCommit {
+	var result []conventionalcommits.ConventionalCommit
 
 	g.git.GetLogsFromTag(fromTag, func(log_record git.Log) bool {
 
@@ -171,9 +143,6 @@ func (g *SemanticGit) GetChangelogByTag(fromTag string, enable_warnings bool) Ch
 			return false
 		})
 		if foundSemver != nil {
-			if fromTag != foundTag.Name && log_record.Hash != g.git.GetLatestCommitHash() {
-				result.Tags = append(result.Tags, *foundSemver)
-			}
 			// Get Changelog only until previous stable tag and don't mind first commit
 			if foundSemver.Prerelease == "" && fromTag != foundTag.Name && log_record.Hash != g.git.GetLatestCommitHash() {
 				return true
@@ -181,7 +150,7 @@ func (g *SemanticGit) GetChangelogByTag(fromTag string, enable_warnings bool) Ch
 		}
 
 		parsed_commit.Hash = log_record.Hash.String()[:8]
-		result.Logs = append(result.Logs, *parsed_commit)
+		result = append(result, *parsed_commit)
 
 		return false
 	})

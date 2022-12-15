@@ -97,7 +97,7 @@ func (changelog ChangelogData) New(g *semanticgit.SemanticGit, semver_options se
 	changelog.FeaturesScoped = make(map[string][]string)
 	changelog.FixesScoped = make(map[string][]string)
 
-	logs := g.GetChangelogByTag(changelog.Tag, true).Logs
+	logs := g.GetChangelogByTag(changelog.Tag, true)
 
 	if changelog.Tag == "" {
 		changelog.Tag = g.GetNextVersion(semver_options).ToString()
