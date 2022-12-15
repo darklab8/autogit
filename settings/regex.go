@@ -35,7 +35,7 @@ func RegexSetDefaults() {
 	if Config.Regex.ConventionalCommit.Header == "" {
 		// copied from https://gist.github.com/marcojahn/482410b728c31b221b70ea6d2c433f0c
 		// type, scope, subject, the rest
-		Config.Regex.ConventionalCommit.Header = `^([a-z]+)(?:\(([\w]+)\))?: (?:([ -~]+))(?:\n\n([\s -~]*)|[\n])?\z`
+		Config.Regex.ConventionalCommit.Header = `^([a-z]+)(?:\(([\w]+)\))?(\!?): (?:([ -~]+))(?:\n\n([\s -~]*)|[\n])?\z`
 	}
 	if Config.Regex.ConventionalCommit.BodyFooter == "" {
 		// everything except : which is between 9 and ;

@@ -25,6 +25,7 @@ type OptionsSemVer struct {
 	Alpha         bool
 	Beta          bool
 	Rc            bool
+	Publish       bool
 }
 type AugmentedSemver struct {
 	Options OptionsSemVer

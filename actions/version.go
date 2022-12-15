@@ -13,6 +13,7 @@ var VersionBuildMeta *string
 var VersionAlpha *bool
 var VersionBeta *bool
 var VersionPrerelease *bool
+var VersionPublish *bool
 
 // if one is enabled, only this one is incremented.
 // if all enabled? we increment only most volatile one only
@@ -31,6 +32,7 @@ func Version() string {
 		Alpha:         *VersionAlpha,
 		Beta:          *VersionBeta,
 		Rc:            *VersionPrerelease,
+		Publish:       *VersionPublish,
 	}
 	vers := g.GetNextVersion(semver_options)
 

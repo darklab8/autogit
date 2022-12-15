@@ -38,4 +38,5 @@ func init() {
 	actions.VersionAlpha = versionCmd.PersistentFlags().Bool("alpha", false, "Enable next version as alpha")
 	actions.VersionBeta = versionCmd.PersistentFlags().Bool("beta", false, "Enable next version as beta")
 	actions.VersionPrerelease = versionCmd.PersistentFlags().Bool("rc", false, "Enable next version as prerelease")
+	actions.VersionPublish = versionCmd.PersistentFlags().Bool("publish", false, "Breaking from 0.x.x to 1+.x.x versions")
 }

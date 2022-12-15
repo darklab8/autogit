@@ -67,6 +67,10 @@ func (g *SemanticGit) CalculateNextVersion(vers *semver.SemVer) *semver.SemVer {
 	var major_change, minor_change, patch_change bool
 	for _, record := range log_records {
 
+		if vers.Options.Publish && vers.Major == 0 {
+			major_change = true
+		}
+
 		if record.Exclamation {
 			if vers.Major != 0 {
 				major_change = true

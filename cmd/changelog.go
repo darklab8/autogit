@@ -30,4 +30,5 @@ func init() {
 	actions.ChangelogAlpha = changelogCmd.PersistentFlags().Bool("alpha", false, "Enable next version as alpha")
 	actions.ChangelogBeta = changelogCmd.PersistentFlags().Bool("beta", false, "Enable next version as beta")
 	actions.ChangelogPrerelease = changelogCmd.PersistentFlags().Bool("rc", false, "Enable next version as prerelease")
+	actions.ChangelogPublish = changelogCmd.PersistentFlags().Bool("publish", false, "Breaking from 0.x.x to 1+.x.x versions")
 }

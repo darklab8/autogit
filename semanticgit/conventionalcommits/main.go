@@ -86,14 +86,18 @@ func ParseCommit(msg string) (*ConventionalCommit, error) {
 
 	result.Type = main_match[1]
 	result.Scope = main_match[2]
-	result.Subject = main_match[3]
+	result.Subject = main_match[4]
 
-	IssueMatch := settings.RegexIssue.FindAllStringSubmatch(main_match[4], -1)
+	if main_match[3] != "" {
+		result.Exclamation = true
+	}
+
+	IssueMatch := settings.RegexIssue.FindAllStringSubmatch(main_match[5], -1)
 	for _, match := range IssueMatch {
 		result.Issue = append(result.Issue, match[1])
 	}
 
-	msgs := strings.Split(main_match[4], "\n\n")
+	msgs := strings.Split(main_match[5], "\n\n")
 
 	for index, msg := range msgs {
 		match := settings.RegexBodyFooter.FindStringSubmatch(msg)

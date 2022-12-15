@@ -37,4 +37,4 @@ validation:
         whitelist: [
         ]
       subject:
-        minWords: 3
+        minWords: 0

@@ -17,6 +17,7 @@ var ChangelogBuildMeta *string
 var ChangelogAlpha *bool
 var ChangelogBeta *bool
 var ChangelogPrerelease *bool
+var ChangelogPublish *bool
 
 func Changelog() string {
 	g := (&semanticgit.SemanticGit{}).NewRepo((&git.Repository{}).NewRepoInWorkDir())
@@ -27,6 +28,7 @@ func Changelog() string {
 		Alpha:         *ChangelogAlpha,
 		Beta:          *ChangelogBeta,
 		Rc:            *ChangelogPrerelease,
+		Publish:       *ChangelogPublish,
 	}).Render()
 
 	if *ChangelogValidate {

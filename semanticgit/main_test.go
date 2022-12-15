@@ -112,3 +112,20 @@ func TestTestPrereleaseVersions(t *testing.T) {
 	assert.Equal(t, "v0.3.0-rc.2", gitSemantic.GetNextVersion(semver.OptionsSemVer{Rc: true}).ToString())
 
 }
+
+func TestBreakingChanges(t *testing.T) {
+	gitInMemory := (&git.Repository{}).TestNewRepo()
+	gitSemantic := (&SemanticGit{}).NewRepo(gitInMemory)
+	gitInMemory.TestCommit("feat: thing")
+	gitInMemory.TestCommit("feat!: break")
+	assert.Equal(t, "v0.1.0", gitSemantic.GetNextVersion(semver.OptionsSemVer{}).ToString())
+	assert.Equal(t, "v1.0.0", gitSemantic.GetNextVersion(semver.OptionsSemVer{Publish: true}).ToString())
+
+	gitInMemory.TestCreateTag("v1.0.0", gitInMemory.TestCommit("fix: thing"))
+	gitInMemory.TestCommit("feat!: break")
+	assert.Equal(t, "v2.0.0", gitSemantic.GetNextVersion(semver.OptionsSemVer{}).ToString())
+
+	gitInMemory.TestCreateTag("v2.0.0", gitInMemory.TestCommit("fix: thing"))
+	gitInMemory.TestCommit("feat!: break")
+	assert.Equal(t, "v3.0.0", gitSemantic.GetNextVersion(semver.OptionsSemVer{}).ToString())
+}
