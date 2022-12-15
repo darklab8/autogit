@@ -10,13 +10,28 @@ Solution for
 - automatic semantic versioning generation
 - auto generating changelogs
 
-## Supported OS and Architectures:
+## Compiled for:
 
-- Linux amd64
-- Linux arm64
-- Windows amd64
+- linux-amd64
+- linux-arm64
+- linux-386
+- linux-arm
+- windows-amd64
+- windows-386.exe
+- windows-arm64.exe
+- windows-arm.exe    
+- macos-amd64
+- macos-arm64
 
-... U a free to help adding more supported versions, by finding gcc compiler from linux to OS Y, Arch Z
+## Support:
+
+##### First tier support - issues can solved on our own
+- for linux and CI usage
+##### Second tier support - issues may be solved on our own
+- for windows
+##### Third tier support - only compiled, and accepting bug fixes implemented by contributors
+- for macos
+
 
 ## Installation
 
@@ -62,7 +77,7 @@ Changelogs and versions https://github.com/darklab8/darklab_freelancer_darktool/
 
 ## Future development and resources
 
-- https://www.quora.com/What-is-the-difference-between-alpha-beta-and-RC-software-version // Adding ability of best versions
+- https://www.quora.com/What-is-the-difference-between-alpha-beta-and-RC-software-version // Adding ability of beta versions
 - https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional // Configurable stricter rules to validator
 - https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines // Just more about git conventional commits
 - https://www.npmjs.com/package/git-conventional-commits
