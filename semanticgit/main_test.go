@@ -129,3 +129,10 @@ func TestBreakingChanges(t *testing.T) {
 	gitInMemory.TestCommit("feat!: break")
 	assert.Equal(t, "v3.0.0", gitSemantic.GetNextVersion(semver.OptionsSemVer{}).ToString())
 }
+
+func TestBuildData(t *testing.T) {
+	gitInMemory := (&git.Repository{}).TestNewRepo()
+	gitSemantic := (&SemanticGit{}).NewRepo(gitInMemory)
+	gitInMemory.TestCommit("feat: thing")
+	assert.Equal(t, "v0.1.0+123", gitSemantic.GetNextVersion(semver.OptionsSemVer{Build: "123"}).ToString())
+}

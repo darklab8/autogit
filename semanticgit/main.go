@@ -107,6 +107,7 @@ func (g *SemanticGit) CalculateNextVersion(vers *semver.SemVer) *semver.SemVer {
 		vers.Rc++
 	}
 
+	vers.Build = vers.Options.Build
 	return vers
 }
 
