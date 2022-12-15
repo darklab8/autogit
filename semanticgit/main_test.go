@@ -136,3 +136,14 @@ func TestBuildData(t *testing.T) {
 	gitInMemory.TestCommit("feat: thing")
 	assert.Equal(t, "v0.1.0+123", gitSemantic.GetNextVersion(semver.OptionsSemVer{Build: "123"}).ToString())
 }
+
+func TestBug(t *testing.T) {
+	gitInMemory := (&git.Repository{}).TestNewRepo()
+	gitSemantic := (&SemanticGit{}).NewRepo(gitInMemory)
+	gitInMemory.TestCommit("feat: thing")
+	gitInMemory.TestCreateTag("v0.2.0", gitInMemory.TestCommit("feat: thing"))
+	gitInMemory.TestCreateTag("v0.3.0", gitInMemory.TestCommit("feat: thing"))
+	gitInMemory.TestCreateTag("v0.3.0-rc.1", gitInMemory.TestCommit("feat: thing"))
+	gitInMemory.TestCreateTag("v0.3.0-rc.2", gitInMemory.TestCommit("feat: thing"))
+	assert.Equal(t, "v0.4.0", gitSemantic.GetNextVersion(semver.OptionsSemVer{}).ToString())
+}
