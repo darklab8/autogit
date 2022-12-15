@@ -1,0 +1,23 @@
+name: Changelog
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install Task
+      run: |
+        curl -o /usr/local/bin/autogit https://github.com/darklab8/darklab_autogit/releases/download/v0.3.0-rc.2/autogit-linux-amd64
+        chmod +x /usr/local/bin/autogit
+
+    - name: Validate changelogs
+      run: |
+        autogit changelog -- validate
