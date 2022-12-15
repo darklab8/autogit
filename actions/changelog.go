@@ -9,30 +9,27 @@ import (
 	"autogit/utils"
 )
 
-var ChangelogTag *string
-var ChangelogValidate *bool
+var CMDChangelog struct {
+	VersionParams
 
-var ChangelogDisableVFlag *bool
-var ChangelogBuildMeta *string
-var ChangelogAlpha *bool
-var ChangelogBeta *bool
-var ChangelogPrerelease *bool
-var ChangelogPublish *bool
+	Tag      *string
+	Validate *bool
+}
 
 func Changelog() string {
 	g := (&semanticgit.SemanticGit{}).NewRepo((&git.Repository{}).NewRepoInWorkDir())
-	rendered_changelog := changelog.ChangelogData{Tag: *ChangelogTag}.New(g, semver.OptionsSemVer{
-		DisableVFlag:  *ChangelogDisableVFlag,
+	rendered_changelog := changelog.ChangelogData{Tag: *CMDChangelog.Tag}.New(g, semver.OptionsSemVer{
+		DisableVFlag:  *CMDChangelog.DisableVFlag,
 		EnableNewline: false,
-		Build:         *ChangelogBuildMeta,
-		Alpha:         *ChangelogAlpha,
-		Beta:          *ChangelogBeta,
-		Rc:            *ChangelogPrerelease,
-		Publish:       *ChangelogPublish,
+		Build:         *CMDChangelog.BuildMeta,
+		Alpha:         *CMDChangelog.Alpha,
+		Beta:          *CMDChangelog.Beta,
+		Rc:            *CMDChangelog.Prerelease,
+		Publish:       *CMDChangelog.Publish,
 	}).Render()
 
-	if *ChangelogValidate {
-		log_records := g.GetChangelogByTag(*ChangelogTag, false)
+	if *CMDChangelog.Validate {
+		log_records := g.GetChangelogByTag(*CMDChangelog.Tag, false)
 		for _, record := range log_records {
 			err := validation.Validate(&record)
 			utils.CheckFatal(err)

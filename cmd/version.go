@@ -22,21 +22,6 @@ var versionCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(versionCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// versionCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-
-	actions.VersionDisableNewLine = versionCmd.PersistentFlags().Bool("no-newline", false, "Disable newline")
-
-	actions.VersionDisableVFlag = versionCmd.PersistentFlags().Bool("no-v", false, "Disable v flag")
-	actions.VersionBuildMeta = versionCmd.PersistentFlags().String("build", "", "Build metadata, not affecting semantic versioning. Added as semver+build")
-	actions.VersionAlpha = versionCmd.PersistentFlags().Bool("alpha", false, "Enable next version as alpha")
-	actions.VersionBeta = versionCmd.PersistentFlags().Bool("beta", false, "Enable next version as beta")
-	actions.VersionPrerelease = versionCmd.PersistentFlags().Bool("rc", false, "Enable next version as prerelease")
-	actions.VersionPublish = versionCmd.PersistentFlags().Bool("publish", false, "Breaking from 0.x.x to 1+.x.x versions")
+	actions.CMDversion.Init(versionCmd)
+	actions.CMDversion.DisableNewLine = versionCmd.PersistentFlags().Bool("no-newline", false, "Disable newline")
 }

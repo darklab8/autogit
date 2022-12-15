@@ -5,34 +5,44 @@ import (
 	"autogit/semanticgit/git"
 	"autogit/semanticgit/semver"
 	"strings"
+
+	"github.com/spf13/cobra"
 )
 
-var VersionDisableNewLine *bool
-var VersionDisableVFlag *bool
-var VersionBuildMeta *string
-var VersionAlpha *bool
-var VersionBeta *bool
-var VersionPrerelease *bool
-var VersionPublish *bool
+type VersionParams struct {
+	DisableVFlag *bool
+	BuildMeta    *string
+	Alpha        *bool
+	Beta         *bool
+	Prerelease   *bool
+	Publish      *bool
+}
 
-// if one is enabled, only this one is incremented.
-// if all enabled? we increment only most volatile one only
-// when we read latest tag, ->
-// we read history up until latest non-prerelease, while collecting alpha/beta/prerelease latest versions
-// if we enabled only beta? it will add version +1 based on latest beta.
-// if we enabled beta+prerelease, it will not change beta, beta will be rendered, prerelease version will be increased
+func (v *VersionParams) Init(cmd *cobra.Command) {
+	v.DisableVFlag = cmd.PersistentFlags().Bool("no-v", false, "Disable v flag")
+	v.BuildMeta = cmd.PersistentFlags().String("build", "", "Build metadata, not affecting semantic versioning. Added as semver+build")
+	v.Alpha = cmd.PersistentFlags().Bool("alpha", false, "Enable next version as alpha")
+	v.Beta = cmd.PersistentFlags().Bool("beta", false, "Enable next version as beta")
+	v.Prerelease = cmd.PersistentFlags().Bool("rc", false, "Enable next version as prerelease")
+	v.Publish = cmd.PersistentFlags().Bool("publish", false, "Breaking from 0.x.x to 1+.x.x versions")
+}
+
+var CMDversion struct {
+	VersionParams
+	DisableNewLine *bool
+}
 
 func Version() string {
 	g := (&semanticgit.SemanticGit{}).NewRepo((&git.Repository{}).NewRepoInWorkDir())
 
 	semver_options := semver.OptionsSemVer{
-		DisableVFlag:  *VersionDisableVFlag,
-		EnableNewline: !(*VersionDisableNewLine),
-		Build:         *VersionBuildMeta,
-		Alpha:         *VersionAlpha,
-		Beta:          *VersionBeta,
-		Rc:            *VersionPrerelease,
-		Publish:       *VersionPublish,
+		DisableVFlag:  *CMDversion.DisableVFlag,
+		EnableNewline: !(*CMDversion.DisableNewLine),
+		Build:         *CMDversion.BuildMeta,
+		Alpha:         *CMDversion.Alpha,
+		Beta:          *CMDversion.Beta,
+		Rc:            *CMDversion.Prerelease,
+		Publish:       *CMDversion.Publish,
 	}
 	vers := g.GetNextVersion(semver_options)
 

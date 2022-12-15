@@ -18,7 +18,7 @@ var tagCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("OK version tag is called")
 		RemoveNewLIne := true
-		actions.VersionDisableNewLine = &RemoveNewLIne
+		actions.CMDversion.DisableNewLine = &RemoveNewLIne
 		vers := actions.Version()
 		utils.ShellRunArgs("git", "tag", vers)
 		fmt.Printf("OK tag=%s is created\n", vers)
@@ -27,14 +27,4 @@ var tagCmd = &cobra.Command{
 
 func init() {
 	versionCmd.AddCommand(tagCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// tagCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// tagCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
