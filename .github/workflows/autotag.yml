@@ -7,7 +7,6 @@ jobs:
   deploy:
     runs-on: ubuntu-22.04
     steps:
-
     - name: Install Task
       run: |
         sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
@@ -29,9 +28,8 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Check future tag
-      run: |
-        echo "$(autogit version --newline=false --alpha --build ${{ github.run_id }})"
+    - id: future_tag
+      run: echo "version=$(autogit version --newline=false --alpha --build ${{ github.run_id }})" >> $GITHUB_OUTPUT
 
     - name: Create tag
       uses: actions/github-script@v5
@@ -40,6 +38,6 @@ jobs:
           github.rest.git.createRef({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            ref: "refs/tags/$(autogit version --newline=false --alpha --build ${{ github.run_id }})",
+            ref: "refs/tags/${{ steps.future_tag.outputs.version }}",
             sha: context.sha
           })
