@@ -1,0 +1,41 @@
+name: build
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+    steps:
+
+    - name: Install Task
+      run: |
+        sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.19
+
+    - name: Install Autogit
+      run: |
+        sudo apt install -y wget
+        wget https://github.com/darklab8/darklab_autogit/releases/download/v0.4.0-a.2/autogit-linux-amd64
+        mv autogit-linux-amd64 /usr/local/bin/autogit
+        chmod +x /usr/local/bin/autogit
+
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: build
+      run: task build
+
+    - name: Use the Upload Artifact GitHub Action
+      uses: actions/upload-artifact@v2
+      with: 
+        name: assets-for-download
+        path: dist
