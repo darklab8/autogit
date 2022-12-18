@@ -31,7 +31,7 @@ jobs:
 
     - name: Check future tag
       run: |
-        - echo "$(autogit version --newline=false --alpha --build ${{ github.run_id }})"
+        echo "$(autogit version --newline=false --alpha --build ${{ github.run_id }})"
     # - name: Create tag
     #   uses: actions/github-script@v5
     #   with:
