@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"autogit/actions"
+	"autogit/semanticgit/git"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -15,14 +16,13 @@ var changelogCmd = &cobra.Command{
 	Use:   "changelog",
 	Short: "Auto generated changelog according to git conventional commits",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("%s", actions.Changelog())
+		fmt.Printf("%s", actions.Changelog(paramsChangelog, (&git.Repository{}).NewRepoInWorkDir()))
 	},
 }
 
+var paramsChangelog actions.ChangelogParams
+
 func init() {
 	rootCmd.AddCommand(changelogCmd)
-
-	actions.CMDChangelog.Init(changelogCmd)
-	actions.CMDChangelog.Tag = changelogCmd.PersistentFlags().String("tag", "", "Select from which tag")
-	actions.CMDChangelog.Validate = changelogCmd.PersistentFlags().Bool("validate", false, "Validate to rules")
+	paramsChangelog.Bind(changelogCmd)
 }

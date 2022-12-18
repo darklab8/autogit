@@ -4,49 +4,56 @@ import (
 	"autogit/semanticgit"
 	"autogit/semanticgit/git"
 	"autogit/semanticgit/semver"
-	"strings"
 
 	"github.com/spf13/cobra"
 )
 
+type GitActions struct {
+	Tag  bool
+	Push bool
+}
+
 type VersionParams struct {
-	DisableVFlag *bool
-	BuildMeta    *string
-	Alpha        *bool
-	Beta         *bool
-	Prerelease   *bool
-	Publish      *bool
+	semver.OptionsSemVer
 }
 
-func (v *VersionParams) Init(cmd *cobra.Command) {
-	v.DisableVFlag = cmd.PersistentFlags().Bool("no-v", false, "Disable v flag")
-	v.BuildMeta = cmd.PersistentFlags().String("build", "", "Build metadata, not affecting semantic versioning. Added as semver+build")
-	v.Alpha = cmd.PersistentFlags().Bool("alpha", false, "Enable next version as alpha")
-	v.Beta = cmd.PersistentFlags().Bool("beta", false, "Enable next version as beta")
-	v.Prerelease = cmd.PersistentFlags().Bool("rc", false, "Enable next version as prerelease")
-	v.Publish = cmd.PersistentFlags().Bool("publish", false, "Breaking from 0.x.x to 1+.x.x versions")
+func (v *VersionParams) Bind(cmd *cobra.Command) {
+	cmd.PersistentFlags().BoolVar(&v.DisableVFlag, "no-v", false, "Disable v flag")
+	cmd.PersistentFlags().StringVar(&v.Build, "build", "", "Build metadata, not affecting semantic versioning. Added as semver+build")
+	cmd.PersistentFlags().BoolVar(&v.Alpha, "alpha", false, "Enable next version as alpha")
+	cmd.PersistentFlags().BoolVar(&v.Beta, "beta", false, "Enable next version as beta")
+	cmd.PersistentFlags().BoolVar(&v.Rc, "rc", false, "Enable next version as prerelease")
+	cmd.PersistentFlags().BoolVar(&v.Publish, "publish", false, "Breaking from 0.x.x to 1+.x.x versions")
 }
 
-var CMDversion struct {
+type ActionVersionParams struct {
 	VersionParams
-	DisableNewLine *bool
+	GitActions
 }
 
-func Version() string {
-	g := (&semanticgit.SemanticGit{}).NewRepo((&git.Repository{}).NewRepoInWorkDir())
+func (v *ActionVersionParams) Bind(cmd *cobra.Command) {
+	v.VersionParams.Bind(cmd)
+	cmd.PersistentFlags().BoolVar(&v.EnableNewline, "newline", true, "Newline pressence, disable with --newline=false")
+	cmd.PersistentFlags().BoolVar(&v.Tag, "tag", false, "shortcut to `git -a tag -m $(autogit changelog)`, not requiring installed git")
+	cmd.PersistentFlags().BoolVar(&v.Push, "push", false, "shortcut to `git push`, not requiring installed git")
+}
 
-	semver_options := semver.OptionsSemVer{
-		DisableVFlag:  *CMDversion.DisableVFlag,
-		EnableNewline: !(*CMDversion.DisableNewLine),
-		Build:         *CMDversion.BuildMeta,
-		Alpha:         *CMDversion.Alpha,
-		Beta:          *CMDversion.Beta,
-		Rc:            *CMDversion.Prerelease,
-		Publish:       *CMDversion.Publish,
+// gitw - (&git.Repository{}).NewRepoInWorkDir() for cmd
+// we can overrise with git in memory
+func Version(params ActionVersionParams, gitw *git.Repository) string {
+	g := (&semanticgit.SemanticGit{}).NewRepo(gitw)
+	vers := g.GetNextVersion(params.OptionsSemVer)
+	renderedVers := vers.ToString()
+
+	vers.Options.EnableNewline = false
+	changelog := Changelog(ChangelogParams{VersionParams: params.VersionParams}, gitw)
+	if params.Tag {
+		gitw.CreateTag(vers.ToString(), changelog)
 	}
-	vers := g.GetNextVersion(semver_options)
 
-	var sb strings.Builder
-	sb.WriteString(vers.ToString())
-	return sb.String()
+	if params.Push {
+		gitw.PushTag(vers.ToString())
+	}
+
+	return renderedVers
 }

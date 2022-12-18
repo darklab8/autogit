@@ -38,3 +38,7 @@ validation:
         whitelist: []
       subject:
         minWords: 0
+
+# expects to find in ~/.ssh for `autogit version --push` command
+git:
+  sshPath: id_rsa.dd84ai

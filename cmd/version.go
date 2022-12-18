@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"autogit/actions"
+	"autogit/semanticgit/git"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -15,13 +16,13 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "next semantic version",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("%s", actions.Version())
+		fmt.Printf("%s", actions.Version(versionParams, (&git.Repository{}).NewRepoInWorkDir()))
 	},
 }
 
+var versionParams actions.ActionVersionParams
+
 func init() {
 	rootCmd.AddCommand(versionCmd)
-
-	actions.CMDversion.Init(versionCmd)
-	actions.CMDversion.DisableNewLine = versionCmd.PersistentFlags().Bool("no-newline", false, "Disable newline")
+	versionParams.Bind(versionCmd)
 }

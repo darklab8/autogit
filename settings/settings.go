@@ -13,6 +13,8 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+const ToolName = "autogit"
+
 //go:embed version.txt
 var Version string
 
@@ -20,6 +22,9 @@ type ConfigScheme struct {
 	Changelog  ChangelogScheme  `yaml:"changelog"`
 	Regex      RegexScheme      `yaml:"regex"`
 	Validation ValidationScheme `yaml:"validation"`
+	Git        struct {
+		SSHPath string `yaml:"sshPath"`
+	} `yaml:"git"`
 }
 
 var Config ConfigScheme

@@ -2,12 +2,19 @@
 package git
 
 import (
+	"autogit/settings"
+	"autogit/utils"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/config"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
+	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 )
 
 func CheckIfError(err error) {
@@ -154,4 +161,29 @@ func (r *Repository) GetLogsFromTag(tagName string, callback func(log Log) bool)
 	r.ForeachLog(FromHash, func(log Log) bool {
 		return callback(log)
 	})
+}
+
+func (r *Repository) CreateTag(name string, msg string) {
+	hash, err := r.repo.Head()
+	utils.CheckFatal(err)
+	ref, err := r.repo.CreateTag(name, hash.Hash(), &git.CreateTagOptions{Message: msg})
+	fmt.Printf("CreateTag=%v,%v\n", ref, err)
+}
+
+const defaultRemoteName = "origin"
+
+func (r *Repository) PushTag(name string) {
+	var publicKey *ssh.PublicKeys
+	sshPath := filepath.Join(os.Getenv("HOME"), ".ssh", settings.Config.Git.SSHPath)
+	sshKey, _ := ioutil.ReadFile(sshPath)
+	publicKey, keyError := ssh.NewPublicKeys("git", []byte(sshKey), "")
+	utils.CheckFatal(keyError)
+
+	refs := []config.RefSpec{
+		config.RefSpec("+refs/tags/" + name + ":refs/tags/" + name),
+	}
+	utils.CheckFatal(refs[0].Validate(), "failed to validate push tag")
+	err := r.repo.Push(&git.PushOptions{RemoteName: defaultRemoteName, Auth: publicKey, RefSpecs: refs, Progress: os.Stdout})
+	utils.CheckFatal(err, "failed to push")
+	fmt.Printf("PushTag=%v\n", err)
 }
