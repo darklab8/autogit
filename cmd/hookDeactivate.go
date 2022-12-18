@@ -4,7 +4,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"autogit/utils"
+	"autogit/semanticgit/git"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -16,7 +16,8 @@ var deactivateCmd = &cobra.Command{
 	Short: "Shortcut to run git config --unset core.hooksPath",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("OK deactivate called")
-		utils.ShellRunArgs("git", "config", "--unset", "core.hooksPath")
+		git := (&git.Repository{}).NewRepoInWorkDir()
+		git.HookEnabled(false)
 	},
 }
 

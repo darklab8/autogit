@@ -187,3 +187,17 @@ func (r *Repository) PushTag(name string) {
 	utils.CheckFatal(err, "failed to push")
 	fmt.Printf("PushTag=%v\n", err)
 }
+
+func (r *Repository) HookEnabled(enabled bool) {
+	hooksPathkey := "hooksPath"
+	cfg, err := r.repo.Config()
+	utils.CheckFatal(err, "failed to read config")
+
+	if enabled {
+		cfg.Raw.Section("core").SetOption(hooksPathkey, ".git-hooks")
+	} else {
+		cfg.Raw.Section("core").RemoveOption(hooksPathkey)
+	}
+	r.repo.SetConfig(cfg)
+	utils.CheckFatal(err, "failed to write config")
+}

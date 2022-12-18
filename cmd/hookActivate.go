@@ -4,7 +4,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"autogit/utils"
+	"autogit/semanticgit/git"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -23,7 +23,9 @@ var activateCmd = &cobra.Command{
 		_ = os.Mkdir(hook_folder, 0777)
 		commit_msg_path := filepath.Join(hook_folder, "commit-msg")
 		ioutil.WriteFile(commit_msg_path, []byte("#!/bin/sh\n\nautogit hook commitMsg \"$1\"\n"), 0777)
-		utils.ShellRunArgs("git", "config", "core.hooksPath", hook_folder)
+
+		git := (&git.Repository{}).NewRepoInWorkDir()
+		git.HookEnabled(true)
 	},
 }
 
