@@ -34,8 +34,8 @@ type ActionVersionParams struct {
 func (v *ActionVersionParams) Bind(cmd *cobra.Command) {
 	v.VersionParams.Bind(cmd)
 	cmd.PersistentFlags().BoolVar(&v.EnableNewline, "newline", true, "Newline pressence, disable with --newline=false")
-	cmd.PersistentFlags().BoolVar(&v.Tag, "tag", false, "shortcut to `git -a tag -m $(autogit changelog)`, not requiring installed git")
-	cmd.PersistentFlags().BoolVar(&v.Push, "push", false, "shortcut to `git push`, not requiring installed git")
+	cmd.PersistentFlags().BoolVar(&v.Tag, "tag", false, "shortcut to 'git -a tag -m $(autogit changelog)', not requiring installed git")
+	cmd.PersistentFlags().BoolVar(&v.Push, "push", false, "shortcut to 'git push', not requiring installed git")
 }
 
 // gitw - (&git.Repository{}).NewRepoInWorkDir() for cmd
