@@ -1,10 +1,7 @@
-name: build
+name: autotag
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "*"
 
 jobs:
   deploy:
@@ -27,16 +24,21 @@ jobs:
         mv autogit-linux-amd64 /usr/local/bin/autogit
         chmod +x /usr/local/bin/autogit
 
-    - name: Checkout repostiory with commit history! 
+    - name: Checkout repostiory with commit history!
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
-    - name: build
-      run: task build
-
-    - name: Use the Upload Artifact GitHub Action
-      uses: actions/upload-artifact@v2
-      with: 
-        name: assets-for-download
-        path: dist
+    - name: Check future tag
+      run: |
+        - echo "$(autogit version --newline=false --alpha --build ${context.runNumber})"
+    # - name: Create tag
+    #   uses: actions/github-script@v5
+    #   with:
+    #     script: |
+    #       github.rest.git.createRef({
+    #         owner: context.repo.owner,
+    #         repo: context.repo.repo,
+    #         ref: "refs/tags/$(autogit version --newline=false --alpha --build ${context.runNumber})",
+    #         sha: context.sha
+    #       })
