@@ -107,7 +107,13 @@ func (g *SemanticGit) CalculateNextVersion(vers *semver.SemVer) *semver.SemVer {
 		vers.Rc++
 	}
 
-	vers.Build = vers.Options.Build
+	// Technically this is the only place where it is set
+	// and always from Options to vers
+	// preserved in this way to keep package `semver` true to its standard
+	// While inputting my all options through Options
+	if vers.Options.Build != "" {
+		vers.Build = vers.Options.Build
+	}
 	return vers
 }
 
