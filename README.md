@@ -197,6 +197,24 @@ Discussions about future development and features in [Pull Requests](https://git
   - `export PATH="$PATH:/usr/local/go/bin:$HOME/go/bin"`
 - install latest stable autogit 😄
 
+## Code architecture
+
+```mermaid
+flowchart TD
+  CLI[cli - CLI interface\nUses cobra-cli third party lib]
+  CLI --> UI[User interface]
+  UI --> Actions[Reusable actions\nwithout attachements to UI details]
+  Actions --> SemanticGit[Semantic Git\nImplements main business logic of repository\nwith added logic of conventional commits\nAnd semantic versioning]
+  Actions --> Changelog[Chagenlog\nHow to generate one]
+  Actions --> Validator[Validator\nRules for optional validations]
+  Changelog --> SemanticGit
+  Validator --> SemanticGit
+  SemanticGit --> SemVer[SemVer\nimplements original Semantic Version\naccording to SemVer2.0.0 standard\nImplemented in current repo]
+  SemanticGit --> Git[Git\ngit wrapper to simple interface\nfor current repository logic\nimplemented in current repo]
+  Git --> GitGo[Git-Go\nEngine under the hood for\nGit repository operations\nImplemented by third party]
+  
+```
+
 ## Contributions and contacts:
 
 - contact author [@dd84ai](https://github.com/dd84ai) at `dark.dreamflyer@gmail.com`
