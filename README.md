@@ -151,16 +151,16 @@ flowchart TD
   CalculatedMainVersion[Calculated main version]
   CalculatedMainVersion --> CalculatePrereleaseVersion[Calculate next prerelease version]
   CalculatePrereleaseVersion --> FindLatestPrerelease[Find latest alpha beta and rc versions\nwith scanning commits up to latest stable version\nExcept not counting latest commit\nChoose ONE, SEVERAL or ALL paths next:]
-  FindLatestPrerelease --> AlphaFlag[if alpha flag is present\nincrease alpha version\nand mark for rendering into output]
-  FindLatestPrerelease --> BetaFlag[if beta flag is present\nincrease beta version\nand mark for rendering into output]
-  FindLatestPrerelease --> RcFlag[if rc-release candidate- flag is present\nincrease rc version\nand mark for rendering into output]
+  FindLatestPrerelease --> AlphaFlag[if alpha flag is present\nincrease alpha version\nand mark for rendering]
+  FindLatestPrerelease --> BetaFlag[if beta flag is present\nincrease beta version\nand mark for rendering]
+  FindLatestPrerelease --> RcFlag[if rc-release candidate-\nflag is present\nincrease rc version\nand mark for rendering]
   AlphaFlag --> CombineIntoTotalPrereleaseVersion
   BetaFlag --> CombineIntoTotalPrereleaseVersion
   RcFlag --> CombineIntoTotalPrereleaseVersion
   CombineIntoTotalPrereleaseVersion[Combine into latest prerelease version]
   CalculatedMainVersion --> AddBuildMetaData[Add build meta data as +$BuildMetaData\nto the end of version]
   CombineIntoTotalPrereleaseVersion --> OutputFinalSemanticVersion
-  AddBuildMetaData --> OutputFinalSemanticVersion
+  AddBuildMetaData --> OutputFinalSemanticVersion[Render Final Semantic Version]
 ```
 
 #### TLDR
