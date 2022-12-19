@@ -55,18 +55,14 @@
 
   - (To be written where to put)
 
-
 2. copy [autogit.yml](https://github.com/darklab8/darklab_autogit/releases/download/v0.4.0-a.2/autogit.yml) from same binary release you downloaded executable! And put to root of your git project folder and adjust settings to your repository specifics
-
-
 3. run `autogit hook activate` to create `.git-hook` folder and enabling it in your git repository settings
-
 
 P.S. Current repository runs on configured autogit as well
 
 ## Usages
 
-#### scenario #1 - validator / Git commit validation
+#### scenario #1 - validator / Git commit validation / Changelog validation
 
 You try to write git commit -m "feat: add rendering in format format"
 your githook is activated and tries to parse your commit name accroding to git conventional commits standard. If unable, it will give you error and prevent commit
@@ -139,10 +135,39 @@ Program checks if u made no commits, or only refactoring and styling.
 - if you made breaking changes, users should know `feat!` or `BREAKING CHANGE:`, then next version is `1.0.0`
 - if u had no previous versions, it will calculate new one as `0.0.0` + calculated version changes
 
+more detailed algorithm, accounting also prerelease version calculations:
+
+```mermaid
+flowchart TD
+  RequestNextSemanticVersioning[Request next semantic versioning]
+  RequestNextSemanticVersioning --> FindCommits[Find commits\nfrom HEAD^1 to previous stable semantic version like v0.3.0]
+  FindCommits --> CalculateVersionChange[Calculate main version change\nChoose only ONE path]
+  CalculateVersionChange --> MajorChange[if git conventional commits\nwith breaking changes\nlike feat! are present\nand it is not 0.*.* development mode\nor flag `--publish` is present,\nthen add MAJOR version\nand reset MINOR and PATCH to 0\nchange: +1.0.0]
+  CalculateVersionChange -->MinorChange[If commits with `feat` type are present\nincrease MINOR version and reset PATCH version to zero\n change: *.+1.0,]
+  CalculateVersionChange -->PatchChange[if only commits with `fix`\n are present\nthen change only PATCH\nchange: *.*.+1]
+  MajorChange --> CalculatedMainVersion
+  MinorChange --> CalculatedMainVersion
+  PatchChange --> CalculatedMainVersion
+  CalculatedMainVersion[Calculated main version]
+  CalculatedMainVersion --> CalculatePrereleaseVersion[Calculate next prerelease version]
+  CalculatePrereleaseVersion --> FindLatestPrerelease[Find latest alpha beta and rc versions\nwith scanning commits up to latest stable version\nExcept not counting latest commit\nChoose ONE, SEVERAL or ALL paths next:]
+  FindLatestPrerelease --> AlphaFlag[if alpha flag is present\nincrease alpha version\nand mark for rendering into output]
+  FindLatestPrerelease --> BetaFlag[if beta flag is present\nincrease beta version\nand mark for rendering into output]
+  FindLatestPrerelease --> RcFlag[if rc-release candidate- flag is present\nincrease rc version\nand mark for rendering into output]
+  AlphaFlag --> CombineIntoTotalPrereleaseVersion
+  BetaFlag --> CombineIntoTotalPrereleaseVersion
+  RcFlag --> CombineIntoTotalPrereleaseVersion
+  CombineIntoTotalPrereleaseVersion[Combine into latest prerelease version]
+  CalculatedMainVersion --> AddBuildMetaData[Add build meta data as +$BuildMetaData\nto the end of version]
+  CombineIntoTotalPrereleaseVersion --> OutputFinalSemanticVersion
+  AddBuildMetaData --> OutputFinalSemanticVersion
+```
+
 #### TLDR
 
 So in a nutshell, it takes away complexity of using git conventional commits and semantic versioning. You are auto guided and auto corrected how correctly to perform it xD
 u only need correctly writing meaning/subject/description to your commits 🙂 but since u see what is rendered to users, you quickly learn how to write it better
+Plus it was made in CI friendly way
 
 why semantic versioning is important, to read here https://semver.org/
 well, about git conventional commits is here: https://www.conventionalcommits.org/en/v1.0.0/
@@ -170,3 +195,9 @@ Discussions about future development and features in [Pull Requests](https://git
 - add binary discovery for cobra-cli, godoc detection
   - `export PATH="$PATH:/usr/local/go/bin:$HOME/go/bin"`
 - install latest stable autogit 😄
+
+## Contribution and contacts:
+
+- U are welcome to contact author @dd84ai at `dark.dreamflyer@gmail.com`
+- opening [Pull Requests with bug fix or feat requests](https://github.com/darklab8/darklab_autogit/issues)
+- joining [Darklab Discord server](https://discord.gg/aukHmTK82J)
