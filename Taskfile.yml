@@ -23,7 +23,7 @@ tasks:
 
   build-version:
     cmds:
-      - autogit version > settings/version.txt || echo 'not installed autogit' > settings/version.txt
+      - autogit version --publish > settings/version.txt || echo 'not installed autogit' > settings/version.txt
   build:
     cmds:
       - task: build-version
