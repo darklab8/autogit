@@ -90,7 +90,7 @@ flowchart TD
   GitCommit --> TryParsingCommitMessage[Try parsing commit message\nto git conventional commit\ntype \ scope \ subject \ body \ footers]
   TryParsingCommitMessage --> ReportFail[Reporting errors if unable]
   TryParsingCommitMessage --> ContinuingValidation[Continue Validation]
-  ContinuingValidation --> CheckOptionalValidationRulesIfEnabled
+  ContinuingValidation --> CheckOptionalValidationRulesIfEnabled[Check options validation rules\if they are enabled]
   CheckOptionalValidationRulesIfEnabled --> CommitTypeInAllowedList[Commit type is\nin allowed list]
   CommitTypeInAllowedList --> WhenAppliedRules
   CheckOptionalValidationRulesIfEnabled --> MinimumNWords[Minimum N words is present\nin commit subhect]
