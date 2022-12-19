@@ -4,8 +4,8 @@
 
 ## Description
 
-CI friendly tool for automatic following of Git Conventional commit rules
-Bthe tool generates automatically changelogs of new features and bug fixes for your product releases
+CI friendly tool for automatic following of Git Conventional commit rules (standard for more descriptive commits)
+The tool generates automatically changelogs of new features and bug fixes for your product releases
 and also calculates next semantic version your next product release should be having
 
 ## Features
