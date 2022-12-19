@@ -2,6 +2,12 @@
   <img src="assets/logo.png" />
 </p>
 
+## Description
+
+CI friendly tool for automatic following of Git Conventional commit rules
+Bthe tool generates automatically changelogs of new features and bug fixes for your product releases
+and also calculates next semantic version your next product release should be having
+
 ## Features
 
 - [git conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) validations (and optional other ones) on pre-commit hook
