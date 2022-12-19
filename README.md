@@ -4,8 +4,8 @@
 
 ## Features
 
-- [git conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) validations (and many other ones) on pre-commit hook
-- validation of your commit history of `autogit changelog --validate` request
+- [git conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) validations (and optional other ones) on pre-commit hook
+- validation of your commit history on `autogit changelog --validate` request
 - automatic next [semantic versioning](https://semver.org/spec/v2.0.0.html) calculation for your product release
 - auto generating [changelogs](https://github.com/darklab8/darklab_autogit/releases/tag/v0.3.0-rc.2) new features and bug fixes to your next product release
 - CI friendly binary file for any OS and arhictecture. Development with CI in mind. [CI examples](https://github.com/darklab8/darklab_autogit/tree/master/.github/workflows)
