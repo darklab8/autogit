@@ -2,13 +2,13 @@
   <img src="assets/logo.png" />
 </p>
 
-## Description
+## Features
 
-Solution for
-
-- git conventional commits validations
-- automatic semantic versioning generation
-- auto generating changelogs
+- [git conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) validations (and many other ones) on pre-commit hook
+- validation of your commit history of `autogit changelog --validate` request
+- automatic next [semantic versioning](https://semver.org/spec/v2.0.0.html) calculation for your product release
+- auto generating [changelogs](https://github.com/darklab8/darklab_autogit/releases/tag/v0.3.0-rc.2) new features and bug fixes to your next product release
+- CI friendly binary file for any OS and arhictecture. Development with CI in mind. [CI examples](https://github.com/darklab8/darklab_autogit/tree/master/.github/workflows)
 
 ## Compiled for:
 
@@ -19,50 +19,120 @@ Solution for
 - windows-amd64
 - windows-386.exe
 - windows-arm64.exe
-- windows-arm.exe    
+- windows-arm.exe
 - macos-amd64
 - macos-arm64
 
 ## Support:
 
 ##### First tier support - issues can solved on our own
-- for linux and CI usage
-##### Second tier support - issues may be solved on our own
-- for windows
-##### Third tier support - only compiled, and accepting bug fixes implemented by contributors
-- for macos
 
+- for linux and CI usage
+
+##### Second tier support - issues may be solved on our own
+
+- for windows
+
+##### Third tier support - only compiled, and accepting bug fixes implemented by contributors
+
+- for macos
 
 ## Installation
 
-- 1. [download latest release](https://github.com/darklab8/darklab_autogit/releases) and put to env PATH searchable range
+- 1. [download latest stable release](https://github.com/darklab8/darklab_autogit/releases) and put to env PATH searchable range
 
-  - 1.1 Linux ubuntu one liner: `curl -o /usr/local/bin/autogit https://github.com/darklab8/darklab_autogit/releases/download/v0.2.0/autogit-linux-amd64 && chmod 777 /usr/local/bin/autogit`
-- 2. copy [autogit.yml](https://github.com/darklab8/darklab_autogit/blob/master/autogit.yml) to root of your folder and adjust settings
-- 3. run `autogit activate`
+  - Linux:
 
-  - 3.1 if you don't have `git` in PATH way, then copy [.git-hooks](https://github.com/darklab8/darklab_autogit/tree/master/.git-hooks) to your project and run `git config core.hooksPath .git-hooks`
+    - Check your PATH bin serachable locations with `echo "$PATH"` and put into any of them or add new location, change settings to allow it being executable with `chmod`
+    - Recomendation to put into `/usr/local/bin`
+    - Linux ubuntu one liner: `curl -o /usr/local/bin/autogit https://github.com/darklab8/darklab_autogit/releases/tag/v0.4.0-a.2 && chmod 777 /usr/local/bin/autogit`
+  - Windows:
+
+    - Check your PATH bin locations with `echo %PATH%` and put binary file any of them or add to new one, be sure to rename from like `autogit-windows-amd64.exe` to `autogit.exe`
+    - If u use `Git Bash`, recommendation to put into `~/bin` for usage in Git Bash only, or into `C:\Program Files\Git\cmd` for working in any terminal
+    - U can add to any other PATH bin searchable locations or add a new one
+  - MacOS
+
+    - (To be written where to put)
+- 2. copy [autogit.yml](https://github.com/darklab8/darklab_autogit/releases/download/v0.4.0-a.2/autogit.yml) from same binary release you downloaded executable! And put to root of your git project folder and adjust settings to your repository specifics
+- 3. run `autogit hook activate` to create `.git-hook` folder and enabling it in your git repository settings
+
+P.S. Current repository runs on configured autogit as well
 
 ## Usages
 
 #### scenario #1 - validator / Git commit validation
 
-You try to write git commit -m "feat: bla bla bla"
+You try to write git commit -m "feat: add rendering in format format"
 your githook is activated and tries to parse your commit name accroding to git conventional commits standard. If unable, it will give you error and prevent commit
+
+```mermaid
+flowchart TD
+  GitCommit[attempt to fixate commit like\ngit commit -m 'feat: add rendering in markdown format'\nwith 'autogit hook activate' enabled]
+  RequestValidatingChangelog[Request changelog with --validate flag] --> TryParsingCommitMessage
+  GitCommit --> TryParsingCommitMessage[Try parsing commit message\nto git conventional commit\ntype \ scope \ subject \ body \ footers]
+  TryParsingCommitMessage --> ReportFail[Reporting errors if unable]
+  TryParsingCommitMessage --> ContinuingValidation[Continue Validation]
+  ContinuingValidation --> CheckOptionalValidationRulesIfEnabled
+  CheckOptionalValidationRulesIfEnabled --> CommitTypeInAllowedList[Commit type is\nin allowed list]
+  CommitTypeInAllowedList --> WhenAppliedRules
+  CheckOptionalValidationRulesIfEnabled --> MinimumNWords[Minimum N words is present\nin commit subhect]
+  MinimumNWords --> WhenAppliedRules
+  CheckOptionalValidationRulesIfEnabled --> IssueIsLinked[Issue is linked to commit]
+  IssueIsLinked --> WhenAppliedRules
+  CheckOptionalValidationRulesIfEnabled --> CheckOtherEnabledRulesInSettings[Check other enabled\nrules in settings]
+  CheckOtherEnabledRulesInSettings --> WhenAppliedRules
+  CheckOptionalValidationRulesIfEnabled --> WhenAppliedRules[when applied rules]
+  WhenAppliedRules --> IfCommit[if it was commit,\nthen fixate if passed rules,\nor cancel fixation]
+  WhenAppliedRules --> IfChangelog[if it was changelog validation\nthen report no errors and exit code 0\nfor pipeline checks]
+```
 
 #### scenario #2 - changelog / Your wish to see changelog of additions you made, what are new features, what are fixes. For user view
 
 You wish to have changelog auto generated.
-program parses your conventional commits, and renders output in markdown for copy paste to github
-(Changelog is generated since the last release version / last semantic tag applied to repository)
-P.S. you can also request at any time changelogs from previous releases/tags. Everything is parsed from your commits
+
+```mermaid
+flowchart TD
+    RequestingChangelog[Requesting changelog]
+    RequestingChangelog --> ChangelogFromLatestCommitToPreviousTagVersion
+    ChangelogFromLatestCommitToPreviousTagVersion[Requesting changelog from previous\ntag to latest commit]
+    RequestingChangelog --> ChangelogFromChosenTagToPreviousTag
+    ChangelogFromChosenTagToPreviousTag[Requesting changelog from chosen tag\nversion to previous tag version]
+    ChangelogFromLatestCommitToPreviousTagVersion --> GenerateChangelog
+    GenerateChangelog[Start generating changelog]
+    ParseCommits[Parse commit in necessary tag range]
+    ChangelogFromChosenTagToPreviousTag --> GenerateChangelog
+    GenerateChangelog --> ParseCommits
+    ParseCommits --> SelectAllowedTypesForRender
+    SelectAllowedTypesForRender[Filter conventional commit `types` like `feat` allowed for render]
+    SelectAllowedTypesForRender --> SubgroupIntoConventionalCommitScopes
+    SubgroupIntoConventionalCommitScopes[Sub group commits according to conventional commit `scope`]
+    GenerateChangelog --> CalculateNextSemver
+    CalculateNextSemver[Calculate Next Semantic Version]
+    CalculateNextSemver --> SendChangelogToRender
+    SubgroupIntoConventionalCommitScopes --> SendChangelogToRender
+    SendChangelogToRender[Receive changelog for render]
+    SendChangelogToRender --> RenderChangelogMarkdown
+    SendChangelogToRender --> RenderChangelogRst
+    SendChangelogToRender --> RenderChangelogHtml
+    RenderChangelogMarkdown[Render in markdown\n--implemented--]
+    RenderChangelogRst[Render in rst\n--not implemented--]
+    RenderChangelogHtml[Render in html\n--not implemented--]
+```
+
+###### example of rendered changelog
+
+[Full example of rendered changelog](https://github.com/darklab8/darklab_autogit/releases/tag/v0.3.0-rc.2)
 
 #### Scenario #3 - nextSemVer / You wish to know which next semantic version / semantic tag should be applied to your release.
 
-Program checks if u made no commits, or only refactoring and styling. Then it says, next version is same as previous one. Nothing changed, for example `0.0.1` as first one.
-If you made `fix`, then it increases PATCH version of semantic version. Your next version is `0.0.2` rendered
-if you made `feat` request, then next MINOR version is increased. Your next version is `0.1.0`
-if you made breaking changes, users should know `feat!` or `BREAKING CHANGE:`, then next version is `1.0.0`
+Program checks if u made no commits, or only refactoring and styling.
+
+- If u made no changes, then next version is same as previous one.
+- If you made `fix`, then it increases PATCH version of semantic version. Your next version is `0.0.2` rendered
+- if you made `feat` request, then next MINOR version is increased. Your next version is `0.1.0`
+- if you made breaking changes, users should know `feat!` or `BREAKING CHANGE:`, then next version is `1.0.0`
+- if u had no previous versions, it will calculate new one as `0.0.0` + calculated version changes
 
 #### TLDR
 
@@ -75,13 +145,17 @@ well, about git conventional commits is here: https://www.conventionalcommits.or
 as an example, all my releases of darktool were made with similar automatation.
 Changelogs and versions https://github.com/darklab8/darklab_freelancer_darktool/releases
 
-## Future development and resources
+## Future development and resources for inspiration
 
 - https://www.quora.com/What-is-the-difference-between-alpha-beta-and-RC-software-version // Adding ability of beta versions
 - https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional // Configurable stricter rules to validator
 - https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines // Just more about git conventional commits
 - https://www.npmjs.com/package/git-conventional-commits
 - https://www.conventionalcommits.org/en/about/ tools
+- https://github.com/c4urself/bump2version/blob/master/RELATED.md // research alternatives
+- https://gist.github.com/qoomon/5dfcdf8eec66a051ecd85625518cfd13
+
+Discussions about future development and features in [Pull Requests](https://github.com/darklab8/darklab_autogit/issues)
 
 ## Dev Requirements
 
@@ -90,6 +164,4 @@ Changelogs and versions https://github.com/darklab8/darklab_freelancer_darktool/
 - godoc
 - add binary discovery for cobra-cli, godoc detection
   - `export PATH="$PATH:/usr/local/go/bin:$HOME/go/bin"`
-- Git hooks of conventional commits
-  - [docs](https://gist.github.com/qoomon/5dfcdf8eec66a051ecd85625518cfd13)
-  - [app](https://www.npmjs.com/package/git-conventional-commits)
+- install latest stable autogit 😄
