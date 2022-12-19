@@ -63,7 +63,7 @@ P.S. Current repository runs on configured autogit as well
 
 ## Usages
 
-#### scenario #1 - validator / Git commit validation / Changelog validation
+### scenario #1 - validator / Git commit validation / Changelog validation
 
 You try to write git commit -m "feat: add rendering in format format"
 your githook is activated and tries to parse your commit name accroding to git conventional commits standard. If unable, it will give you error and prevent commit
@@ -89,7 +89,7 @@ flowchart TD
   WhenAppliedRules --> IfChangelog[if it was changelog validation\nthen report no errors and exit code 0\nfor pipeline checks]
 ```
 
-#### scenario #2 - changelog / Your wish to see changelog of additions you made, what are new features, what are fixes. For user view
+### scenario #2 - changelog / Your wish to see changelog of additions you made, what are new features, what are fixes. For user view
 
 You wish to have changelog auto generated.
 
@@ -126,7 +126,7 @@ flowchart TD
 
 [Full example of rendered changelog](https://github.com/darklab8/darklab_autogit/releases/tag/v0.3.0-rc.2)
 
-#### Scenario #3 - nextSemVer / You wish to know which next semantic version / semantic tag should be applied to your release.
+### Scenario #3 - nextSemVer / You wish to know which next semantic version / semantic tag should be applied to your release.
 
 Program checks if u made no commits, or only refactoring and styling.
 
@@ -164,7 +164,7 @@ flowchart TD
   AddBuildMetaData --> OutputFinalSemanticVersion[Render Final Semantic Version]
 ```
 
-#### TLDR
+### TLDR
 
 So in a nutshell, it takes away complexity of using git conventional commits and semantic versioning. You are auto guided and auto corrected how correctly to perform it xD
 u only need correctly writing meaning/subject/description to your commits 🙂 but since u see what is rendered to users, you quickly learn how to write it better
