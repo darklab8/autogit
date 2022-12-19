@@ -16,6 +16,7 @@ and also calculates next semantic version your next product release should be ha
 - auto generating [changelogs](https://github.com/darklab8/darklab_autogit/releases/tag/v0.3.0-rc.2) new features and bug fixes to your next product release
 - when you create tag with `autogit version --tag --other-flags`, changelog is automatically added to annotated git tag
 - CI friendly binary file for any OS and arhictecture. Development with CI in mind. [CI examples](https://github.com/darklab8/darklab_autogit/tree/master/.github/workflows)
+- Contains inbuilt git. Not requiring git to be installed for its functionality
 
 ## Compiled for:
 
@@ -52,7 +53,7 @@ and also calculates next semantic version your next product release should be ha
 
   - Check your PATH bin serachable locations with `echo "$PATH"` and put into any of them or add new location, change settings to allow it being executable with `chmod`
   - Recomendation to put into `/usr/local/bin`
-  - Linux ubuntu one liner: `curl -o /usr/local/bin/autogit https://github.com/darklab8/darklab_autogit/releases/tag/v0.4.0-a.2 && chmod 777 /usr/local/bin/autogit`
+  - Linux ubuntu one liner: `curl -o /usr/local/bin/autogit https://github.com/darklab8/darklab_autogit/releases/download/v1.0.0/autogit-linux-amd64 && chmod 777 /usr/local/bin/autogit`
 - Windows:
 
   - Check your PATH bin locations with `echo %PATH%` and put binary file any of them or add to new one, be sure to rename from like `autogit-windows-amd64.exe` to `autogit.exe`
@@ -62,7 +63,7 @@ and also calculates next semantic version your next product release should be ha
 
   - (To be written where to put)
 
-2. copy [autogit.yml](https://github.com/darklab8/darklab_autogit/releases/download/v0.4.0-a.2/autogit.yml) from same binary release you downloaded executable! And put to root of your git project folder and adjust settings to your repository specifics
+2. copy [autogit.yml](https://github.com/darklab8/darklab_autogit/releases/download/v1.0.0/autogit.yml) from same binary release you downloaded executable! And put to root of your git project folder and adjust settings to your repository specifics
 3. run `autogit hook activate` to create `.git-hook` folder and enabling it in your git repository settings
 
 P.S. Current repository runs on configured autogit as well
