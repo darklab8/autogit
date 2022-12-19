@@ -5,12 +5,16 @@
 ## Description
 
 CI friendly tool for automatic following of Git Conventional commit rules (standard for more descriptive commits)
+
 The tool generates automatically changelogs of new features and bug fixes for your product releases
+
 and also calculates next semantic version your next product release should be having
 
 Essentially tool... To decrease toll on release documentation writing, and to start writing more descriptive commits
-What are git conventional commits: https://www.conventionalcommits.org/en/v1.0.0/
-What is semantic versioning: https://semver.org/
+
+See what are git conventional commits: https://www.conventionalcommits.org/en/v1.0.0/
+
+See what is semantic versioning: https://semver.org/
 
 ## Features
 
