@@ -196,8 +196,8 @@ Discussions about future development and features in [Pull Requests](https://git
   - `export PATH="$PATH:/usr/local/go/bin:$HOME/go/bin"`
 - install latest stable autogit 😄
 
-## Contribution and contacts:
+## Contributions and contacts:
 
-- U are welcome to contact author [@dd84ai](https://github.com/dd84ai) at `dark.dreamflyer@gmail.com`
-- opening [Pull Requests with bug fix or feat requests](https://github.com/darklab8/darklab_autogit/issues)
-- joining [Darklab Discord server](https://discord.gg/aukHmTK82J)
+- contact author [@dd84ai](https://github.com/dd84ai) at `dark.dreamflyer@gmail.com`
+- open [Pull Requests with bug fix or feat requests](https://github.com/darklab8/darklab_autogit/issues)
+- join [Darklab Discord server](https://discord.gg/aukHmTK82J)
