@@ -24,6 +24,13 @@ tasks:
   build-version:
     cmds:
       - autogit version --publish > settings/version.txt || echo 'not installed autogit' > settings/version.txt
+
+  build:test:
+    cmds:
+      - mkdir -p dist
+      - rm dist/autogit-linux-amd64 | true
+      - GOOS=linux GOARCH=amd64 go build -v -o dist/autogit-linux-amd64 main.go
+
   build:
     cmds:
       - task: build-version

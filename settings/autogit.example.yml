@@ -1,7 +1,7 @@
 changelog:
-  commitUrl: "https://github.com/darklab8/darklab_autogit/commit/{{.Commit}}"
-  commitRangeUrl: "https://github.com/darklab8/darklab_autogit/compare/{{.From}}...{{.To}}?diff=split"
-  issueUrl: "https://github.com/darklab8/darklab_autogit/issues/{{.Issue}}"
+  commitUrl: "https://github.com/REPOSITORY_OWNER/REPOSITORY_NAME/commit/{{.Commit}}"
+  commitRangeUrl: "https://github.com/REPOSITORY_OWNER/REPOSITORY_NAME/compare/{{.From}}...{{.To}}?diff=split"
+  issueUrl: "https://github.com/REPOSITORY_OWNER/REPOSITORY_NAME/issues/{{.Issue}}"
 
 # set to non zero value to have custom definitions
 regex:

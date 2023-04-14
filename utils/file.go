@@ -6,13 +6,19 @@ import (
 	"os"
 )
 
-type File struct {
+type myfile struct {
 	Filepath string
 	file     *os.File
 	lines    []string
 }
 
-func (f *File) OpenToReadF() *File {
+func NewFile(Filepath string) *myfile {
+	return &myfile{
+		Filepath: Filepath,
+	}
+}
+
+func (f *myfile) OpenToReadF() *myfile {
 	file, err := os.Open(f.Filepath)
 	f.file = file
 
@@ -20,11 +26,11 @@ func (f *File) OpenToReadF() *File {
 	return f
 }
 
-func (f *File) Close() {
+func (f *myfile) Close() {
 	f.file.Close()
 }
 
-func (f *File) ReadLines() []string {
+func (f *myfile) ReadLines() []string {
 
 	scanner := bufio.NewScanner(f.file)
 
@@ -34,21 +40,29 @@ func (f *File) ReadLines() []string {
 	return f.lines
 }
 
-func (f *File) FileReadLines() []string {
+func (f *myfile) FileReadLines() []string {
 	f.OpenToReadF()
 	defer f.Close()
 	return f.ReadLines()
 }
 
-func (f *File) CreateToWriteF() *File {
+func (f *myfile) CreateToWriteF() *myfile {
 	file, err := os.Create(f.Filepath)
 	f.file = file
 	CheckFatal(err, "failed to open ", f.Filepath)
 
 	return f
 }
-func (f *File) WritelnF(msg string) {
+func (f *myfile) WritelnF(msg string) {
 	_, err := f.file.WriteString(fmt.Sprintf("%v\n", msg))
 
 	CheckFatal(err, "failed to write string to file")
+}
+
+func FileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
 }

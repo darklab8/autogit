@@ -40,7 +40,7 @@ func (r *Repository) TestNewRepoIntegration() *Repository {
 }
 
 func (r *Repository) TestCommit(msg string) plumbing.Hash {
-	file := (&utils.File{Filepath: "testfile.txt"}).CreateToWriteF()
+	file := utils.NewFile("testfile.txt").CreateToWriteF()
 	defer file.Close()
 	file.WritelnF(utils.TokenHex(10))
 

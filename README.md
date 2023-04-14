@@ -71,8 +71,8 @@ See what is semantic versioning: https://semver.org/
 
   - (To be written where to put)
 
-2. copy [autogit.yml](https://github.com/darklab8/darklab_autogit/releases/download/v1.0.0/autogit.yml) from same binary release you downloaded executable! And put to root of your git project folder and adjust settings to your repository specifics
-3. run `autogit hook activate` to create `.git-hook` folder and enabling it in your git repository settings
+2. init autogit.yml with `autogit init` command in the root of repository. change REPOSITORY_OWNER and REPOSITORY_NAME to yours
+3. run `autogit hook activate` to create `.git-hook` folder and enabling it in your git config for automated commit validation on pre-commit hook
 
 P.S. Current repository runs on configured autogit as well
 
