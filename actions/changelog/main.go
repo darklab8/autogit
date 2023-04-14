@@ -21,8 +21,9 @@ type Header struct {
 }
 
 func (r *Header) Render() string {
+	templs := settings.GetTemplates()
 	currentTime := time.Now()
-	return fmt.Sprintf("## **%s** <sub><sub>%s ([%s...%s](%s))</sub></sub>", r.Version, currentTime.Format("2006-01-02"), r.From, r.To, utils.TmpRender(settings.Template.CommitRangeUrl, r))
+	return fmt.Sprintf("## **%s** <sub><sub>%s ([%s...%s](%s))</sub></sub>", r.Version, currentTime.Format("2006-01-02"), r.From, r.To, utils.TmpRender(templs.CommitRangeUrl, r))
 }
 
 func (r *Header) New(logs []conventionalcommits.ConventionalCommit, version string) *Header {
@@ -37,22 +38,23 @@ type commitRecord struct {
 }
 
 func (c commitRecord) Render(record conventionalcommits.ConventionalCommit) string {
+	templs := settings.GetTemplates()
 	type IssueData struct {
 		Issue string
 	}
 
 	var issue_rendered strings.Builder
 	for _, issue_n := range record.Issue {
-		issue_rendered.WriteString(fmt.Sprintf(", [#%s](%s)", issue_n, utils.TmpRender(settings.Template.IssueUrl, IssueData{Issue: issue_n})))
+		issue_rendered.WriteString(fmt.Sprintf(", [#%s](%s)", issue_n, utils.TmpRender(templs.IssueUrl, IssueData{Issue: issue_n})))
 	}
 
 	rendered_subject := record.Subject
 	IssueMatch := settings.RegexIssue.FindAllStringSubmatch(record.Subject, -1)
 	for _, match := range IssueMatch {
-		rendered_subject = strings.Replace(rendered_subject, match[0], fmt.Sprintf("[#%s](%s)", match[1], utils.TmpRender(settings.Template.IssueUrl, IssueData{Issue: match[1]})), -1)
+		rendered_subject = strings.Replace(rendered_subject, match[0], fmt.Sprintf("[#%s](%s)", match[1], utils.TmpRender(templs.IssueUrl, IssueData{Issue: match[1]})), -1)
 	}
 
-	formatted_url := utils.TmpRender(settings.Template.CommitUrl, commitRecord{Commit: record.Hash})
+	formatted_url := utils.TmpRender(templs.CommitUrl, commitRecord{Commit: record.Hash})
 	return fmt.Sprintf("* %s ([%s](%s)%s)\n", rendered_subject, record.Hash, formatted_url, issue_rendered.String())
 }
 

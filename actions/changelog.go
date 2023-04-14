@@ -5,6 +5,7 @@ import (
 	"autogit/actions/validation"
 	"autogit/semanticgit"
 	"autogit/semanticgit/git"
+	"autogit/settings"
 	"autogit/utils"
 
 	"github.com/spf13/cobra"
@@ -23,6 +24,7 @@ func (v *ChangelogParams) Bind(cmd *cobra.Command) {
 }
 
 func Changelog(params ChangelogParams, gitw *git.Repository) string {
+	conf := settings.LoadSettings(settings.GetSettingsPath())
 	params.EnableNewline = false
 
 	g := (&semanticgit.SemanticGit{}).NewRepo(gitw)
@@ -31,7 +33,7 @@ func Changelog(params ChangelogParams, gitw *git.Repository) string {
 	if params.Validate {
 		log_records := g.GetChangelogByTag(params.Tag, false)
 		for _, record := range log_records {
-			err := validation.Validate(&record)
+			err := validation.Validate(&record, conf)
 			utils.CheckFatal(err)
 		}
 	}

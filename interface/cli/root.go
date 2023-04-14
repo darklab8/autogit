@@ -15,7 +15,9 @@ var rootCmd = &cobra.Command{
 	Short: "Git tool for validation of conventional commits, changelog generation and semantic version generation",
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+	// Run: func(cmd *cobra.Command, args []string) {
+	// 	fmt.Println("invoking root")
+	// },
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

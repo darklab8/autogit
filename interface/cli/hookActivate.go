@@ -5,6 +5,7 @@ package cli
 
 import (
 	"autogit/semanticgit/git"
+	"autogit/settings"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -24,7 +25,7 @@ var activateCmd = &cobra.Command{
 		commit_msg_path := filepath.Join(hook_folder, "commit-msg")
 		ioutil.WriteFile(commit_msg_path, []byte("#!/bin/sh\n\nautogit hook commitMsg \"$1\"\n"), 0777)
 
-		git := (&git.Repository{}).NewRepoInWorkDir()
+		git := (&git.Repository{}).NewRepoInWorkDir(git.SshPath(settings.GetConfig().Git.SSHPath))
 		git.HookEnabled(true)
 	},
 }

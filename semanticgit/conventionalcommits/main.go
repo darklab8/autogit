@@ -118,7 +118,7 @@ func (m InvalidType) Error() string {
 }
 
 func (c *ConventionalCommit) Validate() error {
-	for _, type_ := range settings.Config.Validation.Rules.Header.Type.Whitelist {
+	for _, type_ := range settings.GetConfig().Validation.Rules.Header.Type.Whitelist {
 		if c.Type == type_ {
 			return nil
 		}

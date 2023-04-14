@@ -2,7 +2,6 @@
 package git
 
 import (
-	"autogit/settings"
 	"autogit/utils"
 	"fmt"
 	"io/ioutil"
@@ -23,13 +22,16 @@ func CheckIfError(err error) {
 	}
 }
 
+type SshPath string
+
 type Repository struct {
-	repo   *git.Repository
-	wt     *git.Worktree
-	author *object.Signature
+	repo    *git.Repository
+	wt      *git.Worktree
+	author  *object.Signature
+	sshPath SshPath
 }
 
-func (r *Repository) NewRepoInWorkDir() *Repository {
+func (r *Repository) NewRepoInWorkDir(sshPath SshPath) *Repository {
 	path, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err, "unable to get workdir")
@@ -174,7 +176,7 @@ const defaultRemoteName = "origin"
 
 func (r *Repository) PushTag(name string) {
 	var publicKey *ssh.PublicKeys
-	sshPath := filepath.Join(os.Getenv("HOME"), ".ssh", settings.Config.Git.SSHPath)
+	sshPath := filepath.Join(os.Getenv("HOME"), ".ssh", string(r.sshPath))
 	sshKey, _ := ioutil.ReadFile(sshPath)
 	publicKey, keyError := ssh.NewPublicKeys("git", []byte(sshKey), "")
 	utils.CheckFatal(keyError)

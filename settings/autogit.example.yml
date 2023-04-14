@@ -1,0 +1,44 @@
+changelog:
+  commitUrl: "https://github.com/darklab8/darklab_autogit/commit/{{.Commit}}"
+  commitRangeUrl: "https://github.com/darklab8/darklab_autogit/compare/{{.From}}...{{.To}}?diff=split"
+  issueUrl: "https://github.com/darklab8/darklab_autogit/issues/{{.Issue}}"
+
+# set to non zero value to have custom definitions
+regex:
+  conventionalCommit:
+    header: ''
+    bodyFooter: ''
+  issue: ''
+  semVer: ''
+  prerelease: ''
+  validation:
+    scope:
+      lowercase: ''
+    type:
+      lowercase: ''
+
+validation:
+  sections:
+    hook:
+      commitMsg:
+        enabled: true
+    changelog:
+      enabled: false
+  rules:
+    issue:
+      present: false
+    header:
+      maxLength: 72
+      type:
+        lowercase: true
+        whitelist: []
+      scope:
+        present: false
+        lowercase: true
+        whitelist: []
+      subject:
+        minWords: 0
+
+# expects to find in ~/.ssh for `autogit version --push` command
+git:
+  sshPath: id_rsa

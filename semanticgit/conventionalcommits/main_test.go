@@ -1,6 +1,8 @@
 package conventionalcommits
 
 import (
+	_ "autogit/testsautouse"
+
 	"autogit/utils"
 	"testing"
 

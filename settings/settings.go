@@ -27,26 +27,27 @@ type ConfigScheme struct {
 	} `yaml:"git"`
 }
 
-var Config ConfigScheme
+type SettingPath string
 
-var AutogitSettingsPath string
+func ConfigRead(settingsPath SettingPath) *ConfigScheme {
 
-func ConfigRead() {
+	file, err := ioutil.ReadFile(string(settingsPath))
+	utils.CheckFatal(err, "Could not read the file due to error, autogit_path=%s\n", string(settingsPath))
 
-	file, err := ioutil.ReadFile(AutogitSettingsPath)
-	utils.CheckFatal(err, "Could not read the file due to error, autogit_path=%s\n", AutogitSettingsPath)
+	result := ConfigScheme{}
 
-	err = yaml.Unmarshal(file, &Config)
+	err = yaml.Unmarshal(file, &result)
 	utils.CheckFatal(err, "unable to unmarshal settings")
+	return &result
 }
 
 // yml package has no way to validate that there is no unknown undeclared fields
-func validateSettingsScheme() {
+func validateSettingsScheme(settingsPath SettingPath) {
 	var config ConfigScheme
 	var err error
 
-	file, err := ioutil.ReadFile(AutogitSettingsPath)
-	utils.CheckFatal(err, "Could not read the file due to error, autogit_path=%s\n", AutogitSettingsPath)
+	file, err := ioutil.ReadFile(string(settingsPath))
+	utils.CheckFatal(err, "Could not read the file due to error, autogit_path=%s\n", string(settingsPath))
 
 	// Marshal file to struct
 	err = yaml.Unmarshal(file, &config)
@@ -75,19 +76,36 @@ func validateSettingsScheme() {
 	}
 }
 
-func init() {
+func LoadSettings(settingsPath SettingPath) *ConfigScheme {
+	config := ConfigRead(settingsPath)
+	ChangelogInit(*config)
+	RegexInit(config)
+	ValidationInit(config)
+	validateSettingsScheme(settingsPath)
+
+	return config
+}
+
+func GetSettingsPath() SettingPath {
 	workdir, _ := os.Getwd()
 	project_folder := os.Getenv("AUTOGIT_PROJECT_FOLDER")
 	if project_folder != "" {
 		log.Println("OK AUTOGIT_PROJECT_FOLDER is not empty, changing search settings to ", project_folder)
 		workdir = project_folder
 	}
-
-	AutogitSettingsPath = filepath.Join(workdir, "autogit.yml")
-
-	ConfigRead()
-	ChangelogInit()
-	RegexInit()
-	ValidationInit()
-	validateSettingsScheme()
+	settingsPath := filepath.Join(workdir, "autogit.yml")
+	return SettingPath(settingsPath)
 }
+
+var config *ConfigScheme
+
+func GetConfig() ConfigScheme {
+	if config == nil {
+		settingPath := GetSettingsPath()
+		config = LoadSettings(settingPath)
+	}
+	return *config
+}
+
+//go:embed autogit.example.yml
+var ConfigExample string

@@ -6,6 +6,7 @@ package cli
 import (
 	"autogit/actions"
 	"autogit/semanticgit/git"
+	"autogit/settings"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -16,7 +17,7 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "next semantic version",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("%s", actions.Version(versionParams, (&git.Repository{}).NewRepoInWorkDir()))
+		fmt.Printf("%s", actions.Version(versionParams, (&git.Repository{}).NewRepoInWorkDir(git.SshPath(settings.GetConfig().Git.SSHPath))))
 	},
 }
 

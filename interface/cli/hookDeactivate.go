@@ -5,6 +5,7 @@ package cli
 
 import (
 	"autogit/semanticgit/git"
+	"autogit/settings"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -16,7 +17,7 @@ var deactivateCmd = &cobra.Command{
 	Short: "Shortcut to run git config --unset core.hooksPath",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("OK deactivate called")
-		git := (&git.Repository{}).NewRepoInWorkDir()
+		git := (&git.Repository{}).NewRepoInWorkDir(git.SshPath(settings.GetConfig().Git.SSHPath))
 		git.HookEnabled(false)
 	},
 }

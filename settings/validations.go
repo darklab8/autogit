@@ -33,9 +33,9 @@ type ValidationScheme struct {
 	} `yaml:"rules"`
 }
 
-func ValidationInit() {
-	if len(Config.Validation.Rules.Header.Type.Whitelist) == 0 {
-		Config.Validation.Rules.Header.Type.Whitelist = append([]string{},
+func ValidationInit(conf *ConfigScheme) {
+	if len(conf.Validation.Rules.Header.Type.Whitelist) == 0 {
+		conf.Validation.Rules.Header.Type.Whitelist = append([]string{},
 			"build",
 			"chore",
 			"ci",

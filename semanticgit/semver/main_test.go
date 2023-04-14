@@ -1,6 +1,7 @@
 package semver
 
 import (
+	_ "autogit/testsautouse"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

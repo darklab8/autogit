@@ -1,6 +1,8 @@
 package semanticgit
 
 import (
+	_ "autogit/testsautouse"
+
 	"autogit/semanticgit/git"
 	"autogit/semanticgit/semver"
 	"testing"

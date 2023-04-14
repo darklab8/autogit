@@ -1,6 +1,8 @@
 package changelog
 
 import (
+	_ "autogit/testsautouse"
+
 	"autogit/semanticgit"
 	"autogit/semanticgit/git"
 	"autogit/semanticgit/semver"

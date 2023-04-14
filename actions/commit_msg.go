@@ -10,6 +10,9 @@ import (
 )
 
 func CommmitMsg(args []string) {
+	conf := settings.LoadSettings(settings.GetSettingsPath())
+	settings.LoadSettings(settings.GetSettingsPath())
+
 	inputFile := args[0]
 	fmt.Printf("commitFile=%s\n", inputFile)
 
@@ -23,8 +26,8 @@ func CommmitMsg(args []string) {
 	commit, err := conventionalcommits.NewCommit(fileContent)
 	utils.CheckFatal(err, "unable to parse commit to conventional commits standard")
 
-	if settings.Config.Validation.Sections.Hook.CommitMsg.Enabled {
-		err := validation.Validate(commit)
+	if settings.GetConfig().Validation.Sections.Hook.CommitMsg.Enabled {
+		err := validation.Validate(commit, conf)
 		utils.CheckFatal(err)
 	}
 

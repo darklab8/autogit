@@ -10,18 +10,18 @@ type ChangelogScheme struct {
 	IssueURL       string `yaml:"issueUrl"`
 }
 
-func ChangelogValidate() {
-	if Config.Changelog.CommitURL == "" {
+func ChangelogValidate(conf ConfigScheme) {
+	if conf.Changelog.CommitURL == "" {
 		log.Fatal("autogit.yml->Changelog.CommitUrl is empty")
 	}
-	if Config.Changelog.CommitRangeURL == "" {
+	if conf.Changelog.CommitRangeURL == "" {
 		log.Fatal("autogit.yml->Changelog.CommitRangeURL is empty")
 	}
-	if Config.Changelog.IssueURL == "" {
+	if conf.Changelog.IssueURL == "" {
 		log.Fatal("autogit.yml->Changelog.IssueURL is empty")
 	}
 }
 
-func ChangelogInit() {
-	ChangelogValidate()
+func ChangelogInit(conf ConfigScheme) {
+	ChangelogValidate(conf)
 }

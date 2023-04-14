@@ -6,6 +6,7 @@ package cli
 import (
 	"autogit/actions"
 	"autogit/semanticgit/git"
+	"autogit/settings"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -16,7 +17,7 @@ var changelogCmd = &cobra.Command{
 	Use:   "changelog",
 	Short: "Auto generated changelog according to git conventional commits",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("%s", actions.Changelog(paramsChangelog, (&git.Repository{}).NewRepoInWorkDir()))
+		fmt.Printf("%s", actions.Changelog(paramsChangelog, (&git.Repository{}).NewRepoInWorkDir(git.SshPath(settings.GetConfig().Git.SSHPath))))
 	},
 }
 
