@@ -39,6 +39,7 @@ validation:
       subject:
         minWords: 0
 
-# expects to find in ~/.ssh for `autogit version --push` command
+# expects to find file `id_rsa` in ~/.ssh for `autogit version --push` command
+# where ~ your home folder discovered with env var HOME
 git:
   sshPath: id_rsa
