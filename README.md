@@ -53,7 +53,16 @@ See what is semantic versioning: https://semver.org/
 
 - for macos
 
-## Installation
+## Short opinionated installation
+
+assuming you have Linux:
+
+- `curl -o /usr/local/bin/autogit https://github.com/darklab8/darklab_autogit/releases/download/v1.1.0/autogit-linux-amd64 && chmod 777 /usr/local/bin/autogit`
+- `autogit version` to verify installation
+- `autogit init` to create `autogit.yml` config in root of repository
+- `autogit hook activate` to turn validation commit hooks on
+
+## Detailed installation
 
 1. [download latest stable release](https://github.com/darklab8/darklab_autogit/releases) and put to env PATH searchable range
 
@@ -61,7 +70,7 @@ See what is semantic versioning: https://semver.org/
 
   - Check your PATH bin serachable locations with `echo "$PATH"` and put into any of them or add new location, change settings to allow it being executable with `chmod`
   - Recomendation to put into `/usr/local/bin`
-  - Linux ubuntu one liner: `curl -o /usr/local/bin/autogit https://github.com/darklab8/darklab_autogit/releases/download/v1.0.0/autogit-linux-amd64 && chmod 777 /usr/local/bin/autogit`
+  - Linux ubuntu one liner: `curl -o /usr/local/bin/autogit https://github.com/darklab8/darklab_autogit/releases/download/v1.1.0/autogit-linux-amd64 && chmod 777 /usr/local/bin/autogit`
 - Windows:
 
   - Check your PATH bin locations with `echo %PATH%` and put binary file any of them or add to new one, be sure to rename from like `autogit-windows-amd64.exe` to `autogit.exe`
