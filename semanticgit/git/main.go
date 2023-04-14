@@ -32,6 +32,8 @@ type Repository struct {
 }
 
 func (r *Repository) NewRepoInWorkDir(sshPath SshPath) *Repository {
+	r.sshPath = sshPath
+
 	path, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err, "unable to get workdir")
