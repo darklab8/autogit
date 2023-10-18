@@ -48,9 +48,8 @@ func (f *myfile) FileReadLines() []string {
 
 func (f *myfile) CreateToWriteF() *myfile {
 	file, err := os.Create(f.Filepath)
+	CheckFatal(err, "failed to create file at path ", f.Filepath)
 	f.file = file
-	CheckFatal(err, "failed to open ", f.Filepath)
-
 	return f
 }
 func (f *myfile) WritelnF(msg string) {

@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -29,14 +30,59 @@ type ConfigScheme struct {
 
 type SettingPath string
 
-func ConfigRead(settingsPath SettingPath) *ConfigScheme {
+var GlobSettingPath string
 
+var UserHomeDir string
+
+func init() {
+	dirname, err := os.UserHomeDir()
+	utils.CheckFatal(err, "failed obtaining user home dir")
+	UserHomeDir = dirname
+	GlobSettingPath = filepath.Join(dirname, "autogit.yml")
+}
+
+func readSettingsfile(settingsPath SettingPath) []byte {
 	file, err := ioutil.ReadFile(string(settingsPath))
-	utils.CheckFatal(err, "Could not read the file due to error, autogit_path=%s\n", string(settingsPath))
+	local_file_is_not_found := false
+	if err != nil {
+		if strings.Contains(err.Error(), "no such file") {
+			local_file_is_not_found = true
+		} else {
+			utils.CheckFatal(err, "Could not read the file due to error, autogit_path=%s\n", string(settingsPath))
+		}
+	}
+
+	global_file_is_not_found := false
+	if local_file_is_not_found {
+		// TODO replace with structured logging
+		// fmt.Println("fallback to global settings file")
+		file, err = ioutil.ReadFile(string(GlobSettingPath))
+		if err != nil {
+			if strings.Contains(err.Error(), "no such file") {
+				global_file_is_not_found = true
+			} else {
+				utils.CheckFatal(err, "Could not read the file due to error, autogit_path=%s\n", string(settingsPath))
+			}
+		}
+	}
+
+	if local_file_is_not_found && global_file_is_not_found {
+		// reading is memory settings
+
+		// TODO replace with structured logging
+		// fmt.Println("fallback to memory settings file")
+		file = []byte(ConfigExample)
+	}
+
+	return file
+}
+
+func ConfigRead(settingsPath SettingPath) *ConfigScheme {
+	file := readSettingsfile(settingsPath)
 
 	result := ConfigScheme{}
 
-	err = yaml.Unmarshal(file, &result)
+	err := yaml.Unmarshal(file, &result)
 	utils.CheckFatal(err, "unable to unmarshal settings")
 	return &result
 }
@@ -46,9 +92,7 @@ func validateSettingsScheme(settingsPath SettingPath) {
 	var config ConfigScheme
 	var err error
 
-	file, err := ioutil.ReadFile(string(settingsPath))
-	utils.CheckFatal(err, "Could not read the file due to error, autogit_path=%s\n", string(settingsPath))
-
+	file := readSettingsfile(settingsPath)
 	// Marshal file to struct
 	err = yaml.Unmarshal(file, &config)
 	utils.CheckFatal(err)

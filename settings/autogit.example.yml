@@ -37,7 +37,7 @@ validation:
         lowercase: true
         whitelist: []
       subject:
-        minWords: 0
+        minWords: 3
 
 # expects to find file `id_rsa` in ~/.ssh for `autogit version --push` command
 # where ~ your home folder discovered with env var HOME
