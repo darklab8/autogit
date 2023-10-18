@@ -57,10 +57,15 @@ See what is semantic versioning: https://semver.org/
 
 assuming you have Linux:
 
-- `curl -o /usr/local/bin/autogit https://github.com/darklab8/darklab_autogit/releases/download/v1.1.0/autogit-linux-amd64 && chmod 777 /usr/local/bin/autogit`
-- `autogit version` to verify installation
-- `autogit init` to create `autogit.yml` config in root of repository
-- `autogit hook activate` to turn validation commit hooks on
+1) - `curl -o /usr/local/bin/autogit https://github.com/darklab8/darklab_autogit/releases/download/v1.2.0/autogit-linux-amd64 && chmod 777 /usr/local/bin/autogit`
+2) - `autogit version` to verify installation and get next expected semantic version
+3) - (Optional) config init
+  - `autogit init` to create `autogit.yml` config locally in repo.
+  - `autogit init --global` to make user global settings file fallback
+  - if u will do nothing, program will just fallback to using config fro memory
+4) - `autogit hook activate` to turn validation commit hooks on
+  - `autogit hook activate --global` will turn it on globally for all repos
+  - `autogit hoook deactivate` (also with possible flag `--global`) can serve to deactivate this functionality
 
 ## Detailed installation
 
@@ -81,7 +86,10 @@ assuming you have Linux:
   - (To be written where to put)
 
 2. init autogit.yml with `autogit init` command in the root of repository. change REPOSITORY_OWNER and REPOSITORY_NAME to yours
+  - Or init global one, or don't init at all (see 3d step of short opinionated instructioon)
 3. run `autogit hook activate` to create `.git-hook` folder and enabling it in your git config for automated commit validation on pre-commit hook
+  - Or activate globally with flag `--global`
+  - deactivate with `autogit hook deactivate`, using `--global` flag if necessary as well.
 
 P.S. Current repository runs on configured autogit as well
 
