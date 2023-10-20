@@ -5,6 +5,7 @@ import (
 	"autogit/settings/types"
 	"fmt"
 	"log/slog"
+	"strconv"
 
 	"github.com/go-git/go-git/v5/plumbing"
 )
@@ -106,8 +107,8 @@ func Commit(commit conventionalcommitstype.ParsedCommit) slogParam {
 		c.params["commit_scope"] = commit.Scope
 		c.params["commit_subject"] = commit.Subject
 		c.params["commit_body"] = commit.Body
-
-		c.params["commit_footers"] = commit.Body
+		c.params["commit_exlamation"] = strconv.FormatBool(commit.Exclamation)
+		c.params["commit_hash"] = commit.Hash
 		for index, footer := range commit.Footers {
 			// Should have made structured logging allowing nested dictionaries.
 			// Using as work around more lazy option
@@ -117,6 +118,11 @@ func Commit(commit conventionalcommitstype.ParsedCommit) slogParam {
 				footer.Token,
 				footer.Content,
 			)
+		}
+		for index, issue := range commit.Issue {
+			// Should have made structured logging allowing nested dictionaries.
+			// Using as work around more lazy option
+			c.params[fmt.Sprintf("commit_issue_%d", index)] = issue
 		}
 	}
 }
