@@ -16,7 +16,7 @@ jobs:
     - name: Install Autogit
       run: |
         sudo apt install -y wget
-        wget https://github.com/darklab8/darklab_autogit/releases/download/v1.0.0/autogit-linux-amd64
+        wget https://github.com/darklab8/darklab_autogit/releases/download/v1.3.0/autogit-linux-amd64
         mv autogit-linux-amd64 /usr/local/bin/autogit
         chmod +x /usr/local/bin/autogit
     - name: Validate changelogs
