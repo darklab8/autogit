@@ -113,8 +113,7 @@ func Commit(commit conventionalcommitstype.ParsedCommit) slogParam {
 			// Should have made structured logging allowing nested dictionaries.
 			// Using as work around more lazy option
 			c.params[fmt.Sprintf("commit_footer_%d", index)] = fmt.Sprintf(
-				"footer #%d - token: %s, content: %s\n",
-				index,
+				"token: %s, content: %s",
 				footer.Token,
 				footer.Content,
 			)
