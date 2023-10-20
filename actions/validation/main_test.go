@@ -1,7 +1,7 @@
 package validation
 
 import (
-	_ "autogit/testsautouse"
+	_ "autogit/settings/testutils/autouse"
 
 	"autogit/semanticgit/conventionalcommits"
 	"autogit/settings"

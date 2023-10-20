@@ -3,7 +3,7 @@ package conventionalcommits_test
 import (
 	"autogit/semanticgit/conventionalcommits"
 	"autogit/settings/logus"
-	_ "autogit/testsautouse"
+	_ "autogit/settings/testutils/autouse"
 
 	"testing"
 

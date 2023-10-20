@@ -2,7 +2,7 @@ package changelog
 
 import (
 	"autogit/settings/testutils"
-	_ "autogit/testsautouse"
+	_ "autogit/settings/testutils/autouse"
 
 	"autogit/semanticgit"
 	"autogit/semanticgit/git"
