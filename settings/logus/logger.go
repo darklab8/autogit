@@ -128,7 +128,8 @@ func NewLogger(log_level_str LogLevel) *slog.Logger {
 		programLevel.Set(slog.LevelError)
 	}
 
-	return slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: programLevel}))
+	return slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: programLevel}))
+	// return slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: programLevel}))
 }
 
 func GetCallingFile(level int) string {
