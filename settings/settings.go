@@ -62,8 +62,6 @@ func readSettingsfile(configPath types.ConfigPath) []byte {
 
 	global_file_is_not_found := false
 	if local_file_is_not_found {
-		// TODO replace with structured logging
-		// fmt.Println("fallback to global settings file")
 		file, err = os.ReadFile(string(GlobSettingPath))
 		if err != nil {
 			if strings.Contains(err.Error(), "no such file") {
