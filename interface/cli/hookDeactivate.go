@@ -22,7 +22,7 @@ var deactivateCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("OK deactivate called")
 		if !*deactivateHookGlobally {
-			git := (&git.Repository{}).NewRepoInWorkDir(git.SshPath(settings.GetConfig().Git.SSHPath))
+			git := git.NewRepoInWorkDir(git.SshPath(settings.GetConfig().Git.SSHPath))
 			git.HookEnabled(false)
 		} else {
 			cfg, err := config.LoadConfig(config.GlobalScope)

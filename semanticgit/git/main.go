@@ -26,7 +26,8 @@ type Repository struct {
 	sshPath SshPath
 }
 
-func (r *Repository) NewRepoInWorkDir(sshPath SshPath) *Repository {
+func NewRepoInWorkDir(sshPath SshPath) *Repository {
+	r := &Repository{}
 	r.sshPath = sshPath
 
 	path, err := os.Getwd()

@@ -13,7 +13,7 @@ import (
 
 // For debug on workdir
 // func TestIngeration(t *testing.T) {
-// 	git := (&git.Repository{}).NewRepoIntegration()
+// 	git := git.NewRepoIntegration()
 // 	gitSemantic := (&SemanticGit{}).NewRepo(git)
 // 	vers := gitSemantic.CalculateNextVersion(gitSemantic.GetCurrentVersion()).ToString()
 // 	testutils.EqualTag(t, "v0.2.0", vers)

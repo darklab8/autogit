@@ -28,7 +28,8 @@ func NewRepoTestInMemory() *Repository {
 	return r
 }
 
-func (r *Repository) NewRepoTestIntegration() *Repository {
+func NewRepoTestIntegration() *Repository {
+	r := &Repository{}
 	path, err := os.Getwd()
 	if err != nil {
 		logus.CheckFatal(err, "unable to get workdir")

@@ -17,7 +17,7 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "next semantic version",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("%s", actions.Version(versionParams, (&git.Repository{}).NewRepoInWorkDir(git.SshPath(settings.GetConfig().Git.SSHPath))))
+		fmt.Printf("%s", actions.Version(versionParams, git.NewRepoInWorkDir(git.SshPath(settings.GetConfig().Git.SSHPath))))
 	},
 }
 

@@ -33,7 +33,7 @@ var activateCmd = &cobra.Command{
 		ioutil.WriteFile(commit_msg_path, []byte("#!/bin/sh\n\nautogit hook commitMsg \"$1\"\n"), 0777)
 
 		if !*activateHookGLobally {
-			git := (&git.Repository{}).NewRepoInWorkDir(git.SshPath(settings.GetConfig().Git.SSHPath))
+			git := git.NewRepoInWorkDir(git.SshPath(settings.GetConfig().Git.SSHPath))
 			git.HookEnabled(true)
 		} else {
 			cfg, err := config.LoadConfig(config.GlobalScope)

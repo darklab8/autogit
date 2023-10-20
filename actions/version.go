@@ -40,7 +40,7 @@ func (v *ActionVersionParams) Bind(cmd *cobra.Command) {
 	cmd.PersistentFlags().BoolVar(&v.Push, "push", false, "shortcut to 'git push', not requiring installed git")
 }
 
-// gitw - (&git.Repository{}).NewRepoInWorkDir() for cmd
+// gitw - git.NewRepoInWorkDir() for cmd
 // we can overrise with git in memory
 func Version(params ActionVersionParams, gitw *git.Repository) types.TagName {
 	settings.LoadSettings(settings.GetSettingsPath())
