@@ -1,7 +1,7 @@
 package settings
 
 import (
-	"autogit/utils"
+	"autogit/settings/utils"
 	_ "embed"
 	"text/template"
 )

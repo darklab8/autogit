@@ -2,7 +2,7 @@ package settings
 
 import (
 	"autogit/settings/types"
-	"autogit/utils"
+	"autogit/settings/utils"
 	"regexp"
 )
 

@@ -6,7 +6,7 @@ package cli
 import (
 	"autogit/settings"
 	"autogit/settings/logus"
-	"autogit/utils"
+	"autogit/settings/utils"
 
 	"github.com/spf13/cobra"
 )

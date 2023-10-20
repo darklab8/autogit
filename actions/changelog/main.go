@@ -6,7 +6,7 @@ import (
 	"autogit/semanticgit/semver"
 	"autogit/settings"
 	"autogit/settings/types"
-	"autogit/utils"
+	"autogit/settings/utils"
 	"fmt"
 	"strings"
 	"text/template"

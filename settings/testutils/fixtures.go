@@ -3,7 +3,7 @@ package testutils
 import (
 	"autogit/settings"
 	"autogit/settings/types"
-	"autogit/utils"
+	"autogit/settings/utils"
 	"path/filepath"
 )
 

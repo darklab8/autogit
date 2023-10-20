@@ -2,7 +2,7 @@ package git
 
 import (
 	"autogit/settings/logus"
-	"autogit/utils"
+	"autogit/settings/utils"
 	"fmt"
 	"os"
 	"path/filepath"
