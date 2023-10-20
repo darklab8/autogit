@@ -24,7 +24,7 @@ var activateCmd = &cobra.Command{
 	Short: "Shortcut activating hookPath from autogit.yml",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("OK activate called")
-		hook_folder := ".autogit-hooks"
+		hook_folder := settings.HookFolderName
 		if *activateHookGLobally {
 			hook_folder = filepath.Join(settings.UserHomeDir, hook_folder)
 		}

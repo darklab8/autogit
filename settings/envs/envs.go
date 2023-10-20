@@ -35,4 +35,5 @@ func init() {
 	LogLevel = types.LogLevel(log_level_str)
 
 	UserHomeDir = types.FilePath(os.Getenv("HOME"))
+
 }

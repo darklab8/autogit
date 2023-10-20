@@ -5,6 +5,7 @@ import (
 	"autogit/settings/logus"
 	"autogit/settings/types"
 	_ "embed"
+	"fmt"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -14,6 +15,8 @@ import (
 )
 
 const ToolName = "autogit"
+
+var HookFolderName = fmt.Sprintf(".%s-hooks", ToolName)
 
 //go:embed version.txt
 var Version string

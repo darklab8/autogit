@@ -2,6 +2,7 @@
 package git
 
 import (
+	"autogit/settings"
 	"autogit/settings/envs"
 	"autogit/settings/logus"
 	"autogit/settings/types"
@@ -187,7 +188,7 @@ func (r *Repository) HookEnabled(enabled bool) {
 	logus.CheckFatal(err, "failed to read config")
 
 	if enabled {
-		cfg.Raw.Section("core").SetOption(hooksPathkey, ".autogit-hooks")
+		cfg.Raw.Section("core").SetOption(hooksPathkey, settings.HookFolderName)
 	} else {
 		cfg.Raw.Section("core").RemoveOption(hooksPathkey)
 	}
