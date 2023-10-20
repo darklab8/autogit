@@ -69,14 +69,26 @@ func CommitHash(value plumbing.Hash) slogParam {
 	}
 }
 
-func TagName(value *plumbing.Reference) slogParam {
+func TagName(value types.TagName) slogParam {
 	return func(c *slogGroup) {
-		c.params["tag_name"] = string(value.Name())
+		c.params["tag_name"] = string(value)
 	}
 }
 
 func ProjectFolder(value types.ProjectFolder) slogParam {
 	return func(c *slogGroup) {
 		c.params["project_folder"] = string(value)
+	}
+}
+
+func FilePath(value types.FilePath) slogParam {
+	return func(c *slogGroup) {
+		c.params["file_path"] = string(value)
+	}
+}
+
+func Regex(value types.RegexExpression) slogParam {
+	return func(c *slogGroup) {
+		c.params["regex"] = string(value)
 	}
 }

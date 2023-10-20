@@ -24,12 +24,12 @@ var initCmd = &cobra.Command{
 			config_path = settings.GlobSettingPath
 		}
 
-		if utils.FileExists(string(config_path)) {
+		if utils.FileExists(config_path.ToFilePath()) {
 			logus.Fatal("file with settings already exists", logus.ConfigPath(config_path))
 			return
 		}
 
-		file := utils.NewFile(string(config_path)).CreateToWriteF()
+		file := utils.NewFile(config_path.ToFilePath()).CreateToWriteF()
 		defer file.Close()
 		file.WritelnF(settings.ConfigExample)
 

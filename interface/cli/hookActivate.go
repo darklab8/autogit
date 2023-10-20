@@ -6,7 +6,7 @@ package cli
 import (
 	"autogit/semanticgit/git"
 	"autogit/settings"
-	"autogit/utils"
+	"autogit/settings/logus"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -37,16 +37,16 @@ var activateCmd = &cobra.Command{
 			git.HookEnabled(true)
 		} else {
 			cfg, err := config.LoadConfig(config.GlobalScope)
-			utils.CheckFatal(err, "failed to read global scoped config")
+			logus.CheckFatal(err, "failed to read global scoped config")
 			cfg.Raw.SetOption("core", NoSubsection, "hooksPath", hook_folder)
-			utils.CheckFatal(cfg.Validate(), "failed to validate global config")
+			logus.CheckFatal(cfg.Validate(), "failed to validate global config")
 			file, err := cfg.Marshal()
-			utils.CheckFatal(err, "failed to marshal global settings")
+			logus.CheckFatal(err, "failed to marshal global settings")
 			fmt.Println("file", string(file))
 
 			git_config_path := filepath.Join(settings.UserHomeDir, ".gitconfig")
 			err = ioutil.WriteFile(git_config_path, file, 0777)
-			utils.CheckFatal(err, "failed to write global settings")
+			logus.CheckFatal(err, "failed to write global settings")
 		}
 	},
 }

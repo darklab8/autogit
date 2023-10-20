@@ -3,7 +3,7 @@ package git
 
 import (
 	"autogit/settings/logus"
-	"autogit/utils"
+	"autogit/settings/types"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -101,7 +101,7 @@ func (r *Repository) ForeachLog(From plumbing.Hash, callback func(log Log) bool)
 type Tag struct {
 	Hash plumbing.Hash
 	Ref  *plumbing.Reference
-	Name string
+	Name types.TagName
 }
 
 // brings tags, from latest to new ones
@@ -115,17 +115,18 @@ func (r *Repository) getUnorderedTags() []Tag {
 			return nil
 		}
 		tag, err := r.repo.Tag(ref.Name().Short())
+		tag_name := types.TagName(tag.Name())
 		if err != nil {
-			logus.Fatal("failed to get tag ", logus.TagName(ref))
+			logus.Fatal("failed to get tag ", logus.TagName(tag_name))
 		}
 
 		tag_obj, err := r.repo.TagObject(ref.Hash())
 		if err == nil {
-			results = append(results, Tag{Hash: tag_obj.Target, Name: tag_obj.Name, Ref: ref})
+			results = append(results, Tag{Hash: tag_obj.Target, Name: types.TagName(tag_obj.Name), Ref: ref})
 			return nil
 		}
 
-		results = append(results, Tag{Hash: tag.Hash(), Name: tag.Name().Short(), Ref: ref})
+		results = append(results, Tag{Hash: tag.Hash(), Name: types.TagName(tag.Name().Short()), Ref: ref})
 		return nil
 	}); err != nil {
 		logus.CheckFatal(err, "failed iterating repository refs")
@@ -134,12 +135,12 @@ func (r *Repository) getUnorderedTags() []Tag {
 	return results
 }
 
-func (r *Repository) getHashByTagName(tagName string) plumbing.Hash {
+func (r *Repository) getHashByTagName(tagName types.TagName) plumbing.Hash {
 	if tagName == "" {
 		return HEAD_Hash
 	}
 
-	tag_ref, _ := r.repo.Tag(tagName)
+	tag_ref, _ := r.repo.Tag(string(tagName))
 	tag_obj, err := r.repo.TagObject(tag_ref.Hash())
 	if err == nil {
 		return tag_obj.Target
@@ -147,7 +148,7 @@ func (r *Repository) getHashByTagName(tagName string) plumbing.Hash {
 	return tag_ref.Hash()
 }
 
-func (r *Repository) GetLogsFromTag(tagName string, callback func(log Log) bool) {
+func (r *Repository) GetLogsFromTag(tagName types.TagName, callback func(log Log) bool) {
 	FromHash := r.getHashByTagName(tagName)
 
 	r.ForeachLog(FromHash, func(log Log) bool {
@@ -155,35 +156,35 @@ func (r *Repository) GetLogsFromTag(tagName string, callback func(log Log) bool)
 	})
 }
 
-func (r *Repository) CreateTag(name string, msg string) {
+func (r *Repository) CreateTag(name types.TagName, msg string) {
 	hash, err := r.repo.Head()
-	utils.CheckFatal(err)
-	ref, err := r.repo.CreateTag(name, hash.Hash(), &git.CreateTagOptions{Message: msg})
+	logus.CheckFatal(err, "failed getting Head commit")
+	ref, err := r.repo.CreateTag(string(name), hash.Hash(), &git.CreateTagOptions{Message: msg})
 	fmt.Printf("CreateTag=%v,%v\n", ref, err)
 }
 
 const defaultRemoteName = "origin"
 
-func (r *Repository) PushTag(name string) {
+func (r *Repository) PushTag(name types.TagName) {
 	var publicKey *ssh.PublicKeys
 	sshPath := filepath.Join(os.Getenv("HOME"), ".ssh", string(r.sshPath))
 	sshKey, _ := ioutil.ReadFile(sshPath)
 	publicKey, keyError := ssh.NewPublicKeys("git", []byte(sshKey), "")
-	utils.CheckFatal(keyError)
+	logus.CheckFatal(keyError, "failed initializing git ssh keys")
 
 	refs := []config.RefSpec{
 		config.RefSpec("+refs/tags/" + name + ":refs/tags/" + name),
 	}
-	utils.CheckFatal(refs[0].Validate(), "failed to validate push tag")
+	logus.CheckFatal(refs[0].Validate(), "failed to validate push tag")
 	err := r.repo.Push(&git.PushOptions{RemoteName: defaultRemoteName, Auth: publicKey, RefSpecs: refs, Progress: os.Stdout})
-	utils.CheckFatal(err, "failed to push")
+	logus.CheckFatal(err, "failed to push")
 	fmt.Printf("PushTag=%v\n", err)
 }
 
 func (r *Repository) HookEnabled(enabled bool) {
 	hooksPathkey := "hooksPath"
 	cfg, err := r.repo.Config()
-	utils.CheckFatal(err, "failed to read config")
+	logus.CheckFatal(err, "failed to read config")
 
 	if enabled {
 		cfg.Raw.Section("core").SetOption(hooksPathkey, ".git-hooks")
@@ -191,5 +192,5 @@ func (r *Repository) HookEnabled(enabled bool) {
 		cfg.Raw.Section("core").RemoveOption(hooksPathkey)
 	}
 	r.repo.SetConfig(cfg)
-	utils.CheckFatal(err, "failed to write config")
+	logus.CheckFatal(err, "failed to write config")
 }

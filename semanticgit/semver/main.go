@@ -2,7 +2,8 @@ package semver
 
 import (
 	"autogit/settings"
-	"autogit/utils"
+	"autogit/settings/logus"
+	"autogit/settings/types"
 	"fmt"
 	"strconv"
 	"strings"
@@ -36,12 +37,12 @@ type AugmentedSemver struct {
 
 func ParseToInt(msg string) int {
 	number, err := strconv.Atoi(msg)
-	utils.CheckPanic(err)
+	logus.CheckFatal(err, "failed to parse to int")
 	return number
 }
 
-func Parse(msg string) (*SemVer, error) {
-	matched := settings.RegexSemVer.FindStringSubmatch(msg)
+func Parse(msg types.TagName) (*SemVer, error) {
+	matched := settings.RegexSemVer.FindStringSubmatch(string(msg))
 
 	if len(matched) == 0 {
 		return nil, NotParsed{}
@@ -80,7 +81,7 @@ func Parse(msg string) (*SemVer, error) {
 	return vers, nil
 }
 
-func (s SemVer) ToString() string {
+func (s SemVer) ToString() types.TagName {
 	var sb strings.Builder
 	if !s.Options.DisableVFlag {
 		sb.WriteString("v")
@@ -117,5 +118,5 @@ func (s SemVer) ToString() string {
 	if s.Options.EnableNewline {
 		sb.WriteString("\n")
 	}
-	return sb.String()
+	return types.TagName(sb.String())
 }

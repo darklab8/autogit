@@ -5,6 +5,7 @@ import (
 	"autogit/semanticgit/git"
 	"autogit/semanticgit/semver"
 	"autogit/settings"
+	"autogit/settings/types"
 
 	"github.com/spf13/cobra"
 )
@@ -41,7 +42,7 @@ func (v *ActionVersionParams) Bind(cmd *cobra.Command) {
 
 // gitw - (&git.Repository{}).NewRepoInWorkDir() for cmd
 // we can overrise with git in memory
-func Version(params ActionVersionParams, gitw *git.Repository) string {
+func Version(params ActionVersionParams, gitw *git.Repository) types.TagName {
 	settings.LoadSettings(settings.GetSettingsPath())
 
 	g := (&semanticgit.SemanticGit{}).NewRepo(gitw)

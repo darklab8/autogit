@@ -1,28 +1,30 @@
 package utils
 
 import (
+	"autogit/settings/logus"
+	"autogit/settings/types"
 	"bufio"
 	"fmt"
 	"os"
 )
 
 type myfile struct {
-	Filepath string
+	Filepath types.FilePath
 	file     *os.File
 	lines    []string
 }
 
-func NewFile(Filepath string) *myfile {
+func NewFile(Filepath types.FilePath) *myfile {
 	return &myfile{
 		Filepath: Filepath,
 	}
 }
 
 func (f *myfile) OpenToReadF() *myfile {
-	file, err := os.Open(f.Filepath)
+	file, err := os.Open(string(f.Filepath))
 	f.file = file
 
-	CheckFatal(err, "failed to open ", f.Filepath)
+	logus.CheckFatal(err, "failed to open file", logus.FilePath(f.Filepath))
 	return f
 }
 
@@ -47,19 +49,19 @@ func (f *myfile) FileReadLines() []string {
 }
 
 func (f *myfile) CreateToWriteF() *myfile {
-	file, err := os.Create(f.Filepath)
-	CheckFatal(err, "failed to create file at path ", f.Filepath)
+	file, err := os.Create(string(f.Filepath))
+	logus.CheckFatal(err, "failed to create file ", logus.FilePath(f.Filepath))
 	f.file = file
 	return f
 }
 func (f *myfile) WritelnF(msg string) {
 	_, err := f.file.WriteString(fmt.Sprintf("%v\n", msg))
 
-	CheckFatal(err, "failed to write string to file")
+	logus.CheckFatal(err, "failed to write string to file")
 }
 
-func FileExists(filename string) bool {
-	info, err := os.Stat(filename)
+func FileExists(filename types.FilePath) bool {
+	info, err := os.Stat(string(filename))
 	if os.IsNotExist(err) {
 		return false
 	}

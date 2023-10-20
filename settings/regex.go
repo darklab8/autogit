@@ -1,24 +1,25 @@
 package settings
 
 import (
+	"autogit/settings/types"
 	"autogit/utils"
 	"regexp"
 )
 
 type RegexScheme struct {
 	ConventionalCommit struct {
-		Header     string `yaml:"header"`
-		BodyFooter string `yaml:"bodyFooter"`
+		Header     types.RegexExpression `yaml:"header"`
+		BodyFooter types.RegexExpression `yaml:"bodyFooter"`
 	} `yaml:"conventionalCommit"`
-	Issue      string `yaml:"issue"`
-	SemVer     string `yaml:"semVer"`
-	Prerelease string `yaml:"prerelease"`
+	Issue      types.RegexExpression `yaml:"issue"`
+	SemVer     types.RegexExpression `yaml:"semVer"`
+	Prerelease types.RegexExpression `yaml:"prerelease"`
 	Validation struct {
 		Scope struct {
-			Lowercase string `yaml:"lowercase"`
+			Lowercase types.RegexExpression `yaml:"lowercase"`
 		} `yaml:"scope"`
 		Type struct {
-			Lowercase string `yaml:"lowercase"`
+			Lowercase types.RegexExpression `yaml:"lowercase"`
 		} `yaml:"type"`
 	} `yaml:"validation"`
 }

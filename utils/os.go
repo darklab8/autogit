@@ -1,17 +1,18 @@
 package utils
 
 import (
+	"autogit/settings/types"
 	"path/filepath"
 	"runtime"
 )
 
-func GetCurrentFile() string {
+func GetCurrentFile() types.FilePath {
 	_, filename, _, _ := runtime.Caller(1)
-	return filename
+	return types.FilePath(filename)
 }
 
-func GetCurrrentFolder() string {
+func GetCurrrentFolder() types.FilePath {
 	_, filename, _, _ := runtime.Caller(1)
 	directory := filepath.Dir(filename)
-	return directory
+	return types.FilePath(directory)
 }

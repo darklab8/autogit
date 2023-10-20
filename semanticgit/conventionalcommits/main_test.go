@@ -1,9 +1,9 @@
 package conventionalcommits
 
 import (
+	"autogit/settings/logus"
 	_ "autogit/testsautouse"
 
-	"autogit/utils"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -11,12 +11,12 @@ import (
 
 func TestParse(t *testing.T) {
 	_, err := NewCommit("feat: abc")
-	utils.CheckPanic(err)
+	logus.CheckFatal(err, "failled creating commit")
 }
 
 func TestParse2(t *testing.T) {
 	_, err := NewCommit("fix: dsfsdf")
-	utils.CheckPanic(err)
+	logus.CheckFatal(err, "failed creating commit")
 }
 
 func TestParse3(t *testing.T) {
@@ -30,7 +30,7 @@ func TestParse4(t *testing.T) {
 body message
 
 footer-key: tralala`)
-	utils.CheckPanic(err)
+	logus.CheckFatal(err, "failed creating commit")
 
 	assert.Equal(t, "feat", commit.Type)
 	assert.Equal(t, "api", commit.Scope)
@@ -42,7 +42,7 @@ footer-key: tralala`)
 
 func TestParse5(t *testing.T) {
 	_, err := NewCommit("feat: hook commit msg")
-	utils.CheckPanic(err)
+	logus.CheckFatal(err, "failed creating commit")
 }
 
 func TestNotAllowedNewLineAtSecondLine(t *testing.T) {
@@ -55,14 +55,14 @@ footer-key: tralala`)
 
 func TestParse6(t *testing.T) {
 	_, err := NewCommit(`refactor: autogit version into about`)
-	utils.CheckPanic(err)
+	logus.CheckFatal(err, "failed creating commit")
 }
 
 func TestParse7(t *testing.T) {
 	commit, err := NewCommit(`feat: rendered changelog for task
 
 #1, #2, #3`)
-	utils.CheckPanic(err)
+	logus.CheckFatal(err, "failed creating commits")
 	assert.Equal(t, "1", commit.Issue[0])
 	assert.Equal(t, "2", commit.Issue[1])
 	assert.Equal(t, "3", commit.Issue[2])

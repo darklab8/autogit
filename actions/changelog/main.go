@@ -5,6 +5,7 @@ import (
 	"autogit/semanticgit/conventionalcommits"
 	"autogit/semanticgit/semver"
 	"autogit/settings"
+	"autogit/settings/types"
 	"autogit/utils"
 	"fmt"
 	"strings"
@@ -26,7 +27,8 @@ func (r *Header) Render() string {
 	return fmt.Sprintf("## **%s** <sub><sub>%s ([%s...%s](%s))</sub></sub>", r.Version, currentTime.Format("2006-01-02"), r.From, r.To, utils.TmpRender(templs.CommitRangeUrl, r))
 }
 
-func (r *Header) New(logs []conventionalcommits.ConventionalCommit, version string) *Header {
+func NewHeader(logs []conventionalcommits.ConventionalCommit, version string) *Header {
+	r := &Header{}
 	r.From = logs[len(logs)-1].Hash
 	r.To = logs[0].Hash
 	r.Version = version
@@ -59,7 +61,7 @@ func (c commitRecord) Render(record conventionalcommits.ConventionalCommit) stri
 }
 
 type ChangelogData struct {
-	Tag              string // get changelog from this tag to previous
+	Tag              types.TagName // get changelog from this tag to previous
 	Header           string
 	Features         []string
 	Fixes            []string
@@ -104,7 +106,7 @@ func (changelog ChangelogData) New(g *semanticgit.SemanticGit, semver_options se
 	if changelog.Tag == "" {
 		changelog.Tag = g.GetNextVersion(semver_options).ToString()
 	}
-	changelog.Header = (&Header{}).New(logs, changelog.Tag).Render()
+	changelog.Header = NewHeader(logs, string(changelog.Tag)).Render()
 
 	for _, record := range logs {
 		commit_formatted := commitRecord{Commit: record.Hash}.Render(record)

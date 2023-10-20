@@ -9,7 +9,7 @@ import (
 	"autogit/semanticgit/git"
 	"autogit/semanticgit/semver"
 	"autogit/settings/logus"
-	"autogit/utils"
+	"autogit/settings/types"
 )
 
 type SemanticGit struct {
@@ -30,7 +30,10 @@ func (g *SemanticGit) GetCurrentVersion() *semver.SemVer {
 	latest_hash := g.git.GetLatestCommitHash()
 	g.git.ForeachTag(func(tag git.Tag) bool {
 		vers, err := semver.Parse(tag.Name)
-		utils.CheckWarn(err, "WARN failed to parse tag=", tag.Name)
+
+		if err != nil {
+			logus.Warn("failed to parse tag=", logus.TagName(tag.Name))
+		}
 
 		if tag.Hash == latest_hash || (vers.Prerelease == "" && tag.Hash == latest_hash) {
 			return false
@@ -125,7 +128,7 @@ func (g *SemanticGit) GetNextVersion(semver_options semver.OptionsSemVer) *semve
 	return vers
 }
 
-func (g *SemanticGit) GetChangelogByTag(fromTag string, enable_warnings bool) []conventionalcommits.ConventionalCommit {
+func (g *SemanticGit) GetChangelogByTag(fromTag types.TagName, enable_warnings bool) []conventionalcommits.ConventionalCommit {
 	var result []conventionalcommits.ConventionalCommit
 
 	g.git.GetLogsFromTag(fromTag, func(log_record git.Log) bool {
