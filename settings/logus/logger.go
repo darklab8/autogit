@@ -65,11 +65,24 @@ func Fatal(msg string, opts ...slogParam) {
 	panic(msg)
 }
 
+func CheckError(err error, msg string, opts ...slogParam) {
+	if err == nil {
+		return
+	}
+	args := append([]any{}, newSlogGroup(opts...))
+	args = append(args, "error")
+	args = append(args, fmt.Sprintf("%v", err))
+	slogger.Error(msg, args...)
+	os.Exit(1)
+}
+
 func CheckFatal(err error, msg string, opts ...slogParam) {
 	if err == nil {
 		return
 	}
 	args := append([]any{}, newSlogGroup(opts...))
+	args = append(args, "error")
+	args = append(args, fmt.Sprintf("%v", err))
 	slogger.Error(msg, args...)
 	panic(msg)
 }

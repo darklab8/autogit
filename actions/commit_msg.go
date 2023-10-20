@@ -28,7 +28,7 @@ func CommmitMsg(args []string) {
 
 	if settings.GetConfig().Validation.Sections.Hook.CommitMsg.Enabled {
 		err := validation.Validate(commit, conf)
-		logus.CheckFatal(err, "failed to validate commits")
+		logus.CheckError(err, "failed to validate commits")
 	}
 
 	logus.Info("parsed commit", logus.Commit(commit.ParsedCommit))
