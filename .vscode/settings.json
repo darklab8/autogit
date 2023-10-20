@@ -1,8 +1,9 @@
 {
   "terminal.integrated.env.linux": {
     "AUTOGIT_DEBUG": "true",
-    "AUTOGIT_PROJECT_FOLDER": "/home/naa/repos/pet_projects/darklab_autogit",
     "AUTOGIT_LOG_LEVEL": "DEBUG",
+    "AUTOGIT_TEST_PROJECT_FOLDER": "/home/naa/repos/pet_projects/darklab_autogit",
+
   },
   // Show .git folder
     "files.exclude": {

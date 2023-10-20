@@ -11,6 +11,8 @@ Optionally as single value can be added slogGroup
 */
 
 import (
+	"autogit/settings/envs"
+	"autogit/settings/types"
 	"fmt"
 	"log/slog"
 	"os"
@@ -92,29 +94,22 @@ func Infof(msg string, varname string, value any, opts ...slogParam) {
 	slogger.Info(msg, args...)
 }
 
-var LOG_SHOW_FILE_LOCATIONS = false
+var LOG_SHOW_FILE_LOCATIONS bool
 
 func init() {
-	show_files := os.Getenv("AUTOGIT_LOG_SHOW_FILE_LOCATIONS")
-	LOG_SHOW_FILE_LOCATIONS = (show_files == "true")
+	LOG_SHOW_FILE_LOCATIONS = envs.LogShowFileLocations
 
-	log_level_str, is_log_level_set := os.LookupEnv("AUTOGIT_LOG_LEVEL")
-	if !is_log_level_set {
-		log_level_str = "INFO"
-	}
-	slogger = NewLogger(LogLevel(log_level_str))
+	slogger = NewLogger(envs.LogLevel)
 }
 
-type LogLevel string
-
 const (
-	LEVEL_DEBUG LogLevel = "DEBUG"
-	LEVEL_INFO  LogLevel = "INFO"
-	LEVEL_WARN  LogLevel = "WARN"
-	LEVEL_ERROR LogLevel = "ERROR"
+	LEVEL_DEBUG types.LogLevel = "DEBUG"
+	LEVEL_INFO  types.LogLevel = "INFO"
+	LEVEL_WARN  types.LogLevel = "WARN"
+	LEVEL_ERROR types.LogLevel = "ERROR"
 )
 
-func NewLogger(log_level_str LogLevel) *slog.Logger {
+func NewLogger(log_level_str types.LogLevel) *slog.Logger {
 	var programLevel = new(slog.LevelVar) // Info by default
 
 	switch log_level_str {
@@ -128,8 +123,10 @@ func NewLogger(log_level_str LogLevel) *slog.Logger {
 		programLevel.Set(slog.LevelError)
 	}
 
-	return slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: programLevel}))
-	// return slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: programLevel}))
+	if envs.LogTurnJSONLogging {
+		return slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: programLevel}))
+	}
+	return slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: programLevel}))
 }
 
 func GetCallingFile(level int) string {

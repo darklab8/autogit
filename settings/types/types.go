@@ -19,3 +19,5 @@ type CommitMessage string
 func (c CommitMessage) ToString() string {
 	return string(c)
 }
+
+type LogLevel string

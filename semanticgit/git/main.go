@@ -2,6 +2,7 @@
 package git
 
 import (
+	"autogit/settings/envs"
 	"autogit/settings/logus"
 	"autogit/settings/types"
 	"fmt"
@@ -166,7 +167,7 @@ const defaultRemoteName = "origin"
 
 func (r *Repository) PushTag(name types.TagName) {
 	var publicKey *ssh.PublicKeys
-	sshPath := filepath.Join(os.Getenv("HOME"), ".ssh", string(r.sshPath))
+	sshPath := filepath.Join(string(envs.UserHomeDir), ".ssh", string(r.sshPath))
 	sshKey, _ := os.ReadFile(sshPath)
 	publicKey, keyError := ssh.NewPublicKeys("git", []byte(sshKey), "")
 	logus.CheckFatal(keyError, "failed initializing git ssh keys")

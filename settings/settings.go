@@ -1,6 +1,7 @@
 package settings
 
 import (
+	"autogit/settings/envs"
 	"autogit/settings/logus"
 	"autogit/settings/types"
 	_ "embed"
@@ -125,14 +126,17 @@ func LoadSettings(configPath types.ConfigPath) *ConfigScheme {
 }
 
 func GetSettingsPath() types.ConfigPath {
+	var settingsPath types.ConfigPath
 	workdir, _ := os.Getwd()
-	project_folder := types.ProjectFolder(os.Getenv("AUTOGIT_PROJECT_FOLDER"))
+	project_folder := envs.TestProjectFolder
 	if project_folder != "" {
-		logus.Debug("OKAUTOGIT_PROJECT_FOLDER is not empty, changing search settings to ", logus.ProjectFolder(project_folder))
+		logus.Debug("OK TestProjectFolder is not empty, changing search settings to ", logus.ProjectFolder(project_folder))
 		project_folder = types.ProjectFolder(workdir)
+		settingsPath = types.ConfigPath(filepath.Join(string(project_folder), string(ProjectConfigPath)))
+	} else {
+		settingsPath = types.ConfigPath(string(ProjectConfigPath))
 	}
-	settingsPath := filepath.Join(string(project_folder), string(ProjectConfigPath))
-	return types.ConfigPath(settingsPath)
+	return settingsPath
 }
 
 var config *ConfigScheme
