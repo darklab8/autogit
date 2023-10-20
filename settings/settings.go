@@ -94,6 +94,21 @@ func ConfigRead(configPath types.ConfigPath) *ConfigScheme {
 
 	err := yaml.Unmarshal(file, &result)
 	logus.CheckFatal(err, "unable to unmarshal settings")
+
+	// Config overrides for dev env purposes
+	if value, ok := os.LookupEnv("AUTOGIT_CONFIG_SSH_PATH"); ok {
+		result.Git.SSHPath = value
+	}
+	if value, ok := os.LookupEnv("AUTOGIT_CONFIG_CHANGELOG_COMMIT_URL"); ok {
+		result.Changelog.CommitURL = value
+	}
+	if value, ok := os.LookupEnv("AUTOGIT_CONFIG_CHANGELOG_COMMIT_RANGE_URL"); ok {
+		result.Changelog.CommitRangeURL = value
+	}
+	if value, ok := os.LookupEnv("AUTOGIT_CONFIG_CHANGELOG_ISSUE_URL"); ok {
+		result.Changelog.IssueURL = value
+	}
+
 	return &result
 }
 
@@ -133,7 +148,6 @@ func LoadSettings(configPath types.ConfigPath) *ConfigScheme {
 	config := ConfigRead(configPath)
 	ChangelogInit(*config)
 	RegexInit(config)
-	ValidationInit(config)
 	validateSettingsScheme(configPath)
 
 	return config

@@ -3,7 +3,10 @@
     "AUTOGIT_DEBUG": "true",
     "AUTOGIT_LOG_LEVEL": "DEBUG",
     "AUTOGIT_TEST_PROJECT_FOLDER": "/home/naa/repos/pet_projects/darklab_autogit",
-
+    "AUTOGIT_CONFIG_SSH_PATH": "id_rsa.dd84ai",
+    "AUTOGIT_CONFIG_CHANGELOG_COMMIT_URL": "https://github.com/darklab8/darklab_autogit/commit/{{.Commit}}",
+    "AUTOGIT_CONFIG_CHANGELOG_COMMIT_RANGE_URL": "https://github.com/darklab8/darklab_autogit/compare/{{.From}}...{{.To}}?diff=split",
+    "AUTOGIT_CONFIG_CHANGELOG_ISSUE_URL":  "https://github.com/darklab8/darklab_autogit/issues/{{.Issue}}"
   },
   // Show .git folder
     "files.exclude": {

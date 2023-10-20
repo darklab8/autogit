@@ -3,19 +3,20 @@ changelog:
   commitRangeUrl: "https://github.com/REPOSITORY_OWNER/REPOSITORY_NAME/compare/{{.From}}...{{.To}}?diff=split"
   issueUrl: "https://github.com/REPOSITORY_OWNER/REPOSITORY_NAME/issues/{{.Issue}}"
 
-# set to non zero value to have custom definitions
+# header is copied from https://gist.github.com/marcojahn/482410b728c31b221b70ea6d2c433f0c, type, scope, subject, the rest
 regex:
   conventionalCommit:
-    header: ''
-    bodyFooter: ''
-  issue: ''
-  semVer: ''
-  prerelease: ''
+    header: '^([a-z]+)(?:\(([\w]+)\))?(\!?): (?:([ -~]+))(?:\n\n([\s -~]*)|[\n])?\z'
+    bodyFooter: '(?:([ -9;-~]+))\: (?:([ -9;-~]+))'
+  issue: '\#([0-9]+)'
+  # copied from https://semver.org/spec/v2.0.0.html
+  semVer: '^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
+  prerelease: '(?:a\.([0-9]+))?\.?(?:b\.([0-9]+))?\.?(?:rc\.([0-9]+))?'
   validation:
     scope:
-      lowercase: ''
+      lowercase: '^[a-z]+$'
     type:
-      lowercase: ''
+      lowercase: '^[a-z]+$'
 
 validation:
   sections:
@@ -31,7 +32,20 @@ validation:
       maxLength: 72
       type:
         lowercase: true
-        whitelist: []
+        whitelist:
+          - "build"
+          - "chore"
+          - "ci"
+          - "docs"
+          - "feat"
+          - "fix"
+          - "perf"
+          - "refactor"
+          - "revert"
+          - "style"
+          - "test"
+          - "merge"
+          - "custom"
       scope:
         present: false
         lowercase: true
