@@ -35,7 +35,7 @@ func Changelog(params ChangelogParams, gitw *git.Repository) string {
 		log_records := g.GetChangelogByTag(types.TagName(params.Tag), false)
 		for _, record := range log_records {
 			err := validation.Validate(&record, conf)
-			logus.CheckFatal(err, "failed to validate")
+			logus.CheckError(err, "failed to validate", logus.Commit(record.ParsedCommit))
 		}
 	}
 
