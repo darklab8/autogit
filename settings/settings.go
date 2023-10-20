@@ -6,10 +6,10 @@ import (
 	"autogit/settings/types"
 	_ "embed"
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"reflect"
-	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -45,6 +45,11 @@ func init() {
 
 var cachedConfigFile []byte = []byte{}
 
+func is_file_missing(err error) bool {
+	_, ok := err.(*fs.PathError)
+	return ok
+}
+
 func readSettingsfile(configPath types.ConfigPath) []byte {
 	// TODO You could have written less config readings across your code.
 	// Caching for the purpose of rendering logging records only once
@@ -55,11 +60,11 @@ func readSettingsfile(configPath types.ConfigPath) []byte {
 	file, err := os.ReadFile(string(configPath))
 	local_file_is_not_found := false
 	if err != nil {
-		if strings.Contains(err.Error(), "no such file") {
-			logus.Debug("not found at path repository local file with config. Fallback to global config", logus.FilePath(configPath.ToFilePath()))
+		if is_file_missing(err) {
+			logus.Debug("not found at path repository local file with config. Fallback to global config", logus.FilePath(configPath.ToFilePath()), logus.OptError(err))
 			local_file_is_not_found = true
 		} else {
-			logus.CheckFatal(err, "Could not read the file due to error", logus.ConfigPath(configPath))
+			logus.CheckFatal(err, "Could not read the file due to error", logus.ConfigPath(configPath), logus.OptError(err))
 		}
 	}
 
@@ -67,11 +72,11 @@ func readSettingsfile(configPath types.ConfigPath) []byte {
 	if local_file_is_not_found {
 		file, err = os.ReadFile(string(GlobSettingPath))
 		if err != nil {
-			if strings.Contains(err.Error(), "no such file") {
-				logus.Debug("not found at path repository global file with config. Fallback to other in memory config", logus.FilePath(configPath.ToFilePath()))
+			if is_file_missing(err) {
+				logus.Debug("not found at path repository global file with config. Fallback to other in memory config", logus.FilePath(configPath.ToFilePath()), logus.OptError(err))
 				global_file_is_not_found = true
 			} else {
-				logus.CheckFatal(err, "Could not read the file due to error", logus.ConfigPath(configPath))
+				logus.CheckFatal(err, "Could not read the file due to error", logus.ConfigPath(configPath), logus.OptError(err))
 			}
 		}
 	}

@@ -125,3 +125,10 @@ func Commit(commit conventionalcommitstype.ParsedCommit) slogParam {
 		}
 	}
 }
+
+func OptError(err error) slogParam {
+	return func(c *slogGroup) {
+		c.params["error_msg"] = fmt.Sprintf("%v", err)
+		c.params["error_type"] = fmt.Sprintf("%T", err)
+	}
+}
