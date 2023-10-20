@@ -2,6 +2,7 @@ package conventionalcommits
 
 import (
 	"autogit/settings"
+	"autogit/settings/types"
 	"fmt"
 	"strings"
 )
@@ -12,7 +13,7 @@ type Footer struct {
 }
 
 type ConventionalCommit struct {
-	Original string
+	Original types.CommitMessage
 
 	Type        string
 	Exclamation bool
@@ -62,10 +63,10 @@ func (m NotParsed) Error() string {
 	return "not parsed at all"
 }
 
-func ParseCommit(msg string) (*ConventionalCommit, error) {
+func ParseCommit(msg types.CommitMessage) (*ConventionalCommit, error) {
 	result := ConventionalCommit{}
 	result.Original = msg
-	main_match := settings.RegexConventionalCommit.FindStringSubmatch(msg)
+	main_match := settings.RegexConventionalCommit.FindStringSubmatch(string(msg))
 
 	if len(main_match) == 0 {
 		return nil, NotParsed{}
@@ -113,7 +114,7 @@ func (c *ConventionalCommit) Validate() error {
 	return InvalidType{}
 }
 
-func NewCommit(msg string) (*ConventionalCommit, error) {
+func NewCommit(msg types.CommitMessage) (*ConventionalCommit, error) {
 	commit, err := ParseCommit(msg)
 	if err != nil {
 		return commit, err

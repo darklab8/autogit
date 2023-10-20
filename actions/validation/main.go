@@ -14,7 +14,7 @@ func Validate(commit *conventionalcommits.ConventionalCommit, conf *settings.Con
 	}
 
 	if conf.Validation.Rules.Issue.Present {
-		IssueMatch := settings.RegexIssue.FindAllStringSubmatch(commit.Original, -1)
+		IssueMatch := settings.RegexIssue.FindAllStringSubmatch(commit.Original.ToString(), -1)
 		if len(IssueMatch) == 0 {
 			return valerrors.NewErrorNotFoundIssue(commit, conf)
 		}

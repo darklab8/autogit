@@ -13,3 +13,9 @@ type FilePath string
 type RegexExpression string
 
 type TagName string
+
+type CommitMessage string
+
+func (c CommitMessage) ToString() string {
+	return string(c)
+}

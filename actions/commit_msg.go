@@ -5,6 +5,7 @@ import (
 	"autogit/semanticgit/conventionalcommits"
 	"autogit/settings"
 	"autogit/settings/logus"
+	"autogit/settings/types"
 	"fmt"
 	"os"
 )
@@ -13,15 +14,15 @@ func CommmitMsg(args []string) {
 	conf := settings.LoadSettings(settings.GetSettingsPath())
 	settings.LoadSettings(settings.GetSettingsPath())
 
-	inputFile := args[0]
-	fmt.Printf("commitFile=%s\n", inputFile)
+	inputFile := types.FilePath(args[0])
+	logus.Debug("Received CommitFile", logus.FilePath(inputFile))
 
-	file, err := os.ReadFile(inputFile)
+	file, err := os.ReadFile(string(inputFile))
 	logus.CheckFatal(err, "Could not read the file due to this error")
 
 	// convert the file binary into a string using string
-	fileContent := string(file)
-	fmt.Printf("fileContent=%s", fileContent)
+	fileContent := types.CommitMessage(string(file))
+	logus.Debug("acquired file_content", logus.CommitMessage(fileContent))
 
 	commit, err := conventionalcommits.NewCommit(fileContent)
 	logus.CheckFatal(err, "unable to parse commit to conventional commits standard")
