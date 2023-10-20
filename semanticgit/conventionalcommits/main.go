@@ -3,7 +3,6 @@ package conventionalcommits
 import (
 	"autogit/settings"
 	"fmt"
-	"log"
 	"strings"
 )
 
@@ -55,18 +54,6 @@ func (commit ConventionalCommit) StringAnnotated() string {
 	}
 
 	return sb.String()
-}
-
-func Check(err error, strict bool, msgs ...string) {
-	if err == nil {
-		return
-	}
-
-	if !strict {
-		log.Print(err, msgs)
-	}
-
-	log.Fatal(err, msgs)
 }
 
 type NotParsed struct{}

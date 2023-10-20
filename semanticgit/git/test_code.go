@@ -1,9 +1,9 @@
 package git
 
 import (
+	"autogit/settings/logus"
 	"autogit/utils"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 
@@ -19,7 +19,7 @@ func (r *Repository) TestNewRepo() *Repository {
 	fs := memfs.New()
 
 	r.repo, err = git.Init(memory.NewStorage(), fs)
-	CheckIfError(err)
+	logus.CheckFatal(err, "failed git init")
 
 	r.wt, err = r.repo.Worktree()
 
@@ -30,11 +30,11 @@ func (r *Repository) TestNewRepo() *Repository {
 func (r *Repository) TestNewRepoIntegration() *Repository {
 	path, err := os.Getwd()
 	if err != nil {
-		log.Fatal(err, "unable to get workdir")
+		logus.CheckFatal(err, "unable to get workdir")
 	}
 	r.repo, err = git.PlainOpen(filepath.Dir(filepath.Dir(path)))
 	if err != nil {
-		log.Fatal(err, "unable to open git")
+		logus.CheckFatal(err, "unable to open git")
 	}
 	return r
 }
@@ -46,7 +46,7 @@ func (r *Repository) TestCommit(msg string) plumbing.Hash {
 
 	r.wt.Add("testfile.txt")
 	hash, err := r.wt.Commit(msg, &git.CommitOptions{Author: r.author})
-	CheckIfError(err)
+	logus.CheckFatal(err, "unable to form commit")
 	return hash
 }
 

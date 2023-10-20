@@ -4,6 +4,8 @@ import (
 	"autogit/settings/types"
 	"fmt"
 	"log/slog"
+
+	"github.com/go-git/go-git/v5/plumbing"
 )
 
 func logGroupFiles() slog.Attr {
@@ -61,21 +63,20 @@ func Actual(value any) slogParam {
 	}
 }
 
-// func WithAllowFailedJobs[T IJob](value bool) JobPoolOption[T] {
-// 	return func(c *JobPool[T]) {
-// 		c.allow_failed_jobs = value
-// 	}
-// }
+func CommitHash(value plumbing.Hash) slogParam {
+	return func(c *slogGroup) {
+		c.params["commit_hash"] = value.String()
+	}
+}
 
-// func NewJobPool[T IJob](opts ...JobPoolOption[T]) JobPool[T] {
-// 	client := &JobPool[T]{}
-// 	for _, opt := range opts {
-// 		opt(client)
-// 	}
+func TagName(value *plumbing.Reference) slogParam {
+	return func(c *slogGroup) {
+		c.params["tag_name"] = string(value.Name())
+	}
+}
 
-// 	return *client
-// }
-
-// jobPool := NewJobPool[*JobTest](
-// 	WithAllowFailedJobs[*JobTest](true),
-// )
+func ProjectFolder(value types.ProjectFolder) slogParam {
+	return func(c *slogGroup) {
+		c.params["project_folder"] = string(value)
+	}
+}

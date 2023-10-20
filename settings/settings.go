@@ -5,7 +5,6 @@ import (
 	"autogit/settings/types"
 	_ "embed"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -29,7 +28,7 @@ type ConfigScheme struct {
 }
 
 var GlobSettingPath types.ConfigPath
-var RelativeConfigPath types.ConfigPath
+var ProjectConfigPath types.ConfigPath
 
 var UserHomeDir string
 
@@ -38,7 +37,7 @@ func init() {
 	logus.CheckFatal(err, "failed obtaining user home dir")
 	UserHomeDir = dirname
 	GlobSettingPath = types.ConfigPath(filepath.Join(dirname, "autogit.yml"))
-	RelativeConfigPath = types.ConfigPath("autogit.yml")
+	ProjectConfigPath = types.ConfigPath("autogit.yml")
 }
 
 func readSettingsfile(configPath types.ConfigPath) []byte {
@@ -128,12 +127,12 @@ func LoadSettings(configPath types.ConfigPath) *ConfigScheme {
 
 func GetSettingsPath() types.ConfigPath {
 	workdir, _ := os.Getwd()
-	project_folder := os.Getenv("AUTOGIT_PROJECT_FOLDER")
+	project_folder := types.ProjectFolder(os.Getenv("AUTOGIT_PROJECT_FOLDER"))
 	if project_folder != "" {
-		log.Println("OK AUTOGIT_PROJECT_FOLDER is not empty, changing search settings to ", project_folder)
-		workdir = project_folder
+		logus.Debug("OKAUTOGIT_PROJECT_FOLDER is not empty, changing search settings to ", logus.ProjectFolder(project_folder))
+		project_folder = types.ProjectFolder(workdir)
 	}
-	settingsPath := filepath.Join(workdir, "autogit.yml")
+	settingsPath := filepath.Join(string(project_folder), string(ProjectConfigPath))
 	return types.ConfigPath(settingsPath)
 }
 

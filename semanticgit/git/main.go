@@ -2,10 +2,10 @@
 package git
 
 import (
+	"autogit/settings/logus"
 	"autogit/utils"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 
@@ -15,12 +15,6 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 )
-
-func CheckIfError(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
-}
 
 type SshPath string
 
@@ -35,13 +29,9 @@ func (r *Repository) NewRepoInWorkDir(sshPath SshPath) *Repository {
 	r.sshPath = sshPath
 
 	path, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err, "unable to get workdir")
-	}
+	logus.CheckFatal(err, "unable to get workdir")
 	r.repo, err = git.PlainOpen(path)
-	if err != nil {
-		log.Fatal(err, "unable to open git")
-	}
+	logus.CheckFatal(err, "unable to open git")
 	return r
 }
 
@@ -54,7 +44,7 @@ var HEAD_Hash plumbing.Hash
 
 func (r *Repository) GetLatestCommitHash() plumbing.Hash {
 	ref, err := r.repo.Head()
-	CheckIfError(err)
+	logus.CheckFatal(err, "unabled to get latest Head commit")
 	return ref.Hash()
 }
 
@@ -63,7 +53,7 @@ func (r *Repository) ForeachTag(callback func(tag Tag) bool) {
 
 	// ... retrieves the commit history
 	cIter, err := r.repo.Log(&git.LogOptions{From: From})
-	CheckIfError(err)
+	logus.CheckFatal(err, "unable to get git log")
 
 	tags := r.getUnorderedTags()
 	// ... just iterates over the commits, printing it
@@ -80,7 +70,6 @@ func (r *Repository) ForeachTag(callback func(tag Tag) bool) {
 		}
 
 	}
-	CheckIfError(err)
 }
 
 func (r *Repository) ForeachLog(From plumbing.Hash, callback func(log Log) bool) {
@@ -88,7 +77,7 @@ func (r *Repository) ForeachLog(From plumbing.Hash, callback func(log Log) bool)
 	if From.IsZero() {
 		var err error
 		ref, err := r.repo.Head()
-		CheckIfError(err)
+		logus.CheckFatal(err, "unable getting Head commit")
 		From = ref.Hash()
 	}
 
@@ -97,7 +86,7 @@ func (r *Repository) ForeachLog(From plumbing.Hash, callback func(log Log) bool)
 
 	// ... retrieves the commit history
 	cIter, err := r.repo.Log(&git.LogOptions{From: From})
-	CheckIfError(err)
+	logus.CheckFatal(err, "unable getting git log")
 
 	// ... just iterates over the commits, printing it
 	c, _ := cIter.Next()
@@ -107,7 +96,6 @@ func (r *Repository) ForeachLog(From plumbing.Hash, callback func(log Log) bool)
 			return
 		}
 	}
-	CheckIfError(err)
 }
 
 type Tag struct {
@@ -120,7 +108,7 @@ type Tag struct {
 func (r *Repository) getUnorderedTags() []Tag {
 	var results []Tag
 	iter, err := r.repo.Tags()
-	CheckIfError(err)
+	logus.CheckFatal(err, "unable to get repository tags")
 
 	if err := iter.ForEach(func(ref *plumbing.Reference) error {
 		if !ref.Name().IsTag() {
@@ -128,7 +116,7 @@ func (r *Repository) getUnorderedTags() []Tag {
 		}
 		tag, err := r.repo.Tag(ref.Name().Short())
 		if err != nil {
-			log.Fatal("failed to get tag ", ref.Name())
+			logus.Fatal("failed to get tag ", logus.TagName(ref))
 		}
 
 		tag_obj, err := r.repo.TagObject(ref.Hash())
@@ -140,7 +128,7 @@ func (r *Repository) getUnorderedTags() []Tag {
 		results = append(results, Tag{Hash: tag.Hash(), Name: tag.Name().Short(), Ref: ref})
 		return nil
 	}); err != nil {
-		CheckIfError(err)
+		logus.CheckFatal(err, "failed iterating repository refs")
 	}
 
 	return results

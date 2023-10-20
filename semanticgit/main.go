@@ -8,8 +8,8 @@ import (
 	"autogit/semanticgit/conventionalcommits"
 	"autogit/semanticgit/git"
 	"autogit/semanticgit/semver"
+	"autogit/settings/logus"
 	"autogit/utils"
-	"log"
 )
 
 type SemanticGit struct {
@@ -133,7 +133,7 @@ func (g *SemanticGit) GetChangelogByTag(fromTag string, enable_warnings bool) []
 		parsed_commit, err := conventionalcommits.ParseCommit(log_record.Msg)
 		if err != nil {
 			if enable_warnings {
-				log.Println("WARN unable to parse commit with hash=", log_record.Hash.String())
+				logus.Warn("unable to parse commit with hash=", logus.CommitHash(log_record.Hash))
 			}
 			return false
 		}

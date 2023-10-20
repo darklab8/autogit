@@ -1,8 +1,8 @@
 package utils
 
 import (
+	"autogit/settings/logus"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 )
@@ -20,7 +20,5 @@ func ShellRunArgs(program string, args ...string) {
 	}
 	err := command.Run()
 
-	if err != nil {
-		log.Fatal(err)
-	}
+	logus.CheckFatal(err, "unable to run cobra command")
 }
