@@ -20,6 +20,7 @@ var deactivateCmd = &cobra.Command{
 	Use:   "deactivate",
 	Short: "Shortcut to run git config --unset core.hooksPath",
 	Run: func(cmd *cobra.Command, args []string) {
+		shared.hook_deactivate.Run()
 		fmt.Println("OK deactivate called")
 		if !*deactivateHookGlobally {
 			git := git.NewRepoInWorkDir(git.SshPath(settings.GetConfig().Git.SSHPath))

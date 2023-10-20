@@ -24,6 +24,7 @@ var activateCmd = &cobra.Command{
 	Use:   "activate",
 	Short: "Shortcut activating hookPath from autogit.yml",
 	Run: func(cmd *cobra.Command, args []string) {
+		shared.hook_activate.Run()
 		fmt.Println("OK activate called")
 		hook_folder := settings.HookFolderName
 		if *activateHookGLobally {
@@ -31,7 +32,12 @@ var activateCmd = &cobra.Command{
 		}
 		_ = os.Mkdir(hook_folder, 0777)
 		commit_msg_path := filepath.Join(hook_folder, "commit-msg")
-		ioutil.WriteFile(commit_msg_path, []byte("#!/bin/sh\n\nautogit hook commitMsg \"$1\"\n"), 0777)
+
+		verbose_propagating_cmd := ""
+		if *(shared.hook_activate.verboseLogging) {
+			verbose_propagating_cmd = "-v "
+		}
+		ioutil.WriteFile(commit_msg_path, []byte(fmt.Sprintf("#!/bin/sh\n\nautogit hook commitMsg %s\"$1\"\n", verbose_propagating_cmd)), 0777)
 
 		if !*activateHookGLobally {
 			git := git.NewRepoInWorkDir(git.SshPath(settings.GetConfig().Git.SSHPath))

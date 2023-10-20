@@ -15,6 +15,7 @@ var aboutCmd = &cobra.Command{
 	Use:   "about",
 	Short: "Info about autogit",
 	Run: func(cmd *cobra.Command, args []string) {
+		shared.about.Run()
 		fmt.Printf("%s", actions.About())
 	},
 }

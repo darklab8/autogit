@@ -17,6 +17,7 @@ var changelogCmd = &cobra.Command{
 	Use:   "changelog",
 	Short: "Auto generated changelog according to git conventional commits",
 	Run: func(cmd *cobra.Command, args []string) {
+		shared.changelog.Run()
 		fmt.Printf("%s", actions.Changelog(paramsChangelog, git.NewRepoInWorkDir(git.SshPath(settings.GetConfig().Git.SSHPath))))
 	},
 }

@@ -21,7 +21,7 @@ import (
 )
 
 var (
-	slogger *slog.Logger
+	Slogger *slog.Logger
 )
 
 func Debug(msg string, opts ...slogParam) {
@@ -29,7 +29,7 @@ func Debug(msg string, opts ...slogParam) {
 	if LOG_SHOW_FILE_LOCATIONS {
 		args = append(args, logGroupFiles())
 	}
-	slogger.Debug(msg, args...)
+	Slogger.Debug(msg, args...)
 }
 
 func Info(msg string, opts ...slogParam) {
@@ -37,7 +37,7 @@ func Info(msg string, opts ...slogParam) {
 	if LOG_SHOW_FILE_LOCATIONS {
 		args = append(args, logGroupFiles())
 	}
-	slogger.Info(msg, args...)
+	Slogger.Info(msg, args...)
 }
 
 func Warn(msg string, opts ...slogParam) {
@@ -45,7 +45,7 @@ func Warn(msg string, opts ...slogParam) {
 	if LOG_SHOW_FILE_LOCATIONS {
 		args = append(args, logGroupFiles())
 	}
-	slogger.Warn(msg, args...)
+	Slogger.Warn(msg, args...)
 }
 
 func Error(msg string, opts ...slogParam) {
@@ -53,7 +53,7 @@ func Error(msg string, opts ...slogParam) {
 	if LOG_SHOW_FILE_LOCATIONS {
 		args = append(args, logGroupFiles())
 	}
-	slogger.Error(msg, args...)
+	Slogger.Error(msg, args...)
 }
 
 func Fatal(msg string, opts ...slogParam) {
@@ -61,7 +61,7 @@ func Fatal(msg string, opts ...slogParam) {
 	if LOG_SHOW_FILE_LOCATIONS {
 		args = append(args, logGroupFiles())
 	}
-	slogger.Error(msg, args...)
+	Slogger.Error(msg, args...)
 	panic(msg)
 }
 
@@ -72,7 +72,7 @@ func CheckError(err error, msg string, opts ...slogParam) {
 	args := append([]any{}, newSlogGroup(opts...))
 	args = append(args, "error")
 	args = append(args, fmt.Sprintf("%v", err))
-	slogger.Error(msg, args...)
+	Slogger.Error(msg, args...)
 	os.Exit(1)
 }
 
@@ -83,7 +83,7 @@ func CheckFatal(err error, msg string, opts ...slogParam) {
 	args := append([]any{}, newSlogGroup(opts...))
 	args = append(args, "error")
 	args = append(args, fmt.Sprintf("%v", err))
-	slogger.Error(msg, args...)
+	Slogger.Error(msg, args...)
 	panic(msg)
 }
 
@@ -94,7 +94,7 @@ func Debugf(msg string, varname string, value any, opts ...slogParam) {
 	}
 	args = append(args, varname)
 	args = append(args, fmt.Sprintf("%v", value))
-	slogger.Debug(msg, args...)
+	Slogger.Debug(msg, args...)
 }
 
 func Infof(msg string, varname string, value any, opts ...slogParam) {
@@ -104,7 +104,7 @@ func Infof(msg string, varname string, value any, opts ...slogParam) {
 	}
 	args = append(args, varname)
 	args = append(args, fmt.Sprintf("%v", value))
-	slogger.Info(msg, args...)
+	Slogger.Info(msg, args...)
 }
 
 var LOG_SHOW_FILE_LOCATIONS bool
@@ -112,7 +112,7 @@ var LOG_SHOW_FILE_LOCATIONS bool
 func init() {
 	LOG_SHOW_FILE_LOCATIONS = envs.LogShowFileLocations
 
-	slogger = NewLogger(envs.LogLevel)
+	Slogger = NewLogger(envs.LogLevel)
 }
 
 const (

@@ -19,6 +19,7 @@ var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "init repository settings. " + initAdvice,
 	Run: func(cmd *cobra.Command, args []string) {
+		shared.init.Run()
 		config_path := settings.ProjectConfigPath
 		if *initGLobally {
 			config_path = settings.GlobalConfigPath
