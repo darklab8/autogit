@@ -6,7 +6,7 @@ import (
 	"autogit/settings"
 	"autogit/settings/logus"
 	"fmt"
-	"io/ioutil"
+	"os"
 )
 
 func CommmitMsg(args []string) {
@@ -16,7 +16,7 @@ func CommmitMsg(args []string) {
 	inputFile := args[0]
 	fmt.Printf("commitFile=%s\n", inputFile)
 
-	file, err := ioutil.ReadFile(inputFile)
+	file, err := os.ReadFile(inputFile)
 	logus.CheckFatal(err, "Could not read the file due to this error")
 
 	// convert the file binary into a string using string

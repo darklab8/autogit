@@ -4,7 +4,6 @@ import (
 	"autogit/settings/logus"
 	"autogit/settings/types"
 	_ "embed"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -41,7 +40,7 @@ func init() {
 }
 
 func readSettingsfile(configPath types.ConfigPath) []byte {
-	file, err := ioutil.ReadFile(string(configPath))
+	file, err := os.ReadFile(string(configPath))
 	local_file_is_not_found := false
 	if err != nil {
 		if strings.Contains(err.Error(), "no such file") {
@@ -55,7 +54,7 @@ func readSettingsfile(configPath types.ConfigPath) []byte {
 	if local_file_is_not_found {
 		// TODO replace with structured logging
 		// fmt.Println("fallback to global settings file")
-		file, err = ioutil.ReadFile(string(GlobSettingPath))
+		file, err = os.ReadFile(string(GlobSettingPath))
 		if err != nil {
 			if strings.Contains(err.Error(), "no such file") {
 				global_file_is_not_found = true
