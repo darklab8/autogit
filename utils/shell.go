@@ -8,7 +8,8 @@ import (
 )
 
 func ShellRunArgs(program string, args ...string) {
-	fmt.Printf("OK attempting to run: %s %s\n", program, args)
+	// we are allowed breaking logging rules for code not related to application.
+	logus.Debug(fmt.Sprintf("attempting to run: %s %s\n", program, args))
 	executable, _ := exec.LookPath(program)
 
 	args = append([]string{""}, args...)
