@@ -19,7 +19,7 @@ func (r *Repository) GetLatestTagString() types.TagName {
 }
 
 func TestGetLatestTag(t *testing.T) {
-	repo := (&Repository{}).TestNewRepo()
+	repo := NewRepoTestInMemory()
 	repo.TestCommit("feat: test")
 	repo.TestCommit("feat: test5")
 	assert.Equal(t, types.TagName(""), repo.GetLatestTagString())

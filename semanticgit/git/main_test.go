@@ -8,7 +8,7 @@ import (
 )
 
 func TestGitRepo(t *testing.T) {
-	repo := (&Repository{}).TestNewRepo()
+	repo := NewRepoTestInMemory()
 	repo.TestCommit("feat: test")
 	repo.TestCommit("feat: test3")
 	repo.TestCommit("feat: test5")

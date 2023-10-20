@@ -14,7 +14,8 @@ import (
 	"github.com/go-git/go-git/v5/storage/memory"
 )
 
-func (r *Repository) TestNewRepo() *Repository {
+func NewRepoTestInMemory() *Repository {
+	r := &Repository{}
 	var err error
 	fs := memfs.New()
 
@@ -27,7 +28,7 @@ func (r *Repository) TestNewRepo() *Repository {
 	return r
 }
 
-func (r *Repository) TestNewRepoIntegration() *Repository {
+func (r *Repository) NewRepoTestIntegration() *Repository {
 	path, err := os.Getwd()
 	if err != nil {
 		logus.CheckFatal(err, "unable to get workdir")
