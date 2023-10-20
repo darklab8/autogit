@@ -23,6 +23,7 @@ func NewRepoTestInMemory() *Repository {
 	logus.CheckFatal(err, "failed git init")
 
 	r.wt, err = r.repo.Worktree()
+	logus.CheckFatal(err, "failed to get worktree of repo")
 
 	r.author = &object.Signature{Name: "abc", Email: "abc@example.com"}
 	return r
