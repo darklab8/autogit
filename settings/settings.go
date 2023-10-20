@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strconv"
 
 	"gopkg.in/yaml.v3"
 )
@@ -107,6 +108,12 @@ func ConfigRead(configPath types.ConfigPath) *ConfigScheme {
 	}
 	if value, ok := os.LookupEnv("AUTOGIT_CONFIG_CHANGELOG_ISSUE_URL"); ok {
 		result.Changelog.IssueURL = value
+	}
+
+	if value, ok := os.LookupEnv("AUTOGIT_CONFIG_VALIDATION_RULES_HEADER_SUBJECT_MIN_WORDS"); ok {
+		res, err := strconv.Atoi(value)
+		logus.CheckFatal(err, "crashed when trying to atoi min words env value")
+		result.Validation.Rules.Header.Subject.MinWords = res
 	}
 
 	return &result
