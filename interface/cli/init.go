@@ -5,37 +5,36 @@ package cli
 
 import (
 	"autogit/settings"
+	"autogit/settings/logus"
 	"autogit/utils"
-	"fmt"
-	"log"
 
 	"github.com/spf13/cobra"
 )
 
 const (
-	initAdvice string = "activate hook with `autogit hook activate`"
+	initAdvice string = "activate hook with `autogit hook activate [--global]`"
 )
 
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "init repository settings. " + initAdvice,
 	Run: func(cmd *cobra.Command, args []string) {
-		config_path := "autogit.yml"
+		config_path := settings.RelativeConfigPath
 		if *initGLobally {
 			config_path = settings.GlobSettingPath
 		}
 
-		if utils.FileExists(config_path) {
-			log.Fatalln("file with settings=", config_path, " already exists")
+		if utils.FileExists(string(config_path)) {
+			logus.Fatal("file with settings already exists", logus.ConfigPath(config_path))
 			return
 		}
 
-		file := utils.NewFile(config_path).CreateToWriteF()
+		file := utils.NewFile(string(config_path)).CreateToWriteF()
 		defer file.Close()
 		file.WritelnF(settings.ConfigExample)
 
-		fmt.Println("Succesfully created autogit.yml in location", config_path)
-		fmt.Println("Try to " + initAdvice + ". It will automatically verify committs for you!")
+		logus.Info("Succesfully created settings in location", logus.ConfigPath(config_path))
+		logus.Info("Try to " + initAdvice + ". It will automatically verify committs for you!")
 	},
 }
 

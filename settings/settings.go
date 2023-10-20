@@ -1,9 +1,9 @@
 package settings
 
 import (
-	"autogit/utils"
+	"autogit/settings/logus"
+	"autogit/settings/types"
 	_ "embed"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -28,27 +28,27 @@ type ConfigScheme struct {
 	} `yaml:"git"`
 }
 
-type SettingPath string
-
-var GlobSettingPath string
+var GlobSettingPath types.ConfigPath
+var RelativeConfigPath types.ConfigPath
 
 var UserHomeDir string
 
 func init() {
 	dirname, err := os.UserHomeDir()
-	utils.CheckFatal(err, "failed obtaining user home dir")
+	logus.CheckFatal(err, "failed obtaining user home dir")
 	UserHomeDir = dirname
-	GlobSettingPath = filepath.Join(dirname, "autogit.yml")
+	GlobSettingPath = types.ConfigPath(filepath.Join(dirname, "autogit.yml"))
+	RelativeConfigPath = types.ConfigPath("autogit.yml")
 }
 
-func readSettingsfile(settingsPath SettingPath) []byte {
-	file, err := ioutil.ReadFile(string(settingsPath))
+func readSettingsfile(configPath types.ConfigPath) []byte {
+	file, err := ioutil.ReadFile(string(configPath))
 	local_file_is_not_found := false
 	if err != nil {
 		if strings.Contains(err.Error(), "no such file") {
 			local_file_is_not_found = true
 		} else {
-			utils.CheckFatal(err, "Could not read the file due to error, autogit_path=%s\n", string(settingsPath))
+			logus.CheckFatal(err, "Could not read the file due to error", logus.ConfigPath(configPath))
 		}
 	}
 
@@ -61,76 +61,72 @@ func readSettingsfile(settingsPath SettingPath) []byte {
 			if strings.Contains(err.Error(), "no such file") {
 				global_file_is_not_found = true
 			} else {
-				utils.CheckFatal(err, "Could not read the file due to error, autogit_path=%s\n", string(settingsPath))
+				logus.CheckFatal(err, "Could not read the file due to error", logus.ConfigPath(configPath))
 			}
 		}
 	}
 
 	if local_file_is_not_found && global_file_is_not_found {
-		// reading is memory settings
-
-		// TODO replace with structured logging
-		// fmt.Println("fallback to memory settings file")
+		logus.Debug("fallback to memory settings file")
 		file = []byte(ConfigExample)
 	}
 
 	return file
 }
 
-func ConfigRead(settingsPath SettingPath) *ConfigScheme {
-	file := readSettingsfile(settingsPath)
+func ConfigRead(configPath types.ConfigPath) *ConfigScheme {
+	file := readSettingsfile(configPath)
 
 	result := ConfigScheme{}
 
 	err := yaml.Unmarshal(file, &result)
-	utils.CheckFatal(err, "unable to unmarshal settings")
+	logus.CheckFatal(err, "unable to unmarshal settings")
 	return &result
 }
 
 // yml package has no way to validate that there is no unknown undeclared fields
-func validateSettingsScheme(settingsPath SettingPath) {
+func validateSettingsScheme(configPath types.ConfigPath) {
 	var config ConfigScheme
 	var err error
 
-	file := readSettingsfile(settingsPath)
+	file := readSettingsfile(configPath)
 	// Marshal file to struct
 	err = yaml.Unmarshal(file, &config)
-	utils.CheckFatal(err)
+	logus.CheckFatal(err, "failed to unmarshal config")
 
 	// Unmarshal struct to bytes
 	m, err := yaml.Marshal(&config)
-	utils.CheckFatal(err, "unable to unmarshal settings")
+	logus.CheckFatal(err, "unable to marshal settings")
 
 	// Marshal bytes to map
-	utils.CheckFatal(err)
 	a := make(map[interface{}]interface{})
 	err = yaml.Unmarshal(m, &a)
-	utils.CheckFatal(err)
+	logus.CheckFatal(err, "failed unmarshaling to yaml")
 
 	// compare with file marshaled to map
 	b := make(map[interface{}]interface{})
 	err = yaml.Unmarshal(file, &b)
-	utils.CheckFatal(err)
+	logus.CheckFatal(err, "failed unmarshaling to yaml again")
 
 	if !reflect.DeepEqual(a, b) {
-		fmt.Printf("ERR autogit.yml contains not registered keys. Check your version of autogit, and documentation related to settings\n")
-		fmt.Printf("--- expected:\n%v\n\n", a)
-		fmt.Printf("--- actual:\n%v\n\n", b)
-		os.Exit(1)
+		logus.Fatal(`
+		setting file contains not registered keys.
+		Check your version of autogit, and documentation related to settings
+		`, logus.Expected(a), logus.Actual(b))
 	}
 }
 
-func LoadSettings(settingsPath SettingPath) *ConfigScheme {
-	config := ConfigRead(settingsPath)
+func LoadSettings(configPath types.ConfigPath) *ConfigScheme {
+	config := ConfigRead(configPath)
 	ChangelogInit(*config)
 	RegexInit(config)
 	ValidationInit(config)
-	validateSettingsScheme(settingsPath)
+	validateSettingsScheme(configPath)
 
 	return config
 }
 
-func GetSettingsPath() SettingPath {
+func GetSettingsPath() types.ConfigPath {
 	workdir, _ := os.Getwd()
 	project_folder := os.Getenv("AUTOGIT_PROJECT_FOLDER")
 	if project_folder != "" {
@@ -138,7 +134,7 @@ func GetSettingsPath() SettingPath {
 		workdir = project_folder
 	}
 	settingsPath := filepath.Join(workdir, "autogit.yml")
-	return SettingPath(settingsPath)
+	return types.ConfigPath(settingsPath)
 }
 
 var config *ConfigScheme

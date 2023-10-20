@@ -1,7 +1,7 @@
 package settings
 
 import (
-	"log"
+	"autogit/settings/logus"
 )
 
 type ChangelogScheme struct {
@@ -12,13 +12,13 @@ type ChangelogScheme struct {
 
 func ChangelogValidate(conf ConfigScheme) {
 	if conf.Changelog.CommitURL == "" {
-		log.Fatal("autogit.yml->Changelog.CommitUrl is empty")
+		logus.Fatal("autogit.yml->Changelog.CommitUrl is empty")
 	}
 	if conf.Changelog.CommitRangeURL == "" {
-		log.Fatal("autogit.yml->Changelog.CommitRangeURL is empty")
+		logus.Fatal("autogit.yml->Changelog.CommitRangeURL is empty")
 	}
 	if conf.Changelog.IssueURL == "" {
-		log.Fatal("autogit.yml->Changelog.IssueURL is empty")
+		logus.Fatal("autogit.yml->Changelog.IssueURL is empty")
 	}
 }
 
