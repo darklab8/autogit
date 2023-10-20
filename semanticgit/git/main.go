@@ -187,7 +187,7 @@ func (r *Repository) HookEnabled(enabled bool) {
 	logus.CheckFatal(err, "failed to read config")
 
 	if enabled {
-		cfg.Raw.Section("core").SetOption(hooksPathkey, ".git-hooks")
+		cfg.Raw.Section("core").SetOption(hooksPathkey, ".autogit-hooks")
 	} else {
 		cfg.Raw.Section("core").RemoveOption(hooksPathkey)
 	}

@@ -68,7 +68,7 @@ tasks:
 
   hook:dev:
     cmds:
-      - git config core.hooksPath .git-hooks-dev
+      - git config core.hooksPath .autogit-hooks-dev
 
   hook:prod:
     cmds:
