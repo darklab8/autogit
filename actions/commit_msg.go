@@ -20,7 +20,7 @@ func CommmitMsg(args []string) {
 	logus.CheckFatal(err, "Could not read the file due to this error")
 
 	// convert the file binary into a string using string
-	fileContent := types.CommitMessage(string(file))
+	fileContent := types.CommitOriginalMsg(string(file))
 	logus.Debug("acquired file_content", logus.CommitMessage(fileContent))
 
 	commit, err := conventionalcommits.NewCommit(fileContent)

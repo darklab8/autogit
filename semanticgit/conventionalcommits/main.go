@@ -9,7 +9,7 @@ import (
 )
 
 type ConventionalCommit struct {
-	Original types.CommitMessage
+	Original types.CommitOriginalMsg
 	conventionalcommitstype.ParsedCommit
 }
 
@@ -31,7 +31,7 @@ func (m NotParsed) Error() string {
 	return "not parsed at all"
 }
 
-func ParseCommit(msg types.CommitMessage) (*ConventionalCommit, error) {
+func ParseCommit(msg types.CommitOriginalMsg) (*ConventionalCommit, error) {
 	result := ConventionalCommit{}
 	result.Original = msg
 	main_match := settings.RegexConventionalCommit.FindStringSubmatch(string(msg))
@@ -82,7 +82,7 @@ func (c *ConventionalCommit) Validate() error {
 	return InvalidType{}
 }
 
-func NewCommit(msg types.CommitMessage) (*ConventionalCommit, error) {
+func NewCommit(msg types.CommitOriginalMsg) (*ConventionalCommit, error) {
 	commit, err := ParseCommit(msg)
 	if err != nil {
 		return commit, err

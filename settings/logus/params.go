@@ -95,7 +95,7 @@ func Regex(value types.RegexExpression) slogParam {
 	}
 }
 
-func CommitMessage(value types.CommitMessage) slogParam {
+func CommitMessage(value types.CommitOriginalMsg) slogParam {
 	return func(c *slogGroup) {
 		c.params["commit_file"] = string(value)
 	}

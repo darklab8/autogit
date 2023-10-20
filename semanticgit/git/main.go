@@ -38,7 +38,7 @@ func (r *Repository) NewRepoInWorkDir(sshPath SshPath) *Repository {
 
 type Log struct {
 	Hash plumbing.Hash
-	Msg  types.CommitMessage
+	Msg  types.CommitOriginalMsg
 }
 
 var HEAD_Hash plumbing.Hash
@@ -92,7 +92,7 @@ func (r *Repository) ForeachLog(From plumbing.Hash, callback func(log Log) bool)
 	// ... just iterates over the commits, printing it
 	c, _ := cIter.Next()
 	for ; c != nil; c, _ = cIter.Next() {
-		shouldWeStop := callback(Log{Hash: c.Hash, Msg: types.CommitMessage(c.Message)})
+		shouldWeStop := callback(Log{Hash: c.Hash, Msg: types.CommitOriginalMsg(c.Message)})
 		if shouldWeStop {
 			return
 		}
