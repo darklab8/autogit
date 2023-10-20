@@ -1,28 +1,16 @@
 package conventionalcommits
 
 import (
+	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
 	"autogit/settings"
 	"autogit/settings/types"
 	"fmt"
 	"strings"
 )
 
-type Footer struct {
-	Token   string
-	Content string
-}
-
 type ConventionalCommit struct {
 	Original types.CommitMessage
-
-	Type        string
-	Exclamation bool
-	Scope       string
-	Subject     string
-	Body        string
-	Footers     []Footer
-	Hash        string
-	Issue       []string
+	conventionalcommitstype.ParsedCommit
 }
 
 func (commit ConventionalCommit) StringHeader() string {
@@ -33,26 +21,6 @@ func (commit ConventionalCommit) StringHeader() string {
 		sb.WriteString(fmt.Sprintf("(%s)", commit.Scope))
 	}
 	sb.WriteString(fmt.Sprintf(": %s", commit.Subject))
-
-	return sb.String()
-}
-
-func (commit ConventionalCommit) StringAnnotated() string {
-	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf("type=%s\n", commit.Type))
-
-	if commit.Scope != "" {
-		sb.WriteString(fmt.Sprintf("scope=%s\n", commit.Scope))
-	}
-	sb.WriteString(fmt.Sprintf("subject=%s\n", commit.Subject))
-
-	if commit.Body != "" {
-		sb.WriteString(fmt.Sprintf("body=%s\n", commit.Body))
-	}
-
-	for index, footer := range commit.Footers {
-		sb.WriteString(fmt.Sprintf("footer #%d - token: %s, content: %s\n", index, footer.Token, footer.Content))
-	}
 
 	return sb.String()
 }
@@ -92,7 +60,7 @@ func ParseCommit(msg types.CommitMessage) (*ConventionalCommit, error) {
 		if index == 0 && len(match) == 0 {
 			result.Body = msg
 		} else if len(match) > 0 {
-			result.Footers = append(result.Footers, Footer{Token: match[1], Content: match[2]})
+			result.Footers = append(result.Footers, conventionalcommitstype.Footer{Token: match[1], Content: match[2]})
 		}
 	}
 

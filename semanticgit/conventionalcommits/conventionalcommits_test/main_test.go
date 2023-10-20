@@ -1,6 +1,7 @@
-package conventionalcommits
+package conventionalcommits_test
 
 import (
+	"autogit/semanticgit/conventionalcommits"
 	"autogit/settings/logus"
 	_ "autogit/testsautouse"
 
@@ -10,22 +11,22 @@ import (
 )
 
 func TestParse(t *testing.T) {
-	_, err := NewCommit("feat: abc")
+	_, err := conventionalcommits.NewCommit("feat: abc")
 	logus.CheckFatal(err, "failled creating commit")
 }
 
 func TestParse2(t *testing.T) {
-	_, err := NewCommit("fix: dsfsdf")
+	_, err := conventionalcommits.NewCommit("fix: dsfsdf")
 	logus.CheckFatal(err, "failed creating commit")
 }
 
 func TestParse3(t *testing.T) {
-	_, err := NewCommit("abcd abc")
+	_, err := conventionalcommits.NewCommit("abcd abc")
 	assert.True(t, err != nil)
 }
 
 func TestParse4(t *testing.T) {
-	commit, err := NewCommit(`feat(api): my subject
+	commit, err := conventionalcommits.NewCommit(`feat(api): my subject
 
 body message
 
@@ -41,12 +42,12 @@ footer-key: tralala`)
 }
 
 func TestParse5(t *testing.T) {
-	_, err := NewCommit("feat: hook commit msg")
+	_, err := conventionalcommits.NewCommit("feat: hook commit msg")
 	logus.CheckFatal(err, "failed creating commit")
 }
 
 func TestNotAllowedNewLineAtSecondLine(t *testing.T) {
-	_, err := NewCommit(`feat(api): my subject
+	_, err := conventionalcommits.NewCommit(`feat(api): my subject
 body message
 
 footer-key: tralala`)
@@ -54,12 +55,12 @@ footer-key: tralala`)
 }
 
 func TestParse6(t *testing.T) {
-	_, err := NewCommit(`refactor: autogit version into about`)
+	_, err := conventionalcommits.NewCommit(`refactor: autogit version into about`)
 	logus.CheckFatal(err, "failed creating commit")
 }
 
 func TestParse7(t *testing.T) {
-	commit, err := NewCommit(`feat: rendered changelog for task
+	commit, err := conventionalcommits.NewCommit(`feat: rendered changelog for task
 
 #1, #2, #3`)
 	logus.CheckFatal(err, "failed creating commits")

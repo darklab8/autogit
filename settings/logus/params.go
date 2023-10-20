@@ -1,6 +1,7 @@
 package logus
 
 import (
+	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
 	"autogit/settings/types"
 	"fmt"
 	"log/slog"
@@ -96,5 +97,26 @@ func Regex(value types.RegexExpression) slogParam {
 func CommitMessage(value types.CommitMessage) slogParam {
 	return func(c *slogGroup) {
 		c.params["commit_file"] = string(value)
+	}
+}
+
+func Commit(commit conventionalcommitstype.ParsedCommit) slogParam {
+	return func(c *slogGroup) {
+		c.params["commit_type"] = commit.Type
+		c.params["commit_scope"] = commit.Scope
+		c.params["commit_subject"] = commit.Subject
+		c.params["commit_body"] = commit.Body
+
+		c.params["commit_footers"] = commit.Body
+		for index, footer := range commit.Footers {
+			// Should have made structured logging allowing nested dictionaries.
+			// Using as work around more lazy option
+			c.params[fmt.Sprintf("commit_footer_%d", index)] = fmt.Sprintf(
+				"footer #%d - token: %s, content: %s\n",
+				index,
+				footer.Token,
+				footer.Content,
+			)
+		}
 	}
 }

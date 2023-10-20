@@ -6,7 +6,6 @@ import (
 	"autogit/settings"
 	"autogit/settings/logus"
 	"autogit/settings/types"
-	"fmt"
 	"os"
 )
 
@@ -32,5 +31,5 @@ func CommmitMsg(args []string) {
 		logus.CheckFatal(err, "failed to validate commits")
 	}
 
-	fmt.Printf("parsed commit:\n%s\n", commit.StringAnnotated())
+	logus.Info("parsed commit", logus.Commit(commit.ParsedCommit))
 }
