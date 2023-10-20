@@ -40,11 +40,20 @@ func init() {
 	ProjectConfigPath = types.ConfigPath("autogit.yml")
 }
 
+var cachedConfigFile []byte = []byte{}
+
 func readSettingsfile(configPath types.ConfigPath) []byte {
+	// TODO You could have written less config readings across your code.
+	// Caching for the purpose of rendering logging records only once
+	if len(cachedConfigFile) != 0 {
+		return cachedConfigFile
+	}
+
 	file, err := os.ReadFile(string(configPath))
 	local_file_is_not_found := false
 	if err != nil {
 		if strings.Contains(err.Error(), "no such file") {
+			logus.Debug("not found at path repository local file with config. Fallback to global config", logus.FilePath(configPath.ToFilePath()))
 			local_file_is_not_found = true
 		} else {
 			logus.CheckFatal(err, "Could not read the file due to error", logus.ConfigPath(configPath))
@@ -58,6 +67,7 @@ func readSettingsfile(configPath types.ConfigPath) []byte {
 		file, err = os.ReadFile(string(GlobSettingPath))
 		if err != nil {
 			if strings.Contains(err.Error(), "no such file") {
+				logus.Debug("not found at path repository global file with config. Fallback to other in memory config", logus.FilePath(configPath.ToFilePath()))
 				global_file_is_not_found = true
 			} else {
 				logus.CheckFatal(err, "Could not read the file due to error", logus.ConfigPath(configPath))
@@ -70,6 +80,7 @@ func readSettingsfile(configPath types.ConfigPath) []byte {
 		file = []byte(ConfigExample)
 	}
 
+	cachedConfigFile = file
 	return file
 }
 
