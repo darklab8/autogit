@@ -30,17 +30,14 @@ type ConfigScheme struct {
 	} `yaml:"git"`
 }
 
-var GlobSettingPath types.ConfigPath
+var GlobalConfigPath types.ConfigPath
 var ProjectConfigPath types.ConfigPath
 
-var UserHomeDir string
+const ConfigFileName types.ConfigPath = "autogit.yml"
 
 func init() {
-	dirname, err := os.UserHomeDir()
-	logus.CheckFatal(err, "failed obtaining user home dir")
-	UserHomeDir = dirname
-	GlobSettingPath = types.ConfigPath(filepath.Join(dirname, "autogit.yml"))
-	ProjectConfigPath = types.ConfigPath("autogit.yml")
+	GlobalConfigPath = types.ConfigPath(filepath.Join(string(envs.PathUserHome), string(ConfigFileName)))
+	ProjectConfigPath = ConfigFileName
 }
 
 var cachedConfigFile []byte = []byte{}
@@ -70,7 +67,7 @@ func readSettingsfile(configPath types.ConfigPath) []byte {
 
 	global_file_is_not_found := false
 	if local_file_is_not_found {
-		file, err = os.ReadFile(string(GlobSettingPath))
+		file, err = os.ReadFile(string(GlobalConfigPath))
 		if err != nil {
 			if is_file_missing(err) {
 				logus.Debug("not found at path repository global file with config. Fallback to other in memory config", logus.FilePath(configPath.ToFilePath()), logus.OptError(err))
@@ -142,26 +139,26 @@ func LoadSettings(configPath types.ConfigPath) *ConfigScheme {
 	return config
 }
 
-func GetSettingsPath() types.ConfigPath {
-	var settingsPath types.ConfigPath
+func GetConfigPath() types.ConfigPath {
+	var configPath types.ConfigPath
 	workdir, _ := os.Getwd()
 	project_folder := envs.TestProjectFolder
 	if project_folder != "" {
 		logus.Debug("OK TestProjectFolder is not empty, changing search settings to ", logus.ProjectFolder(project_folder))
 		project_folder = types.ProjectFolder(workdir)
-		settingsPath = types.ConfigPath(filepath.Join(string(project_folder), string(ProjectConfigPath)))
+		configPath = types.ConfigPath(filepath.Join(string(project_folder), string(ProjectConfigPath)))
 	} else {
-		settingsPath = types.ConfigPath(string(ProjectConfigPath))
+		configPath = types.ConfigPath(string(ProjectConfigPath))
 	}
-	return settingsPath
+	return configPath
 }
 
 var config *ConfigScheme
 
 func GetConfig() ConfigScheme {
 	if config == nil {
-		settingPath := GetSettingsPath()
-		config = LoadSettings(settingPath)
+		configPath := GetConfigPath()
+		config = LoadSettings(configPath)
 	}
 	return *config
 }

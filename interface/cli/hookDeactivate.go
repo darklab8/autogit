@@ -6,10 +6,10 @@ package cli
 import (
 	"autogit/semanticgit/git"
 	"autogit/settings"
+	"autogit/settings/envs"
 	"autogit/settings/logus"
 	"fmt"
 	"io/ioutil"
-	"path/filepath"
 
 	"github.com/go-git/go-git/v5/config"
 	"github.com/spf13/cobra"
@@ -37,8 +37,7 @@ var deactivateCmd = &cobra.Command{
 			logus.CheckFatal(err, "failed to marshal global settings")
 			fmt.Println("file", string(file))
 
-			git_config_path := filepath.Join(settings.UserHomeDir, ".gitconfig")
-			err = ioutil.WriteFile(git_config_path, file, 0777)
+			err = ioutil.WriteFile(string(envs.PathGitConfig), file, 0777)
 			logus.CheckFatal(err, "failed to write global settings")
 		}
 	},

@@ -25,7 +25,7 @@ func (v *ChangelogParams) Bind(cmd *cobra.Command) {
 }
 
 func Changelog(params ChangelogParams, gitw *git.Repository) string {
-	conf := settings.LoadSettings(settings.GetSettingsPath())
+	conf := settings.LoadSettings(settings.GetConfigPath())
 	params.EnableNewline = false
 
 	g := (&semanticgit.SemanticGit{}).NewRepo(gitw)

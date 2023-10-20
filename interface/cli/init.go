@@ -21,7 +21,7 @@ var initCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		config_path := settings.ProjectConfigPath
 		if *initGLobally {
-			config_path = settings.GlobSettingPath
+			config_path = settings.GlobalConfigPath
 		}
 
 		if utils.FileExists(config_path.ToFilePath()) {

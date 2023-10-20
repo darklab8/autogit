@@ -6,6 +6,7 @@ package cli
 import (
 	"autogit/semanticgit/git"
 	"autogit/settings"
+	"autogit/settings/envs"
 	"autogit/settings/logus"
 	"fmt"
 	"io/ioutil"
@@ -26,7 +27,7 @@ var activateCmd = &cobra.Command{
 		fmt.Println("OK activate called")
 		hook_folder := settings.HookFolderName
 		if *activateHookGLobally {
-			hook_folder = filepath.Join(settings.UserHomeDir, hook_folder)
+			hook_folder = filepath.Join(string(envs.PathUserHome), hook_folder)
 		}
 		_ = os.Mkdir(hook_folder, 0777)
 		commit_msg_path := filepath.Join(hook_folder, "commit-msg")
@@ -44,8 +45,7 @@ var activateCmd = &cobra.Command{
 			logus.CheckFatal(err, "failed to marshal global settings")
 			fmt.Println("file", string(file))
 
-			git_config_path := filepath.Join(settings.UserHomeDir, ".gitconfig")
-			err = ioutil.WriteFile(git_config_path, file, 0777)
+			err = ioutil.WriteFile(string(envs.PathGitConfig), file, 0777)
 			logus.CheckFatal(err, "failed to write global settings")
 		}
 	},

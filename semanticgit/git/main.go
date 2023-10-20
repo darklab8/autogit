@@ -169,7 +169,7 @@ const defaultRemoteName = "origin"
 
 func (r *Repository) PushTag(name types.TagName) {
 	var publicKey *ssh.PublicKeys
-	sshPath := filepath.Join(string(envs.UserHomeDir), ".ssh", string(r.sshPath))
+	sshPath := filepath.Join(string(envs.PathUserHome), ".ssh", string(r.sshPath))
 	sshKey, _ := os.ReadFile(sshPath)
 	publicKey, keyError := ssh.NewPublicKeys("git", []byte(sshKey), "")
 	logus.CheckFatal(keyError, "failed initializing git ssh keys")

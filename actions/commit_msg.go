@@ -10,8 +10,8 @@ import (
 )
 
 func CommmitMsg(args []string) {
-	conf := settings.LoadSettings(settings.GetSettingsPath())
-	settings.LoadSettings(settings.GetSettingsPath())
+	conf := settings.LoadSettings(settings.GetConfigPath())
+	settings.LoadSettings(settings.GetConfigPath())
 
 	inputFile := types.FilePath(args[0])
 	logus.Debug("Received CommitFile", logus.FilePath(inputFile))

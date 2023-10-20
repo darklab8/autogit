@@ -2,7 +2,9 @@ package envs
 
 import (
 	"autogit/settings/types"
+	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -17,7 +19,9 @@ var TestProjectFolder types.ProjectFolder
 var LogTurnJSONLogging bool
 var LogShowFileLocations bool
 var LogLevel types.LogLevel
-var UserHomeDir types.FilePath
+
+var PathUserHome types.FilePath
+var PathGitConfig types.FilePath
 
 const (
 	EnvTrue = "true"
@@ -34,6 +38,12 @@ func init() {
 	}
 	LogLevel = types.LogLevel(log_level_str)
 
-	UserHomeDir = types.FilePath(os.Getenv("HOME"))
+	PathUserHome = types.FilePath(os.Getenv("HOME"))
 
+	dirname, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Printf("Unable to get UserHomeDir, e=%v", err)
+	}
+	PathUserHome = types.FilePath(dirname)
+	PathGitConfig = types.FilePath(filepath.Join(string(PathUserHome), ".gitconfig"))
 }
