@@ -49,8 +49,6 @@ tasks:
       
       - GOOS=darwin GOARCH=amd64 go build -v -o dist/autogit-macos-amd64 main.go
       - GOOS=darwin GOARCH=arm64 go build -v -o dist/autogit-macos-arm64 main.go
-      - cp autogit.yml dist/autogit.yml
-
   test:
     cmds:
       - go test ./... {{.CLI_ARGS}}
