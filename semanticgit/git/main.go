@@ -2,6 +2,7 @@
 package git
 
 import (
+	"autogit/semanticgit/git/gitraw"
 	"autogit/settings"
 	"autogit/settings/envs"
 	"autogit/settings/logus"
@@ -29,11 +30,7 @@ type Repository struct {
 func NewRepoInWorkDir(sshPath SshPath) *Repository {
 	r := &Repository{}
 	r.sshPath = sshPath
-
-	path, err := os.Getwd()
-	logus.CheckFatal(err, "unable to get workdir")
-	r.repo, err = git.PlainOpen(path)
-	logus.CheckFatal(err, "unable to open git")
+	r.repo = gitraw.NewGitRepo()
 	return r
 }
 

@@ -14,7 +14,6 @@ unit tests are located in nested folders.
 And autogit is able to run with correct settings only if run from project root
 TODO fix actually to detect root folder of it, then it will not be necessary value
 */
-var TestProjectFolder types.ProjectFolder
 
 var LogTurnJSONLogging bool
 var LogShowFileLocations bool
@@ -28,7 +27,6 @@ const (
 )
 
 func init() {
-	TestProjectFolder = types.ProjectFolder(os.Getenv("AUTOGIT_TEST_PROJECT_FOLDER"))
 	LogTurnJSONLogging = strings.ToLower(os.Getenv("AUTOGIT_LOG_JSON")) == EnvTrue
 	LogShowFileLocations = strings.ToLower(os.Getenv("AUTOGIT_LOG_SHOW_FILE_LOCATIONS")) == EnvTrue
 

@@ -1,6 +1,7 @@
 package settings
 
 import (
+	"autogit/semanticgit/git/gitraw"
 	"autogit/settings/envs"
 	"autogit/settings/logus"
 	"autogit/settings/types"
@@ -32,13 +33,22 @@ type ConfigScheme struct {
 }
 
 var GlobalConfigPath types.ConfigPath
+
 var ProjectConfigPath types.ConfigPath
+
+var ProjectPath types.FilePath
 
 const ConfigFileName types.ConfigPath = "autogit.yml"
 
 func init() {
 	GlobalConfigPath = types.ConfigPath(filepath.Join(string(envs.PathUserHome), string(ConfigFileName)))
-	ProjectConfigPath = ConfigFileName
+
+	g := gitraw.NewGitRepo()
+	w, err := g.Worktree()
+	logus.CheckFatal(err, "are we not in git repo folder?")
+	ProjectPath = types.FilePath(w.Filesystem.Root())
+
+	ProjectConfigPath = types.ConfigPath(filepath.Join(string(ProjectPath), string(ConfigFileName)))
 }
 
 var cachedConfigFile []byte = []byte{}
@@ -162,27 +172,11 @@ func LoadSettings(configPath types.ConfigPath) *ConfigScheme {
 	return config
 }
 
-func GetConfigPath() types.ConfigPath {
-	var configPath types.ConfigPath
-	workdir, _ := os.Getwd()
-	project_folder := envs.TestProjectFolder
-	if project_folder != "" {
-		logus.Debug("OK TestProjectFolder is not empty, changing search settings to ", logus.ProjectFolder(project_folder))
-		project_folder = types.ProjectFolder(workdir)
-		configPath = types.ConfigPath(filepath.Join(string(project_folder), string(ProjectConfigPath)))
-	} else {
-		configPath = types.ConfigPath(string(ProjectConfigPath))
-	}
-	logus.Debug("GetConfigPath", logus.FilePath(configPath.ToFilePath()))
-	return configPath
-}
-
 var config *ConfigScheme
 
 func GetConfig() ConfigScheme {
 	if config == nil {
-		configPath := GetConfigPath()
-		config = LoadSettings(configPath)
+		config = LoadSettings(ProjectConfigPath)
 	}
 	return *config
 }

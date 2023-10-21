@@ -4,8 +4,6 @@ import (
 	"autogit/settings/logus"
 	"autogit/settings/utils"
 	"fmt"
-	"os"
-	"path/filepath"
 
 	"github.com/go-git/go-billy/v5/memfs"
 	"github.com/go-git/go-git/v5"
@@ -26,19 +24,6 @@ func NewRepoTestInMemory() *Repository {
 	logus.CheckFatal(err, "failed to get worktree of repo")
 
 	r.author = &object.Signature{Name: "abc", Email: "abc@example.com"}
-	return r
-}
-
-func NewRepoTestIntegration() *Repository {
-	r := &Repository{}
-	path, err := os.Getwd()
-	if err != nil {
-		logus.CheckFatal(err, "unable to get workdir")
-	}
-	r.repo, err = git.PlainOpen(filepath.Dir(filepath.Dir(path)))
-	if err != nil {
-		logus.CheckFatal(err, "unable to open git")
-	}
 	return r
 }
 
