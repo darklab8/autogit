@@ -100,35 +100,90 @@ func readSettingsfile(configPath types.ConfigPath) []byte {
 	return file
 }
 
-func ConfigRead(configPath types.ConfigPath) *ConfigScheme {
-	file := readSettingsfile(configPath)
+func merge_maps[T comparable](result map[T]interface{}, additions map[T]interface{}) map[T]interface{} {
+	/*
+		for key value in result {
+			if key is present in additions {
 
-	result := ConfigScheme{}
+				if value is not map[string]interface{} {
+					result[key] = additions[key]
+				} else {
+					merge_maps(result[key], additions[key])
+				}
 
-	err := yaml.Unmarshal(file, &result)
-	logus.CheckFatal(err, "unable to unmarshal settings")
+			}
+		}
+	*/
+
+	// For all keys and values in resulting hashmap
+	for result_key, result_value := range result {
+
+		// if key is present in additions hasmap
+		if additions_value, is_present := additions[result_key]; is_present {
+
+			// if value is not map[string]{interface}
+			if asserted_addition_value, ok := additions_value.(map[string]interface{}); !ok {
+				// just override with value from additions to resulting hashmap
+				result[result_key] = additions_value
+			} else {
+
+				// otherwise try to merge recursively values from additions nested hashmaps to resulting key
+				if asserted_result_value, ok := result_value.(map[string]interface{}); ok {
+					merge_maps(asserted_result_value, asserted_addition_value)
+				} else {
+					logus.Fatal(`
+						failed to assert value of config in memory being of same type as value in input config
+						potentially broken config
+					`)
+				}
+			}
+		}
+	}
+
+	return result
+}
+
+func configRead(file []byte) *ConfigScheme {
+	config := ConfigScheme{}
+
+	file_config := make(map[interface{}]interface{})
+	err := yaml.Unmarshal(file, &file_config)
+	logus.CheckFatal(err, "unable to unmarshal input config")
+
+	memory_config := make(map[interface{}]interface{})
+	err = yaml.Unmarshal([]byte(ConfigExample), &memory_config)
+	logus.CheckFatal(err, "unable to unmrashal memory config")
+
+	// merged file content onto memory config
+	merged_config := merge_maps(memory_config, file_config)
+
+	merged_config_as_bytes, err := yaml.Marshal(&merged_config)
+	logus.CheckFatal(err, "unable to marshal merged config")
+
+	err = yaml.Unmarshal(merged_config_as_bytes, &config)
+	logus.CheckFatal(err, "unable to unmarshal merged config")
 
 	// Config overrides for dev env purposes
 	if value, ok := os.LookupEnv("AUTOGIT_CONFIG_SSH_PATH"); ok {
-		result.Git.SSHPath = value
+		config.Git.SSHPath = value
 	}
 	if value, ok := os.LookupEnv("AUTOGIT_CONFIG_CHANGELOG_COMMIT_URL"); ok {
-		result.Changelog.CommitURL = value
+		config.Changelog.CommitURL = value
 	}
 	if value, ok := os.LookupEnv("AUTOGIT_CONFIG_CHANGELOG_COMMIT_RANGE_URL"); ok {
-		result.Changelog.CommitRangeURL = value
+		config.Changelog.CommitRangeURL = value
 	}
 	if value, ok := os.LookupEnv("AUTOGIT_CONFIG_CHANGELOG_ISSUE_URL"); ok {
-		result.Changelog.IssueURL = value
+		config.Changelog.IssueURL = value
 	}
 
 	if value, ok := os.LookupEnv("AUTOGIT_CONFIG_VALIDATION_RULES_HEADER_SUBJECT_MIN_WORDS"); ok {
 		res, err := strconv.Atoi(value)
 		logus.CheckFatal(err, "crashed when trying to atoi min words env value")
-		result.Validation.Rules.Header.Subject.MinWords = res
+		config.Validation.Rules.Header.Subject.MinWords = res
 	}
 
-	return &result
+	return &config
 }
 
 // yml package has no way to validate that there is no unknown undeclared fields
@@ -164,7 +219,8 @@ func validateSettingsScheme(configPath types.ConfigPath) {
 }
 
 func LoadSettings(configPath types.ConfigPath) *ConfigScheme {
-	config := ConfigRead(configPath)
+	file := readSettingsfile(configPath)
+	config := configRead(file)
 	ChangelogInit(*config)
 	RegexInit(config)
 	validateSettingsScheme(configPath)
