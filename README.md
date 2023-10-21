@@ -258,3 +258,9 @@ flowchart TD
 - contact author [@dd84ai](https://github.com/dd84ai) at `dark.dreamflyer@gmail.com`
 - open [Pull Requests with bug fix or feat requests](https://github.com/darklab8/darklab_autogit/issues)
 - join [Darklab Discord server](https://discord.gg/aukHmTK82J)
+
+## FAQ
+
+- if u have strange bugs, consider as first actions
+  - updating to latest verion
+  - wiping previous present repository local and user global autogit.yml settings file :smile:
