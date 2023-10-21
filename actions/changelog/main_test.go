@@ -14,7 +14,7 @@ import (
 
 func TestGitGood(t *testing.T) {
 	gitInMemory := git.NewRepoTestInMemory()
-	gitSemantic := (&semanticgit.SemanticGit{}).NewRepo(gitInMemory)
+	gitSemantic := semanticgit.NewSemanticRepo(gitInMemory)
 
 	gitInMemory.TestCommit("feat: test")
 

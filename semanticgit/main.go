@@ -16,7 +16,8 @@ type SemanticGit struct {
 	git *git.Repository
 }
 
-func (g *SemanticGit) NewRepo(gitRepo *git.Repository) *SemanticGit {
+func NewSemanticRepo(gitRepo *git.Repository) *SemanticGit {
+	g := &(SemanticGit{})
 	g.git = gitRepo
 	return g
 }

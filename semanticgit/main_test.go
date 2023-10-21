@@ -14,14 +14,14 @@ import (
 // For debug on workdir
 // func TestIngeration(t *testing.T) {
 // 	git := git.NewRepoIntegration()
-// 	gitSemantic := (&SemanticGit{}).NewRepo(git)
+// 	gitSemantic := semanticgit.NewSemanticRepo(git)
 // 	vers := gitSemantic.CalculateNextVersion(gitSemantic.GetCurrentVersion()).ToString()
 // 	testutils.EqualTag(t, "v0.2.0", vers)
 // }
 
 func TestCurrentNextRegularVersion(t *testing.T) {
 	gitInMemory := git.NewRepoTestInMemory()
-	gitSemantic := (&SemanticGit{}).NewRepo(gitInMemory)
+	gitSemantic := NewSemanticRepo(gitInMemory)
 	gitInMemory.TestCommit("feat: init")
 
 	testutils.EqualTag(t, "v0.0.0", gitSemantic.GetCurrentVersion().ToString())
@@ -49,7 +49,7 @@ func TestCurrentNextRegularVersion(t *testing.T) {
 
 func TestGetChangelogs(t *testing.T) {
 	gitInMemory := git.NewRepoTestInMemory()
-	gitSemantic := (&SemanticGit{}).NewRepo(gitInMemory)
+	gitSemantic := NewSemanticRepo(gitInMemory)
 	gitInMemory.TestCommit("feat: init")
 
 	gitInMemory.TestCommit("feat: test3")
@@ -73,7 +73,7 @@ func TestGetChangelogs(t *testing.T) {
 
 func TestTestPrereleaseVersions(t *testing.T) {
 	gitInMemory := git.NewRepoTestInMemory()
-	gitSemantic := (&SemanticGit{}).NewRepo(gitInMemory)
+	gitSemantic := NewSemanticRepo(gitInMemory)
 
 	gitInMemory.TestCommit("feat: init")
 	testutils.EqualTag(t, "v0.1.0-a.1", gitSemantic.GetNextVersion(semver.OptionsSemVer{Alpha: true}).ToString())
@@ -118,7 +118,7 @@ func TestTestPrereleaseVersions(t *testing.T) {
 
 func TestBreakingChanges(t *testing.T) {
 	gitInMemory := git.NewRepoTestInMemory()
-	gitSemantic := (&SemanticGit{}).NewRepo(gitInMemory)
+	gitSemantic := NewSemanticRepo(gitInMemory)
 	gitInMemory.TestCommit("feat: thing")
 	gitInMemory.TestCommit("feat!: break")
 	testutils.EqualTag(t, "v0.1.0", gitSemantic.GetNextVersion(semver.OptionsSemVer{}).ToString())
@@ -135,14 +135,14 @@ func TestBreakingChanges(t *testing.T) {
 
 func TestBuildData(t *testing.T) {
 	gitInMemory := git.NewRepoTestInMemory()
-	gitSemantic := (&SemanticGit{}).NewRepo(gitInMemory)
+	gitSemantic := NewSemanticRepo(gitInMemory)
 	gitInMemory.TestCommit("feat: thing")
 	testutils.EqualTag(t, "v0.1.0+123", gitSemantic.GetNextVersion(semver.OptionsSemVer{Build: "123"}).ToString())
 }
 
 func TestBug(t *testing.T) {
 	gitInMemory := git.NewRepoTestInMemory()
-	gitSemantic := (&SemanticGit{}).NewRepo(gitInMemory)
+	gitSemantic := NewSemanticRepo(gitInMemory)
 	gitInMemory.TestCommit("feat: thing")
 	gitInMemory.TestCreateTag("v0.2.0", gitInMemory.TestCommit("feat: thing"))
 	gitInMemory.TestCreateTag("v0.3.0", gitInMemory.TestCommit("feat: thing"))

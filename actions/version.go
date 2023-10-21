@@ -42,7 +42,7 @@ func (v *ActionVersionParams) Bind(cmd *cobra.Command) {
 // gitw - git.NewRepoInWorkDir() for cmd
 // we can overrise with git in memory
 func Version(params ActionVersionParams, gitw *git.Repository) types.TagName {
-	g := (&semanticgit.SemanticGit{}).NewRepo(gitw)
+	g := semanticgit.NewSemanticRepo(gitw)
 	vers := g.GetNextVersion(params.OptionsSemVer)
 	renderedVers := vers.ToString()
 
