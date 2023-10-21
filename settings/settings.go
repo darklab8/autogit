@@ -163,6 +163,10 @@ func configRead(file []byte) *ConfigScheme {
 	err = yaml.Unmarshal(merged_config_as_bytes, &config)
 	logus.CheckFatal(err, "unable to unmarshal merged config")
 
+	return &config
+}
+
+func (config *ConfigScheme) configLoadEnvOverrides() {
 	// Config overrides for dev env purposes
 	if value, ok := os.LookupEnv("AUTOGIT_CONFIG_SSH_PATH"); ok {
 		config.Git.SSHPath = value
@@ -182,8 +186,6 @@ func configRead(file []byte) *ConfigScheme {
 		logus.CheckFatal(err, "crashed when trying to atoi min words env value")
 		config.Validation.Rules.Header.Subject.MinWords = res
 	}
-
-	return &config
 }
 
 // yml package has no way to validate that there is no unknown undeclared fields
@@ -218,11 +220,14 @@ func validateSettingsScheme(configPath types.ConfigPath) {
 	}
 }
 
-func LoadSettings(configPath types.ConfigPath) *ConfigScheme {
+func NewConfig(configPath types.ConfigPath) *ConfigScheme {
 	file := readSettingsfile(configPath)
+
 	config := configRead(file)
-	ChangelogInit(*config)
-	RegexInit(config)
+	config.configLoadEnvOverrides()
+	config.changelogValidate()
+	config.regexCompile()
+
 	validateSettingsScheme(configPath)
 
 	return config
@@ -232,7 +237,7 @@ var config *ConfigScheme
 
 func GetConfig() ConfigScheme {
 	if config == nil {
-		config = LoadSettings(ProjectConfigPath)
+		config = NewConfig(ProjectConfigPath)
 	}
 	return *config
 }

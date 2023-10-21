@@ -10,7 +10,7 @@ type ChangelogScheme struct {
 	IssueURL       string `yaml:"issueUrl"`
 }
 
-func ChangelogValidate(conf ConfigScheme) {
+func (conf ConfigScheme) changelogValidate() {
 	if conf.Changelog.CommitURL == "" {
 		logus.Fatal("autogit.yml->Changelog.CommitUrl is empty")
 	}
@@ -20,8 +20,4 @@ func ChangelogValidate(conf ConfigScheme) {
 	if conf.Changelog.IssueURL == "" {
 		logus.Fatal("autogit.yml->Changelog.IssueURL is empty")
 	}
-}
-
-func ChangelogInit(conf ConfigScheme) {
-	ChangelogValidate(conf)
 }

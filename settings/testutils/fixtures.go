@@ -13,6 +13,5 @@ func FixtureSettings() {
 	rootFolder := filepath.Dir(string(originalSettingsPath))
 	testSettingsPath := types.ConfigPath(filepath.Join(rootFolder, "settings", "autogit.example.yml"))
 
-	config := settings.LoadSettings(testSettingsPath)
-	settings.RegexInit(config)
+	settings.NewConfig(testSettingsPath)
 }

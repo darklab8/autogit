@@ -32,7 +32,7 @@ var RegexScope *regexp.Regexp
 var RegexType *regexp.Regexp
 var RegexPrerelease *regexp.Regexp
 
-func RegexCompile(conf *ConfigScheme) {
+func (conf *ConfigScheme) regexCompile() {
 	utils.InitRegexExpression(&RegexConventionalCommit, conf.Regex.ConventionalCommit.Header)
 	utils.InitRegexExpression(&RegexBodyFooter, conf.Regex.ConventionalCommit.BodyFooter)
 	utils.InitRegexExpression(&RegexIssue, conf.Regex.Issue)
@@ -40,8 +40,4 @@ func RegexCompile(conf *ConfigScheme) {
 	utils.InitRegexExpression(&RegexScope, conf.Regex.Validation.Scope.Lowercase)
 	utils.InitRegexExpression(&RegexType, conf.Regex.Validation.Type.Lowercase)
 	utils.InitRegexExpression(&RegexPrerelease, conf.Regex.Prerelease)
-}
-
-func RegexInit(conf *ConfigScheme) {
-	RegexCompile(conf)
 }
