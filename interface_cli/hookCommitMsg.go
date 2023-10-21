@@ -4,7 +4,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package interface_cli
 
 import (
-	"autogit/actions"
+	"autogit/interface_cli/actions"
 
 	"github.com/spf13/cobra"
 )

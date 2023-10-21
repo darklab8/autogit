@@ -1,7 +1,7 @@
 package actions
 
 import (
-	"autogit/actions/validation"
+	"autogit/interface_cli/actions/validation"
 	"autogit/semanticgit/conventionalcommits"
 	"autogit/settings"
 	"autogit/settings/logus"

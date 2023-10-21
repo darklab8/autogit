@@ -1,7 +1,7 @@
 package validation
 
 import (
-	"autogit/actions/validation/valerrors"
+	"autogit/interface_cli/actions/validation/valerrors"
 	"autogit/semanticgit/conventionalcommits"
 	"autogit/settings"
 	"strings"

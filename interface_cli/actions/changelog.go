@@ -1,8 +1,8 @@
 package actions
 
 import (
-	"autogit/actions/changelog"
-	"autogit/actions/validation"
+	"autogit/interface_cli/actions/changelog"
+	"autogit/interface_cli/actions/validation"
 	"autogit/semanticgit"
 	"autogit/semanticgit/git"
 	"autogit/settings"
