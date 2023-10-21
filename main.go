@@ -3,8 +3,8 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 */
 package main
 
-import "autogit/interface/cli"
+import "autogit/interface_cli"
 
 func main() {
-	cli.Execute()
+	interface_cli.Execute()
 }

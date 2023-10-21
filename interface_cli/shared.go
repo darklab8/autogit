@@ -1,4 +1,4 @@
-package cli
+package interface_cli
 
 import (
 	"autogit/settings/logus"
