@@ -87,14 +87,11 @@ assuming you have Linux:
 
   - (To be written where to put)
 
-2. init autogit.yml with `autogit init` command in the root of repository. change REPOSITORY_OWNER and REPOSITORY_NAME to yours
-
-- Or init global one, or don't init at all (see 3d step of short opinionated instructioon)
-
+2. (Optional) init autogit.yml with `autogit init` command in the root of repository. change REPOSITORY_OWNER and REPOSITORY_NAME to yours
+   1. Or init global one, or don't init at all (see 3d step of short opinionated instructioon)
 3. run `autogit hook activate` to create `.git-hook` folder and enabling it in your git config for automated commit validation on pre-commit hook
-
-- Or activate globally with flag `--global`
-- deactivate with `autogit hook deactivate`, using `--global` flag if necessary as well.
+   1. Or activate globally with flag `--global`
+   2. `deactivate with `autogit hook deactivate`, using `--global` flag if necessary as well.
 
 P.S. Current repository runs on configured autogit as well
 
@@ -261,4 +258,3 @@ flowchart TD
 - contact author [@dd84ai](https://github.com/dd84ai) at `dark.dreamflyer@gmail.com`
 - open [Pull Requests with bug fix or feat requests](https://github.com/darklab8/darklab_autogit/issues)
 - join [Darklab Discord server](https://discord.gg/aukHmTK82J)
-
