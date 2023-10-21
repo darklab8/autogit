@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func Validate(commit *conventionalcommits.ConventionalCommit, conf *settings.ConfigScheme) error {
+func Validate(commit conventionalcommits.ConventionalCommit, conf settings.ConfigScheme) error {
 
 	if len(commit.StringHeader()) > conf.Validation.Rules.Header.MaxLength {
 		return valerrors.NewErrorInvalidMaxLength(commit, conf)

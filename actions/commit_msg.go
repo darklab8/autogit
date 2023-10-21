@@ -10,8 +10,7 @@ import (
 )
 
 func CommmitMsg(args []string) {
-	conf := settings.LoadSettings(settings.GetConfigPath())
-	settings.LoadSettings(settings.GetConfigPath())
+	conf := settings.GetConfig()
 
 	inputFile := types.FilePath(args[0])
 	logus.Debug("Received CommitFile", logus.FilePath(inputFile))
@@ -27,7 +26,7 @@ func CommmitMsg(args []string) {
 	logus.CheckFatal(err, "unable to parse commit to conventional commits standard")
 
 	if settings.GetConfig().Validation.Sections.Hook.CommitMsg.Enabled {
-		err := validation.Validate(commit, conf)
+		err := validation.Validate(*commit, conf)
 		logus.CheckError(err, "failed to validate commits", logus.Commit(commit.ParsedCommit))
 	}
 

@@ -25,17 +25,17 @@ func (v *ChangelogParams) Bind(cmd *cobra.Command) {
 }
 
 func Changelog(params ChangelogParams, gitw *git.Repository) string {
-	conf := settings.LoadSettings(settings.GetConfigPath())
+	conf := settings.GetConfig()
 	params.EnableNewline = false
 
 	g := (&semanticgit.SemanticGit{}).NewRepo(gitw)
 	rendered_changelog := changelog.ChangelogData{Tag: types.TagName(params.Tag)}.New(g, params.OptionsSemVer).Render()
 
 	if params.Validate {
-		log_records := g.GetChangelogByTag(types.TagName(params.Tag), false)
-		for _, record := range log_records {
-			err := validation.Validate(&record, conf)
-			logus.CheckError(err, "failed to validate", logus.Commit(record.ParsedCommit))
+		log_commits := g.GetChangelogByTag(types.TagName(params.Tag), false)
+		for _, commit := range log_commits {
+			err := validation.Validate(commit, conf)
+			logus.CheckError(err, "failed to validate", logus.Commit(commit.ParsedCommit))
 		}
 	}
 

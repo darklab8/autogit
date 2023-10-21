@@ -64,6 +64,8 @@ func readSettingsfile(configPath types.ConfigPath) []byte {
 		} else {
 			logus.CheckFatal(err, "Could not read the file due to error", logus.ConfigPath(configPath), logus.OptError(err))
 		}
+	} else {
+		logus.Debug("succesfuly read config from local repository project path", logus.ConfigPath(configPath))
 	}
 
 	global_file_is_not_found := false
@@ -171,6 +173,7 @@ func GetConfigPath() types.ConfigPath {
 	} else {
 		configPath = types.ConfigPath(string(ProjectConfigPath))
 	}
+	logus.Debug("GetConfigPath", logus.FilePath(configPath.ToFilePath()))
 	return configPath
 }
 
