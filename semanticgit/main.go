@@ -34,7 +34,8 @@ func (g *SemanticGit) GetCurrentVersion() *semver.SemVer {
 		vers, err := semver.Parse(tag.Name)
 
 		if err != nil {
-			logus.Warn("failed to parse tag=", logus.TagName(tag.Name))
+			logus.Warn("failed to parse tag=", logus.TagName(tag.Name), logus.OptError(err))
+			return false
 		}
 
 		if tag.Hash == latest_hash || (vers.Prerelease == "" && tag.Hash == latest_hash) {
@@ -138,7 +139,7 @@ func (g *SemanticGit) GetChangelogByTag(fromTag types.TagName, enable_warnings b
 		parsed_commit, err := conventionalcommits.ParseCommit(log_record.Msg)
 		if err != nil {
 			if enable_warnings {
-				logus.Warn("unable to parse commit with hash=", logus.CommitHash(log_record.Hash))
+				logus.Warn("unable to parse commit with hash=", logus.CommitHash(log_record.Hash), logus.CommitMessage(log_record.Msg))
 			}
 			return false
 		}
