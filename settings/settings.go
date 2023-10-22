@@ -183,14 +183,11 @@ func (config *ConfigScheme) configLoadEnvOverrides() {
 	if value, ok := os.LookupEnv("AUTOGIT_CONFIG_SSH_PATH"); ok {
 		config.Git.SSHPath = value
 	}
-	if value, ok := os.LookupEnv("AUTOGIT_CONFIG_CHANGELOG_COMMIT_URL"); ok {
-		config.Changelog.CommitURL = value
+	if value, ok := os.LookupEnv("AUTOGIT_CONFIG_CHANGELOG_REPOSITORY_OWNER"); ok {
+		config.Changelog.REPOSITORY_OWNER = value
 	}
-	if value, ok := os.LookupEnv("AUTOGIT_CONFIG_CHANGELOG_COMMIT_RANGE_URL"); ok {
-		config.Changelog.CommitRangeURL = value
-	}
-	if value, ok := os.LookupEnv("AUTOGIT_CONFIG_CHANGELOG_ISSUE_URL"); ok {
-		config.Changelog.IssueURL = value
+	if value, ok := os.LookupEnv("AUTOGIT_CONFIG_CHANGELOG_REPOSITORY_NAME"); ok {
+		config.Changelog.REPOSITORY_NAME = value
 	}
 
 	if value, ok := os.LookupEnv("AUTOGIT_CONFIG_VALIDATION_RULES_HEADER_SUBJECT_MIN_WORDS"); ok {

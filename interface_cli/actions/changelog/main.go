@@ -1,6 +1,7 @@
 package changelog
 
 import (
+	"autogit/interface_cli/actions/changelog/templates"
 	"autogit/semanticgit"
 	"autogit/semanticgit/conventionalcommits"
 	"autogit/semanticgit/semver"
@@ -10,58 +11,30 @@ import (
 	"fmt"
 	"strings"
 	"text/template"
-	"time"
 
 	_ "embed"
 )
 
-type Header struct {
-	From    string
-	To      string
-	Version string
-}
-
-func (r *Header) Render() string {
-	templs := settings.GetTemplates()
-	currentTime := time.Now()
-	return fmt.Sprintf("## **%s** <sub><sub>%s ([%s...%s](%s))</sub></sub>", r.Version, currentTime.Format("2006-01-02"), r.From, r.To, utils.TmpRender(templs.CommitRangeUrl, r))
-}
-
-func NewHeader(logs []conventionalcommits.ConventionalCommit, version string) *Header {
-	r := &Header{}
-	r.From = logs[len(logs)-1].Hash
-	r.To = logs[0].Hash
-	r.Version = version
-	return r
-}
-
-type commitRecord struct {
-	Commit string
-}
-
-func (c commitRecord) Render(record conventionalcommits.ConventionalCommit) string {
-	templs := settings.GetTemplates()
-	type IssueData struct {
-		Issue string
-	}
+func commitRender(record conventionalcommits.ConventionalCommit) string {
+	templs := templates.NewTemplates()
 
 	var issue_rendered strings.Builder
 	for _, issue_n := range record.Issue {
-		issue_rendered.WriteString(fmt.Sprintf(", [#%s](%s)", issue_n, utils.TmpRender(templs.IssueUrl, IssueData{Issue: issue_n})))
+
+		issue_rendered.WriteString(fmt.Sprintf(", [#%s](%s)", issue_n, templs.RenderIssueUrl(issue_n)))
 	}
 
 	rendered_subject := record.Subject
 	IssueMatch := settings.RegexIssue.FindAllStringSubmatch(record.Subject, -1)
 	for _, match := range IssueMatch {
-		rendered_subject = strings.Replace(rendered_subject, match[0], fmt.Sprintf("[#%s](%s)", match[1], utils.TmpRender(templs.IssueUrl, IssueData{Issue: match[1]})), -1)
+		rendered_subject = strings.Replace(rendered_subject, match[0], fmt.Sprintf("[#%s](%s)", match[1], templs.RenderIssueUrl(match[1])), -1)
 	}
 
-	formatted_url := utils.TmpRender(templs.CommitUrl, commitRecord{Commit: record.Hash})
+	formatted_url := templs.RenderCommitUrl(record)
 	return fmt.Sprintf("* %s ([%s](%s)%s)\n", rendered_subject, record.Hash, formatted_url, issue_rendered.String())
 }
 
-type ChangelogData struct {
-	Tag              types.TagName // get changelog from this tag to previous
+type changelogVars struct {
 	Header           string
 	Features         []string
 	Fixes            []string
@@ -71,7 +44,7 @@ type ChangelogData struct {
 	AreThereFixes    bool
 }
 
-func (changelog *ChangelogData) AddCommit(record conventionalcommits.ConventionalCommit, commit_formatted string) {
+func (changelog *changelogVars) addCommit(record conventionalcommits.ConventionalCommit, commit_formatted string) {
 	if record.Type == "feat" {
 		if record.Scope == "" {
 			changelog.Features = append(changelog.Features, commit_formatted)
@@ -97,20 +70,28 @@ func (changelog *ChangelogData) AddCommit(record conventionalcommits.Conventiona
 	}
 }
 
-func (changelog ChangelogData) New(g *semanticgit.SemanticGit, semver_options semver.OptionsSemVer) ChangelogData {
+func NewChangelog(g *semanticgit.SemanticGit, semver_options semver.OptionsSemVer, config settings.ChangelogScheme, FromTag types.TagName) changelogVars {
+	changelog := changelogVars{}
 	changelog.FeaturesScoped = make(map[string][]string)
 	changelog.FixesScoped = make(map[string][]string)
 
-	logs := g.GetChangelogByTag(changelog.Tag, true)
+	templs := templates.NewTemplates()
 
-	if changelog.Tag == "" {
-		changelog.Tag = g.GetNextVersion(semver_options).ToString()
+	logs := g.GetChangelogByTag(FromTag, true)
+	if FromTag == "" {
+		FromTag = g.GetNextVersion(semver_options).ToString()
 	}
-	changelog.Header = NewHeader(logs, string(changelog.Tag)).Render()
+
+	ChangelogVersionTag := FromTag
+	if FromTag == "" {
+		ChangelogVersionTag = g.GetNextVersion(semver_options).ToString()
+	}
+
+	changelog.Header = templs.NewCommitRangeUrlRender(logs, ChangelogVersionTag)
 
 	for _, record := range logs {
-		commit_formatted := commitRecord{Commit: record.Hash}.Render(record)
-		changelog.AddCommit(record, commit_formatted)
+		commit_formatted := commitRender(record)
+		changelog.addCommit(record, commit_formatted)
 	}
 
 	changelog.AreThereFeatures = len(changelog.Features) > 0 || len(changelog.FeaturesScoped) > 0
@@ -119,7 +100,7 @@ func (changelog ChangelogData) New(g *semanticgit.SemanticGit, semver_options se
 	return changelog
 }
 
-func (changelog ChangelogData) Render() string {
+func (changelog changelogVars) Render() string {
 	return utils.TmpRender(changelogTemplate, changelog)
 }
 

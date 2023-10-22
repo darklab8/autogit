@@ -3,9 +3,8 @@
     "AUTOGIT_DEBUG": "true",
     "AUTOGIT_LOG_LEVEL": "DEBUG",
     "AUTOGIT_CONFIG_SSH_PATH": "id_rsa.dd84ai",
-    "AUTOGIT_CONFIG_CHANGELOG_COMMIT_URL": "https://github.com/darklab8/darklab_autogit/commit/{{.Commit}}",
-    "AUTOGIT_CONFIG_CHANGELOG_COMMIT_RANGE_URL": "https://github.com/darklab8/darklab_autogit/compare/{{.From}}...{{.To}}?diff=split",
-    "AUTOGIT_CONFIG_CHANGELOG_ISSUE_URL":  "https://github.com/darklab8/darklab_autogit/issues/{{.Issue}}",
+    "AUTOGIT_CONFIG_CHANGELOG_REPOSITORY_OWNER": "darklab8",
+    "AUTOGIT_CONFIG_CHANGELOG_REPOSITORY_NAME": "darklab_autogit",
     "AUTOGIT_CONFIG_VALIDATION_RULES_HEADER_SUBJECT_MIN_WORDS": "2"
   },
   // Show .git folder

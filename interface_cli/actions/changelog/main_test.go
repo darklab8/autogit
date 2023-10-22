@@ -1,8 +1,10 @@
 package changelog
 
 import (
+	"autogit/settings"
 	"autogit/settings/testutils"
 	_ "autogit/settings/testutils/autouse"
+	"autogit/settings/types"
 
 	"autogit/semanticgit"
 	"autogit/semanticgit/git"
@@ -25,10 +27,10 @@ func TestGitGood(t *testing.T) {
 
 	testutils.EqualTag(t, "v0.0.1", gitSemantic.GetCurrentVersion().ToString())
 
-	rendered := ChangelogData{}.New(gitSemantic, semver.OptionsSemVer{}).Render()
+	rendered := NewChangelog(gitSemantic, semver.OptionsSemVer{}, settings.GetConfig().Changelog, types.TagName("")).Render()
 	assert.Contains(t, rendered, "v0.1.0")
 
 	// historing render
-	rendered = ChangelogData{Tag: "v0.0.1"}.New(gitSemantic, semver.OptionsSemVer{}).Render()
+	rendered = NewChangelog(gitSemantic, semver.OptionsSemVer{}, settings.GetConfig().Changelog, types.TagName("v0.0.1")).Render()
 	assert.Contains(t, rendered, "v0.0.1")
 }
