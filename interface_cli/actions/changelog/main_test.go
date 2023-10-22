@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGitGood(t *testing.T) {
+func FixtureGitSemantic(t *testing.T) (*semanticgit.SemanticGit, settings.ConfigScheme) {
 	gitInMemory := git.NewRepoTestInMemory()
 	gitSemantic := semanticgit.NewSemanticRepo(gitInMemory)
 
@@ -26,11 +26,26 @@ func TestGitGood(t *testing.T) {
 	gitInMemory.TestCommit("feat: test2")
 
 	testutils.Equal(t, "v0.0.1", gitSemantic.GetCurrentVersion().ToString())
+	return gitSemantic, settings.GetConfig()
+}
 
-	rendered := NewChangelog(gitSemantic, semver.OptionsSemVer{}, settings.GetConfig().Changelog, types.TagName("")).Render()
+func TestPrepare(t *testing.T) {
+	gitSemantic, config := FixtureGitSemantic(t)
+
+	// Just for debug
+	rendered := NewChangelog(gitSemantic, semver.OptionsSemVer{}, config, types.TagName(""))
+	_ = rendered
+	rendered = NewChangelog(gitSemantic, semver.OptionsSemVer{}, config, types.TagName("v0.0.1"))
+	_ = rendered
+}
+
+func TestRender(t *testing.T) {
+	gitSemantic, config := FixtureGitSemantic(t)
+
+	rendered := NewChangelog(gitSemantic, semver.OptionsSemVer{}, config, types.TagName("")).Render()
 	assert.Contains(t, rendered, "v0.1.0")
 
 	// historing render
-	rendered = NewChangelog(gitSemantic, semver.OptionsSemVer{}, settings.GetConfig().Changelog, types.TagName("v0.0.1")).Render()
+	rendered = NewChangelog(gitSemantic, semver.OptionsSemVer{}, config, types.TagName("v0.0.1")).Render()
 	assert.Contains(t, rendered, "v0.0.1")
 }

@@ -1,11 +1,13 @@
 {{.Header}}
 
-{{ if .AreThereFeatures }}### Features{{ end }}
-{{range $val := .Features}}{{$val}}{{end}}
-{{range $key, $list := .FeaturesScoped}}#### {{$key}}
-{{range $val := $list}}{{$val}}{{end}}{{end}}
-
-{{ if .AreThereFixes }}### Bug Fixes{{ end }}
-{{range $val := .Fixes}}{{$val}}{{end}}
-{{range $key, $list := .FixesScoped}}#### {{$key}}
-{{range $val := $list}}{{$val}}{{end}}{{end}}
+{{range $semver_group := .OrderedSemverGroups -}}
+## {{ $semver_group.Name }} Changes
+{{range $commit_type, $type_group := $semver_group.CommitTypeGroups -}}
+### {{ $commit_type }}
+{{range $commit := $type_group.NoScopeCommits}}{{$commit}}{{end}}
+{{- range $scope, $commits := $type_group.ScopedCommits -}}<!-- -->
+* **{{$scope}}**
+{{range $commit := $commits}}   {{$commit}}{{end}}
+{{ end -}}
+{{ end -}}
+{{ end -}}
