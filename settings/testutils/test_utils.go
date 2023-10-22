@@ -1,12 +1,11 @@
 package testutils
 
 import (
-	"autogit/settings/types"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func EqualTag(t *testing.T, tag_name string, actual types.TagName) {
-	assert.Equal(t, types.TagName(tag_name), actual)
+func Equal[T interface{}](t *testing.T, tag_name T, actual T) {
+	assert.Equal(t, tag_name, actual)
 }

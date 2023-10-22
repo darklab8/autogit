@@ -103,12 +103,12 @@ func CommitMessage(value types.CommitOriginalMsg) slogParam {
 
 func Commit(commit conventionalcommitstype.ParsedCommit) slogParam {
 	return func(c *slogGroup) {
-		c.params["commit_type"] = commit.Type
+		c.params["commit_type"] = string(commit.Type)
 		c.params["commit_scope"] = string(commit.Scope)
-		c.params["commit_subject"] = commit.Subject
-		c.params["commit_body"] = commit.Body
+		c.params["commit_subject"] = string(commit.Subject)
+		c.params["commit_body"] = string(commit.Body)
 		c.params["commit_exlamation"] = strconv.FormatBool(commit.Exclamation)
-		c.params["commit_hash"] = commit.Hash
+		c.params["commit_hash"] = string(commit.Hash)
 		for index, footer := range commit.Footers {
 			// Should have made structured logging allowing nested dictionaries.
 			// Using as work around more lazy option
@@ -121,7 +121,7 @@ func Commit(commit conventionalcommitstype.ParsedCommit) slogParam {
 		for index, issue := range commit.Issue {
 			// Should have made structured logging allowing nested dictionaries.
 			// Using as work around more lazy option
-			c.params[fmt.Sprintf("commit_issue_%d", index)] = issue
+			c.params[fmt.Sprintf("commit_issue_%d", index)] = string(issue)
 		}
 	}
 }

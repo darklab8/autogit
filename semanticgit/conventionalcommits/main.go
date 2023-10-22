@@ -4,6 +4,7 @@ import (
 	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
 	"autogit/settings"
 	"autogit/settings/types"
+	"autogit/settings/utils"
 	"fmt"
 	"strings"
 )
@@ -40,9 +41,9 @@ func ParseCommit(msg types.CommitOriginalMsg) (*ConventionalCommit, error) {
 		return nil, NotParsed{}
 	}
 
-	result.Type = main_match[1]
+	result.Type = conventionalcommitstype.Type(main_match[1])
 	result.Scope = conventionalcommitstype.Scope(main_match[2])
-	result.Subject = main_match[4]
+	result.Subject = conventionalcommitstype.Subject(main_match[4])
 
 	if main_match[3] != "" {
 		result.Exclamation = true
@@ -50,7 +51,7 @@ func ParseCommit(msg types.CommitOriginalMsg) (*ConventionalCommit, error) {
 
 	IssueMatch := settings.RegexIssue.FindAllStringSubmatch(main_match[5], -1)
 	for _, match := range IssueMatch {
-		result.Issue = append(result.Issue, match[1])
+		result.Issue = append(result.Issue, conventionalcommitstype.Issue(match[1]))
 	}
 
 	msgs := strings.Split(main_match[5], "\n\n")
@@ -58,9 +59,12 @@ func ParseCommit(msg types.CommitOriginalMsg) (*ConventionalCommit, error) {
 	for index, msg := range msgs {
 		match := settings.RegexBodyFooter.FindStringSubmatch(msg)
 		if index == 0 && len(match) == 0 {
-			result.Body = msg
+			result.Body = conventionalcommitstype.Body(msg)
 		} else if len(match) > 0 {
-			result.Footers = append(result.Footers, conventionalcommitstype.Footer{Token: match[1], Content: match[2]})
+			result.Footers = append(result.Footers, conventionalcommitstype.Footer{
+				Token:   conventionalcommitstype.FooterToken(match[1]),
+				Content: conventionalcommitstype.FooterContent(match[2]),
+			})
 		}
 	}
 
@@ -68,11 +72,14 @@ func ParseCommit(msg types.CommitOriginalMsg) (*ConventionalCommit, error) {
 }
 
 type InvalidType struct {
-	allowed_types []string
+	allowed_types []conventionalcommitstype.Type
 }
 
 func (m InvalidType) Error() string {
-	return "invalid conventional commit Type. Allowed types:" + strings.Join(m.allowed_types, ",")
+	return "invalid conventional commit Type. Allowed types:" + strings.Join(
+		utils.CompL(m.allowed_types, func(x conventionalcommitstype.Type) string { return string(x) }),
+		",",
+	)
 }
 
 func (c *ConventionalCommit) Validate() error {

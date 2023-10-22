@@ -20,12 +20,12 @@ func TestGitGood(t *testing.T) {
 
 	gitInMemory.TestCommit("feat: test")
 
-	testutils.EqualTag(t, "v0.0.0", gitSemantic.GetCurrentVersion().ToString())
+	testutils.Equal(t, "v0.0.0", gitSemantic.GetCurrentVersion().ToString())
 
 	gitInMemory.TestCreateTag("v0.0.1", gitInMemory.TestCommit("fix: thing"))
 	gitInMemory.TestCommit("feat: test2")
 
-	testutils.EqualTag(t, "v0.0.1", gitSemantic.GetCurrentVersion().ToString())
+	testutils.Equal(t, "v0.0.1", gitSemantic.GetCurrentVersion().ToString())
 
 	rendered := NewChangelog(gitSemantic, semver.OptionsSemVer{}, settings.GetConfig().Changelog, types.TagName("")).Render()
 	assert.Contains(t, rendered, "v0.1.0")

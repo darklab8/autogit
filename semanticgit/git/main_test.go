@@ -1,10 +1,9 @@
 package git
 
 import (
+	"autogit/settings/testutils"
 	"fmt"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestGitRepo(t *testing.T) {
@@ -21,5 +20,5 @@ func TestGitRepo(t *testing.T) {
 
 	tags := repo.getUnorderedTags()
 	fmt.Printf("tags=%v\n", tags)
-	assert.Equal(t, 2, len(tags))
+	testutils.Equal(t, 2, len(tags))
 }

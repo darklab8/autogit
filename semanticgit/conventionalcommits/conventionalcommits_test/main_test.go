@@ -4,6 +4,7 @@ import (
 	"autogit/semanticgit/conventionalcommits"
 	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
 	"autogit/settings/logus"
+	"autogit/settings/testutils"
 	_ "autogit/settings/testutils/autouse"
 
 	"testing"
@@ -34,12 +35,12 @@ body message
 footer-key: tralala`)
 	logus.CheckFatal(err, "failed creating commit")
 
-	assert.Equal(t, "feat", commit.Type)
-	assert.Equal(t, conventionalcommitstype.Scope("api"), commit.Scope)
-	assert.Equal(t, "my subject", commit.Subject)
-	assert.Equal(t, "body message", commit.Body)
-	assert.Equal(t, "footer-key", commit.Footers[0].Token)
-	assert.Equal(t, "tralala", commit.Footers[0].Content)
+	testutils.Equal(t, "feat", commit.Type)
+	testutils.Equal(t, conventionalcommitstype.Scope("api"), commit.Scope)
+	testutils.Equal(t, "my subject", commit.Subject)
+	testutils.Equal(t, "body message", commit.Body)
+	testutils.Equal(t, "footer-key", commit.Footers[0].Token)
+	testutils.Equal(t, "tralala", commit.Footers[0].Content)
 }
 
 func TestParse5(t *testing.T) {
@@ -65,7 +66,7 @@ func TestParse7(t *testing.T) {
 
 #1, #2, #3`)
 	logus.CheckFatal(err, "failed creating commits")
-	assert.Equal(t, "1", commit.Issue[0])
-	assert.Equal(t, "2", commit.Issue[1])
-	assert.Equal(t, "3", commit.Issue[2])
+	testutils.Equal(t, "1", commit.Issue[0])
+	testutils.Equal(t, "2", commit.Issue[1])
+	testutils.Equal(t, "3", commit.Issue[2])
 }

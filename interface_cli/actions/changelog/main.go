@@ -26,9 +26,19 @@ func commitRender(record conventionalcommits.ConventionalCommit) string {
 	}
 
 	rendered_subject := record.Subject
-	IssueMatch := settings.RegexIssue.FindAllStringSubmatch(record.Subject, -1)
+	IssueMatch := settings.RegexIssue.FindAllStringSubmatch(string(record.Subject), -1)
 	for _, match := range IssueMatch {
-		rendered_subject = strings.Replace(rendered_subject, match[0], fmt.Sprintf("[#%s](%s)", match[1], templs.RenderIssueUrl(match[1])), -1)
+		rendered_subject = conventionalcommitstype.Subject(strings.Replace(
+			string(rendered_subject),
+			match[0],
+			fmt.Sprintf(
+				"[#%s](%s)",
+				match[1],
+				templs.RenderIssueUrl(conventionalcommitstype.Issue(match[1])),
+			),
+			-1,
+		),
+		)
 	}
 
 	formatted_url := templs.RenderCommitUrl(record)

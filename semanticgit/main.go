@@ -6,6 +6,7 @@ package semanticgit
 
 import (
 	"autogit/semanticgit/conventionalcommits"
+	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
 	"autogit/semanticgit/git"
 	"autogit/semanticgit/semver"
 	"autogit/settings/logus"
@@ -164,7 +165,7 @@ func (g *SemanticGit) GetChangelogByTag(fromTag types.TagName, enable_warnings b
 			}
 		}
 
-		parsed_commit.Hash = log_record.Hash.String()[:8]
+		parsed_commit.Hash = conventionalcommitstype.Hash(log_record.Hash.String()[:8])
 		result = append(result, *parsed_commit)
 
 		return false

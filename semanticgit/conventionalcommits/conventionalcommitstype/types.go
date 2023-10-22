@@ -1,19 +1,27 @@
 package conventionalcommitstype
 
+type FooterToken string
+type FooterContent string
+
 type Footer struct {
-	Token   string
-	Content string
+	Token   FooterToken
+	Content FooterContent
 }
 
 type Scope string
+type Type string
+type Subject string
+type Body string
+type Hash string
+type Issue string
 
 type ParsedCommit struct {
-	Type        string
+	Type        Type
 	Exclamation bool
 	Scope       Scope
-	Subject     string
-	Body        string
+	Subject     Subject
+	Body        Body
 	Footers     []Footer
-	Hash        string
-	Issue       []string
+	Hash        Hash
+	Issue       []Issue
 }

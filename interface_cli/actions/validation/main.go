@@ -33,7 +33,7 @@ func Validate(commit conventionalcommits.ConventionalCommit, conf settings.Confi
 	}
 
 	if conf.Validation.Rules.Header.Type.Lowercase {
-		if !settings.RegexType.MatchString(commit.Type) {
+		if !settings.RegexType.MatchString(string(commit.Type)) {
 			return valerrors.NewerrorCommitTypeMustBeLowercase(commit)
 		}
 	}
@@ -51,7 +51,7 @@ func Validate(commit conventionalcommits.ConventionalCommit, conf settings.Confi
 		}
 	}
 
-	words := strings.Split(commit.Subject, " ")
+	words := strings.Split(string(commit.Subject), " ")
 	if len(words) < conf.Validation.Rules.Header.Subject.MinWords {
 		return valerrors.NewerrorCommitSubjectMinWords(commit, conf)
 	}

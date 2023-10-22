@@ -3,13 +3,13 @@ package settings
 import "autogit/semanticgit/conventionalcommits/conventionalcommitstype"
 
 type TypeAllowLists struct {
-	SemVerMinorIncreasers []string `yaml:"semver_minor_increases"`
-	SemverPatchIncreasers []string `yaml:"semver_patch_increases"`
-	SemverNotAffects      []string `yaml:"semver_is_not_affected"`
+	SemVerMinorIncreasers []conventionalcommitstype.Type `yaml:"semver_minor_increases"`
+	SemverPatchIncreasers []conventionalcommitstype.Type `yaml:"semver_patch_increases"`
+	SemverNotAffects      []conventionalcommitstype.Type `yaml:"semver_is_not_affected"`
 }
 
-func (a TypeAllowLists) GetAllTypes() []string {
-	list := []string{}
+func (a TypeAllowLists) GetAllTypes() []conventionalcommitstype.Type {
+	list := []conventionalcommitstype.Type{}
 	list = append(list, a.SemVerMinorIncreasers...)
 	list = append(list, a.SemverPatchIncreasers...)
 	list = append(list, a.SemverNotAffects...)

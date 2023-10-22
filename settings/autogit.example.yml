@@ -4,7 +4,7 @@ changelog:
   REPOSITORY_OWNER: REPOSITORY_OWNER
   REPOSITORY_NAME: REPOSITORY_NAME
   # templating lines used to form changelog. Replace REPOSITORY_OWNER and REPOSITORY_NAME with your own values
-  commitUrl: "https://github.com/{{.REPOSITORY_OWNER}}/{{.REPOSITORY_NAME}}/commit/{{.Commit}}"
+  commitUrl: "https://github.com/{{.REPOSITORY_OWNER}}/{{.REPOSITORY_NAME}}/commit/{{.CommitHash}}"
   commitRangeUrl: "https://github.com/{{.REPOSITORY_OWNER}}/{{.REPOSITORY_NAME}}/compare/{{.From}}...{{.To}}?diff=split"
   issueUrl: "https://github.com/{{.REPOSITORY_OWNER}}/{{.REPOSITORY_NAME}}/issues/{{.Issue}}"
 

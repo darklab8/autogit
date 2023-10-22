@@ -2,6 +2,7 @@ package templates
 
 import (
 	"autogit/semanticgit/conventionalcommits"
+	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
 	"autogit/settings"
 	"autogit/settings/types"
 	"autogit/settings/utils"
@@ -43,26 +44,26 @@ func NewTemplates() Templates {
 }
 
 type CommitUrlVars struct {
-	Commit           string
+	CommitHash       conventionalcommitstype.Hash
 	REPOSITORY_OWNER string
 	REPOSITORY_NAME  string
 }
 
 func (templs Templates) RenderCommitUrl(record conventionalcommits.ConventionalCommit) string {
 	return utils.TmpRender(templs.commitUrl.Template, CommitUrlVars{
-		Commit:           record.Hash,
+		CommitHash:       record.Hash,
 		REPOSITORY_OWNER: templs.conf.REPOSITORY_OWNER,
 		REPOSITORY_NAME:  templs.conf.REPOSITORY_NAME,
 	})
 }
 
 type IssueDataVars struct {
-	Issue            string
+	Issue            conventionalcommitstype.Issue
 	REPOSITORY_OWNER string
 	REPOSITORY_NAME  string
 }
 
-func (templs Templates) RenderIssueUrl(issue_n string) string {
+func (templs Templates) RenderIssueUrl(issue_n conventionalcommitstype.Issue) string {
 	return utils.TmpRender(
 		templs.issueUrl.Template,
 		IssueDataVars{Issue: issue_n,
@@ -72,8 +73,8 @@ func (templs Templates) RenderIssueUrl(issue_n string) string {
 }
 
 type CommitRangeUrlVars struct {
-	From             string
-	To               string
+	From             conventionalcommitstype.Hash
+	To               conventionalcommitstype.Hash
 	REPOSITORY_OWNER string
 	REPOSITORY_NAME  string
 }
