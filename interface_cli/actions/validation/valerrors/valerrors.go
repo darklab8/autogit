@@ -70,17 +70,17 @@ func NewerrorCommitTypeMustBeLowercase(commit conventionalcommits.ConventionalCo
 	return errorCommitTypeMustBeLowercase{commit: commit}
 }
 
-type errorCommitScopeMustBeInWhitelist struct {
+type errorCommitScopeMustBeInAllowlist struct {
 	commit conventionalcommits.ConventionalCommit
 	conf   settings.ConfigScheme
 }
 
-func (err errorCommitScopeMustBeInWhitelist) Error() string {
-	return fmt.Sprintf("commit='%s' must be in whitelist %v, because rule is enabled", err.commit.StringHeader(), err.conf.Validation.Rules.Header.Scope.Whitelist)
+func (err errorCommitScopeMustBeInAllowlist) Error() string {
+	return fmt.Sprintf("commit='%s' must be in allowlist %v, because rule is enabled", err.commit.StringHeader(), err.conf.Validation.Rules.Header.Scope.Allowlist)
 }
 
-func NewerrorCommitScopeMustBeInWhitelist(commit conventionalcommits.ConventionalCommit, conf settings.ConfigScheme) errorCommitScopeMustBeInWhitelist {
-	return errorCommitScopeMustBeInWhitelist{commit: commit, conf: conf}
+func NewerrorCommitScopeMustBeInAllowlist(commit conventionalcommits.ConventionalCommit, conf settings.ConfigScheme) errorCommitScopeMustBeInAllowlist {
+	return errorCommitScopeMustBeInAllowlist{commit: commit, conf: conf}
 }
 
 type errorCommitSubjectMinWords struct {

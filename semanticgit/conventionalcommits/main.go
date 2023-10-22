@@ -76,7 +76,7 @@ func (m InvalidType) Error() string {
 }
 
 func (c *ConventionalCommit) Validate() error {
-	allowed_types := settings.GetConfig().Validation.Rules.Header.Type.Whitelist
+	allowed_types := settings.GetConfig().Validation.Rules.Header.Type.Allowlists.GetAllTypes()
 	for _, type_ := range allowed_types {
 		if c.Type == type_ {
 			return nil

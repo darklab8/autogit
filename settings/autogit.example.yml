@@ -37,24 +37,28 @@ validation:
       type:
         lowercase: true
         # Add yours if desired. Empty list means everything is allowed
-        whitelist:
-          - "build" #  Commits, that affect build components like build tool, ci pipeline, dependencies, project version, ...
-          - "chore" #  Miscellaneous commits e.g. modifying .gitignore
-          - "docs" #  Commits, that affect documentation only. Comments are part of docs
-          - "feat" #  Commits, that adds a new feature
-          - "fix" #  Commits, that fixes a bug
-          - "refactor" # Commits, that rewrite/restructure your code, however does not change any API behaviour
-          - "perf" #  Commits (Child of refactor) are special refactor commits, that improve performance
-          - "style" #  Commits, that do not affect the meaning (white-space, formatting, missing semi-colons, etc)
-          - "test" # Commits, that add missing tests or correcting existing tests
-          - "ops" # Commits, that affect operational components like infrastructure, deployment, backup, recovery, ...
-          - "ci"  # Commits, (Child of ops) Configuring or reparing CI
-          - "revert" # Commits, to revert stuff
-          - "merge" # Commits to merge branches
+        allowlists:
+          # for increasing major vers, write type as `feat!`
+          semver_minor_increases:
+            - "feat" #  Commits, that adds a new feature
+          semver_patch_increases:
+            - "fix" #  Commits, that fixes a bug
+            - "build" #  Commits, that affect build components like build tool, ci pipeline, dependencies, project version, ...
+            - "docs" #  Commits, that affect documentation only. Comments are part of docs
+            - "perf" #  Commits (Child of refactor) are special refactor commits, that improve performance
+            - "revert" # Commits, to revert stuff
+          semver_is_not_affected:
+            - "chore" #  Miscellaneous commits e.g. modifying .gitignore
+            - "refactor" # Commits, that rewrite/restructure your code, however does not change any API behaviour
+            - "style" #  Commits, that do not affect the meaning (white-space, formatting, missing semi-colons, etc)
+            - "test" # Commits, that add missing tests or correcting existing tests
+            - "ops" # Commits, that affect operational components like infrastructure, deployment, backup, recovery, ...
+            - "ci"  # Commits, (Child of ops) Configuring or reparing CI
+            - "merge" # Commits to merge branches
       scope:
         present: false # feat(scope): smth. Forces to write scope of a commit. Participes in changelog generation
         lowercase: true
-        whitelist: [] # which scopes are allowed. Empty list means allowed everything.
+        allowlist: [] # which scopes are allowed. Empty list means allowed everything.
       subject:
         minWords: 3 # 3 or higher value helps to write more meaningful commits
 

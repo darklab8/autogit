@@ -38,16 +38,16 @@ func Validate(commit conventionalcommits.ConventionalCommit, conf settings.Confi
 		}
 	}
 
-	if len(conf.Validation.Rules.Header.Scope.Whitelist) > 0 && commit.Scope != "" {
+	if len(conf.Validation.Rules.Header.Scope.Allowlist) > 0 && commit.Scope != "" {
 		matchFound := false
-		for _, allowed_scope := range conf.Validation.Rules.Header.Scope.Whitelist {
+		for _, allowed_scope := range conf.Validation.Rules.Header.Scope.Allowlist {
 			if commit.Scope == allowed_scope {
 				matchFound = true
 			}
 		}
 
 		if !matchFound {
-			return valerrors.NewerrorCommitScopeMustBeInWhitelist(commit, conf)
+			return valerrors.NewerrorCommitScopeMustBeInAllowlist(commit, conf)
 		}
 	}
 
