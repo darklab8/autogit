@@ -66,12 +66,17 @@ tasks:
 
   hook:dev:
     cmds:
-      - git config core.hooksPath .autogit-hooks-dev
+      - git config --global core.hooksPath $(pwd)/.autogit-hooks-dev
+
+      - sudo rm /usr/local/bin/autogit | true
+
+      - echo -e '#!/bin/bash\nset -x\nfilepath=`pwd`\ncd /home/naa/repos/pet_projects/darklab_autogit && AUTOGIT_PROJECT_FOLDER=$filepath go run . "$1\"' | sudo tee /usr/local/bin/autogit
+      - sudo chmod 777 /usr/local/bin/autogit
 
   hook:prod:
     cmds:
       - sudo ln -s {{.PWD}}/dist/autogit-linux-amd64 /usr/local/bin/autogit
-      - go run . hook activate
+      - go run . hook --global activate
     vars:
       PWD:
         sh: echo "$(pwd)"

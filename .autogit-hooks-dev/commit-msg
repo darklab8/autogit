@@ -1,3 +1,4 @@
 #!/bin/sh
-
-cd /home/naa/repos/pet_projects/darklab_autogit && go run . hook commitMsg "$1"
+set -x
+filepath=`pwd`
+cd /home/naa/repos/pet_projects/darklab_autogit && AUTOGIT_PROJECT_FOLDER=$filepath go run . hook commitMsg "$1"
