@@ -1,57 +1,62 @@
+# uncomment settings u wish to override
+
 changelog:
+  # templating lines used to form changelog. Replace REPOSITORY_OWNER and REPOSITORY_NAME with your own values
   commitUrl: "https://github.com/REPOSITORY_OWNER/REPOSITORY_NAME/commit/{{.Commit}}"
   commitRangeUrl: "https://github.com/REPOSITORY_OWNER/REPOSITORY_NAME/compare/{{.From}}...{{.To}}?diff=split"
   issueUrl: "https://github.com/REPOSITORY_OWNER/REPOSITORY_NAME/issues/{{.Issue}}"
 
 # header is copied from https://gist.github.com/marcojahn/482410b728c31b221b70ea6d2c433f0c, type, scope, subject, the rest
 regex:
+  # regex values are used to parse correctly commit message. Likely hook of any changes necessary is low, but could be useful
   conventionalCommit:
-    header: '^([a-z]+)(?:\(([\w]+)\))?(\!?): (?:([ -~]+))(?:\n\n([\s -~]*)|[\n])?\z'
-    bodyFooter: '(?:([ -9;-~]+))\: (?:([ -9;-~]+))'
-  issue: '\#([0-9]+)'
+    header: '^([a-z]+)(?:\(([\w]+)\))?(\!?): (?:([ -~]+))(?:\n\n([\s -~]*)|[\n])?\z' # type(scope): header\n\nbody
+    bodyFooter: '(?:([ -9;-~]+))\: (?:([ -9;-~]+))' # body can have key: value multiple footers
+  issue: '\#([0-9]+)' # Regex to grab linked issue. Adjusted for Github Issues
   # copied from https://semver.org/spec/v2.0.0.html
   semVer: '^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
   prerelease: '(?:a\.([0-9]+))?\.?(?:b\.([0-9]+))?\.?(?:rc\.([0-9]+))?'
   validation:
     scope:
-      lowercase: '^[a-z]+$'
+      lowercase: '^[a-z]+$' # scope is made only out of english lower case letters by default
     type:
-      lowercase: '^[a-z]+$'
+      lowercase: '^[a-z]+$' # type is made only out of english lower case letters by default
 
 validation:
   sections:
     hook:
       commitMsg:
-        enabled: true
-    changelog:
-      enabled: false
+        enabled: true # validates submitted commits for repository, if hook is activated
   rules:
     issue:
+      # forces to link github/gitlab issue. Depends on correct regex.issue (configured for Github)
       present: false
     header:
+      # Max Github(and may be for others) readable commit length for first line of a commit msg
       maxLength: 72
       type:
         lowercase: true
+        # Add yours if desired. Empty list means everything is allowed
         whitelist:
-          - "build"
-          - "chore"
-          - "ci"
-          - "docs"
-          - "feat"
-          - "fix"
-          - "perf"
-          - "refactor"
-          - "revert"
-          - "style"
-          - "test"
-          - "merge"
-          - "custom"
+          - "build" #  Commits, that affect build components like build tool, ci pipeline, dependencies, project version, ...
+          - "chore" #  Miscellaneous commits e.g. modifying .gitignore
+          - "docs" #  Commits, that affect documentation only. Comments are part of docs
+          - "feat" #  Commits, that adds a new feature
+          - "fix" #  Commits, that fixes a bug
+          - "refactor" # Commits, that rewrite/restructure your code, however does not change any API behaviour
+          - "perf" #  Commits (Child of refactor) are special refactor commits, that improve performance
+          - "style" #  Commits, that do not affect the meaning (white-space, formatting, missing semi-colons, etc)
+          - "test" # Commits, that add missing tests or correcting existing tests
+          - "ops" # Commits, that affect operational components like infrastructure, deployment, backup, recovery, ...
+          - "ci"  # Commits, (Child of ops) Configuring or reparing CI
+          - "revert" # Commits, to revert stuff
+          - "merge" # Commits to merge branches
       scope:
-        present: false
+        present: false # feat(scope): smth. Forces to write scope of a commit. Participes in changelog generation
         lowercase: true
-        whitelist: []
+        whitelist: [] # which scopes are allowed. Empty list means allowed everything.
       subject:
-        minWords: 3
+        minWords: 3 # 3 or higher value helps to write more meaningful commits
 
 # expects to find file `id_rsa` in ~/.ssh for `autogit version --push` command
 # where ~ your home folder discovered with env var HOME

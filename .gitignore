@@ -5,3 +5,4 @@ __debug_bin
 !.gitkeep
 version.txt
 testfile.txt
+/autogit.yml

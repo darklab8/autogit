@@ -7,9 +7,10 @@ type ValidationScheme struct {
 				Enabled bool `yaml:"enabled"`
 			} `yaml:"commitMsg"`
 		} `yaml:"hook"`
-		Changelog struct {
-			Enabled bool `yaml:"enabled"`
-		} `yaml:"changelog"`
+		// TODO, add ability to disable Changelog validations?
+		// Changelog struct {
+		// 	Enabled bool `yaml:"enabled"`
+		// } `yaml:"changelog"`
 	} `yaml:"sections"`
 	Rules struct {
 		Issue struct {

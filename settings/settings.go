@@ -188,36 +188,42 @@ func (config *ConfigScheme) configLoadEnvOverrides() {
 	}
 }
 
-// yml package has no way to validate that there is no unknown undeclared fields
-func validateSettingsScheme(configPath types.ConfigPath) {
-	var config ConfigScheme
-	var err error
+func check_file_is_not_having_invalid[T comparable](example map[T]interface{}, checkable map[T]interface{}) {
+	// For all keys and values in resulting hashmap
+	for checkable_key, checkable_value := range checkable {
 
-	file := readSettingsfile(configPath)
-	// Marshal file to struct
-	err = yaml.Unmarshal(file, &config)
-	logus.CheckFatal(err, "failed to unmarshal config")
+		// if key is present in additions hasmap
+		if example_value, is_present := example[checkable_key]; !is_present {
+			logus.Fatal(fmt.Sprintf("key=%v is not allowed", checkable_key))
+		} else {
+			if reflect.TypeOf(example_value) != reflect.TypeOf(checkable_value) {
+				logus.Fatal(fmt.Sprintf(
+					"wrong value type in config. Expected: %v, Received:%v",
+					reflect.TypeOf(example_value),
+					reflect.TypeOf(checkable_value),
+				))
+			}
+		}
 
-	// Unmarshal struct to bytes
-	m, err := yaml.Marshal(&config)
-	logus.CheckFatal(err, "unable to marshal settings")
-
-	// Marshal bytes to map
-	a := make(map[interface{}]interface{})
-	err = yaml.Unmarshal(m, &a)
-	logus.CheckFatal(err, "failed unmarshaling to yaml")
-
-	// compare with file marshaled to map
-	b := make(map[interface{}]interface{})
-	err = yaml.Unmarshal(file, &b)
-	logus.CheckFatal(err, "failed unmarshaling to yaml again")
-
-	if !reflect.DeepEqual(a, b) {
-		logus.Fatal(`
-		setting file contains not registered keys.
-		Check your version of autogit, and documentation related to settings
-		`, logus.Expected(a), logus.Actual(b))
+		if nested_checkable_map, ok := checkable_value.(map[string]interface{}); ok {
+			if nested_example_map, ok := example[checkable_key].(map[string]interface{}); ok {
+				check_file_is_not_having_invalid(nested_example_map, nested_checkable_map)
+			}
+		}
 	}
+}
+
+func validate_file_config(file []byte) {
+
+	file_config := make(map[interface{}]interface{})
+	err := yaml.Unmarshal(file, &file_config)
+	logus.CheckFatal(err, "unable to unmarshal input config")
+
+	memory_config := make(map[interface{}]interface{})
+	err = yaml.Unmarshal([]byte(ConfigExample), &memory_config)
+	logus.CheckFatal(err, "unable to unmrashal memory config")
+
+	check_file_is_not_having_invalid(memory_config, file_config)
 }
 
 func NewConfig(configPath types.ConfigPath) *ConfigScheme {
@@ -228,7 +234,7 @@ func NewConfig(configPath types.ConfigPath) *ConfigScheme {
 	config.changelogValidate()
 	config.regexCompile()
 
-	validateSettingsScheme(configPath)
+	validate_file_config(file)
 
 	return config
 }
