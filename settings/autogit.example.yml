@@ -41,20 +41,20 @@ validation:
         # Add yours if desired. Empty list means everything is allowed
         allowlists:
           # for increasing major vers, write type as `feat!`
-          semver_minor_increases:
+          semver_minor_increases: # This group is rendered to changelog
             - "feat" #  Commits, that adds a new feature
-          semver_patch_increases:
+          semver_patch_increases: # This group is rendered to changelog
             - "fix" #  Commits, that fixes a bug
-            - "build" #  Commits, that affect build components like build tool, ci pipeline, dependencies, project version, ...
+            - "build" #  Commits, that affect build components like build tool, dependencies, ...
             - "docs" #  Commits, that affect documentation only. Comments are part of docs
-            - "perf" #  Commits (Child of refactor) are special refactor commits, that improve performance
+            - "perf" #  Commits (Child of refactor) are refactor commits, that improve performance
             - "revert" # Commits, to revert stuff
-          semver_is_not_affected:
+          semver_is_not_affected: # This group is not rendered to changelog
             - "chore" #  Miscellaneous commits e.g. modifying .gitignore
-            - "refactor" # Commits, that rewrite/restructure your code, however does not change any API behaviour
-            - "style" #  Commits, that do not affect the meaning (white-space, formatting, missing semi-colons, etc)
+            - "refactor" # Commits, that rewrite your code, but do not change any API behaviour
+            - "style" #  Commits, that do not affect the meaning (white-space, formatting, etc)
             - "test" # Commits, that add missing tests or correcting existing tests
-            - "ops" # Commits, that affect operational components like infrastructure, deployment, backup, recovery, ...
+            - "ops" # Commits, that affect operational components like infrastructure, deployment, ...
             - "ci"  # Commits, (Child of ops) Configuring or reparing CI
             - "merge" # Commits to merge branches
       scope:
