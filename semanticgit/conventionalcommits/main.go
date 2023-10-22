@@ -41,7 +41,7 @@ func ParseCommit(msg types.CommitOriginalMsg) (*ConventionalCommit, error) {
 	}
 
 	result.Type = main_match[1]
-	result.Scope = main_match[2]
+	result.Scope = conventionalcommitstype.Scope(main_match[2])
 	result.Subject = main_match[4]
 
 	if main_match[3] != "" {

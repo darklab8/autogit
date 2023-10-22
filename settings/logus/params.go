@@ -104,7 +104,7 @@ func CommitMessage(value types.CommitOriginalMsg) slogParam {
 func Commit(commit conventionalcommitstype.ParsedCommit) slogParam {
 	return func(c *slogGroup) {
 		c.params["commit_type"] = commit.Type
-		c.params["commit_scope"] = commit.Scope
+		c.params["commit_scope"] = string(commit.Scope)
 		c.params["commit_subject"] = commit.Subject
 		c.params["commit_body"] = commit.Body
 		c.params["commit_exlamation"] = strconv.FormatBool(commit.Exclamation)

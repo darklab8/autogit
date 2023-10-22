@@ -1,5 +1,7 @@
 package settings
 
+import "autogit/semanticgit/conventionalcommits/conventionalcommitstype"
+
 type TypeAllowLists struct {
 	SemVerMinorIncreasers []string `yaml:"semver_minor_increases"`
 	SemverPatchIncreasers []string `yaml:"semver_patch_increases"`
@@ -37,9 +39,9 @@ type ValidationScheme struct {
 				Allowlists TypeAllowLists `yaml:"allowlists"`
 			} `yaml:"type"`
 			Scope struct {
-				Present   bool     `yaml:"present"`
-				Lowercase bool     `yaml:"lowercase"`
-				Allowlist []string `yaml:"allowlist"`
+				Present   bool                            `yaml:"present"`
+				Lowercase bool                            `yaml:"lowercase"`
+				Allowlist []conventionalcommitstype.Scope `yaml:"allowlist"`
 			} `yaml:"scope"`
 			Subject struct {
 				MinWords int `yaml:"minWords"`

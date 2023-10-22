@@ -4,6 +4,7 @@ import (
 	"autogit/interface_cli/actions/changelog/templates"
 	"autogit/semanticgit"
 	"autogit/semanticgit/conventionalcommits"
+	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
 	"autogit/semanticgit/semver"
 	"autogit/settings"
 	"autogit/settings/types"
@@ -38,8 +39,8 @@ type changelogVars struct {
 	Header           string
 	Features         []string
 	Fixes            []string
-	FeaturesScoped   map[string][]string
-	FixesScoped      map[string][]string
+	FeaturesScoped   map[conventionalcommitstype.Scope][]string
+	FixesScoped      map[conventionalcommitstype.Scope][]string
 	AreThereFeatures bool
 	AreThereFixes    bool
 }
@@ -72,8 +73,8 @@ func (changelog *changelogVars) addCommit(record conventionalcommits.Conventiona
 
 func NewChangelog(g *semanticgit.SemanticGit, semver_options semver.OptionsSemVer, config settings.ChangelogScheme, FromTag types.TagName) changelogVars {
 	changelog := changelogVars{}
-	changelog.FeaturesScoped = make(map[string][]string)
-	changelog.FixesScoped = make(map[string][]string)
+	changelog.FeaturesScoped = make(map[conventionalcommitstype.Scope][]string)
+	changelog.FixesScoped = make(map[conventionalcommitstype.Scope][]string)
 
 	templs := templates.NewTemplates()
 

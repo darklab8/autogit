@@ -26,7 +26,7 @@ func Validate(commit conventionalcommits.ConventionalCommit, conf settings.Confi
 		}
 
 		if conf.Validation.Rules.Header.Scope.Lowercase {
-			if !settings.RegexScope.MatchString(commit.Scope) {
+			if !settings.RegexScope.MatchString(string(commit.Scope)) {
 				return valerrors.NewerrorCommitScopeMustBeLowercase(commit)
 			}
 		}

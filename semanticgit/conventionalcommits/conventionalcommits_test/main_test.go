@@ -2,6 +2,7 @@ package conventionalcommits_test
 
 import (
 	"autogit/semanticgit/conventionalcommits"
+	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
 	"autogit/settings/logus"
 	_ "autogit/settings/testutils/autouse"
 
@@ -34,7 +35,7 @@ footer-key: tralala`)
 	logus.CheckFatal(err, "failed creating commit")
 
 	assert.Equal(t, "feat", commit.Type)
-	assert.Equal(t, "api", commit.Scope)
+	assert.Equal(t, conventionalcommitstype.Scope("api"), commit.Scope)
 	assert.Equal(t, "my subject", commit.Subject)
 	assert.Equal(t, "body message", commit.Body)
 	assert.Equal(t, "footer-key", commit.Footers[0].Token)
