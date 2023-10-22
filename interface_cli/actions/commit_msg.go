@@ -27,7 +27,7 @@ func CommmitMsg(args []string) {
 	logus.Debug("acquired file_content", logus.CommitMessage(fileContent))
 
 	commit, err := conventionalcommits.NewCommit(fileContent)
-	logus.CheckFatal(err, "unable to parse commit to conventional commits standard")
+	logus.CheckError(err, "unable to parse commit to conventional commits standard")
 
 	err = validation.Validate(*commit, conf)
 	logus.CheckError(err, "failed to validate commits", logus.Commit(commit.ParsedCommit))

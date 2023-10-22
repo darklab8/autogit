@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"strconv"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -21,7 +22,18 @@ const ToolName = "autogit"
 var HookFolderName = fmt.Sprintf(".%s-hooks", ToolName)
 
 //go:embed version.txt
-var Version string
+var autogit_version string
+
+func GetAutogitVersion() string {
+	// cleaning up version from... debugging logs used during dev env
+	lines := strings.Split(autogit_version, "\n")
+	for _, line := range lines {
+		if strings.HasPrefix(line, "v") {
+			return line
+		}
+	}
+	return autogit_version
+}
 
 type ConfigScheme struct {
 	Changelog  ChangelogScheme  `yaml:"changelog"`

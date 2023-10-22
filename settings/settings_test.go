@@ -16,3 +16,7 @@ func TestReadPartialConfig(t *testing.T) {
 	assert.Equal(t, 7, result.Validation.Rules.Header.Subject.MinWords)
 	assert.Equal(t, true, result.Validation.Rules.Header.Scope.Lowercase)
 }
+
+func TestGerVersion(t *testing.T) {
+	GetAutogitVersion()
+}

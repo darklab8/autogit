@@ -67,19 +67,22 @@ func ParseCommit(msg types.CommitOriginalMsg) (*ConventionalCommit, error) {
 	return &result, nil
 }
 
-type InvalidType struct{}
+type InvalidType struct {
+	allowed_types []string
+}
 
 func (m InvalidType) Error() string {
-	return "invalid conventional commit Type"
+	return "invalid conventional commit Type. Allowed types:" + strings.Join(m.allowed_types, ",")
 }
 
 func (c *ConventionalCommit) Validate() error {
-	for _, type_ := range settings.GetConfig().Validation.Rules.Header.Type.Whitelist {
+	allowed_types := settings.GetConfig().Validation.Rules.Header.Type.Whitelist
+	for _, type_ := range allowed_types {
 		if c.Type == type_ {
 			return nil
 		}
 	}
-	return InvalidType{}
+	return InvalidType{allowed_types: allowed_types}
 }
 
 func NewCommit(msg types.CommitOriginalMsg) (*ConventionalCommit, error) {
