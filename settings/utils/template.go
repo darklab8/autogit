@@ -2,6 +2,7 @@ package utils
 
 import (
 	"autogit/settings/logus"
+	"autogit/settings/types"
 	"bytes"
 	"text/template"
 )
@@ -13,9 +14,9 @@ func TmpRender(templateRef *template.Template, data interface{}) string {
 	return header.String()
 }
 
-func TmpInit(content string) *template.Template {
+func TmpInit(content types.TemplateExpression) *template.Template {
 	var err error
-	templateRef, err := template.New("test").Parse(content)
+	templateRef, err := template.New("test").Parse(string(content))
 	logus.CheckFatal(err, "failed initing regex template")
 	return templateRef
 }

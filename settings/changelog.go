@@ -2,14 +2,15 @@ package settings
 
 import (
 	"autogit/settings/logus"
+	"autogit/settings/types"
 )
 
 type ChangelogScheme struct {
-	REPOSITORY_OWNER string `yaml:"REPOSITORY_OWNER"`
-	REPOSITORY_NAME  string `yaml:"REPOSITORY_NAME"`
-	CommitURL        string `yaml:"commitUrl"`
-	CommitRangeURL   string `yaml:"commitRangeUrl"`
-	IssueURL         string `yaml:"issueUrl"`
+	REPOSITORY_OWNER string                   `yaml:"REPOSITORY_OWNER"`
+	REPOSITORY_NAME  string                   `yaml:"REPOSITORY_NAME"`
+	CommitURL        types.TemplateExpression `yaml:"commitUrl"`
+	CommitRangeURL   types.TemplateExpression `yaml:"commitRangeUrl"`
+	IssueURL         types.TemplateExpression `yaml:"issueUrl"`
 }
 
 func (conf ConfigScheme) changelogValidate() {

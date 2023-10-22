@@ -116,7 +116,7 @@ func (changelog changelogVars) Render() string {
 }
 
 //go:embed templates/changelog.md
-var changelogMarkup string
+var changelogMarkup types.TemplateExpression
 var changelogTemplate *template.Template
 
 func init() {

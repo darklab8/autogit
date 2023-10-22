@@ -12,6 +12,8 @@ type ProjectFolder FilePath
 
 type RegexExpression string
 
+type TemplateExpression string
+
 type TagName string
 
 type CommitOriginalMsg string
