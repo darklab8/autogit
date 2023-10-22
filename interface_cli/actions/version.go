@@ -3,7 +3,7 @@ package actions
 import (
 	"autogit/semanticgit"
 	"autogit/semanticgit/git"
-	"autogit/semanticgit/semver"
+	"autogit/semanticgit/semver/semvertype"
 	"autogit/settings/types"
 
 	"github.com/spf13/cobra"
@@ -15,7 +15,7 @@ type GitActions struct {
 }
 
 type VersionParams struct {
-	semver.OptionsSemVer
+	semvertype.OptionsSemVer
 }
 
 func (v *VersionParams) Bind(cmd *cobra.Command) {

@@ -47,7 +47,9 @@ func (r *Repository) GetLatestCommitHash() plumbing.Hash {
 	return ref.Hash()
 }
 
-func (r *Repository) ForeachTag(callback func(tag Tag) bool) {
+type ShouldWeStopIteration bool
+
+func (r *Repository) ForeachTag(callback func(tag Tag) ShouldWeStopIteration) {
 	From := r.GetLatestCommitHash()
 
 	// ... retrieves the commit history
@@ -71,7 +73,8 @@ func (r *Repository) ForeachTag(callback func(tag Tag) bool) {
 	}
 }
 
-func (r *Repository) ForeachLog(From plumbing.Hash, callback func(log Log) bool) {
+func (r *Repository) ForeachLog(From plumbing.Hash, callback func(log Log) ShouldWeStopIteration) {
+	logus.Debug(fmt.Sprintf("ForeachLog. From1=%v", From))
 	// retrieves the branch pointed by HEAD
 	if From.IsZero() {
 		var err error
@@ -79,18 +82,26 @@ func (r *Repository) ForeachLog(From plumbing.Hash, callback func(log Log) bool)
 		logus.CheckFatal(err, "unable getting Head commit")
 		From = ref.Hash()
 	}
+	logus.Debug(fmt.Sprintf("ForeachLog. From2=%v", From))
 
 	// get the commit object, pointed by ref
 	// commit, err := r.CommitObject(ref.Hash())
 
 	// ... retrieves the commit history
-	cIter, err := r.repo.Log(&git.LogOptions{From: From})
+	cIter, err := r.repo.Log(
+		&git.LogOptions{
+			From:  From,
+			Order: git.LogOrderCommitterTime, // necessary to see commits between merging commits
+		},
+	)
 	logus.CheckFatal(err, "unable getting git log")
 
 	// ... just iterates over the commits, printing it
 	c, _ := cIter.Next()
 	for ; c != nil; c, _ = cIter.Next() {
-		shouldWeStop := callback(Log{Hash: c.Hash, Msg: types.CommitOriginalMsg(c.Message)})
+		msg := types.CommitOriginalMsg(c.Message)
+		// logus.Debug("ForeachLog retrieved", logus.CommitMessage(msg), logus.CommitHash(c.Hash))
+		shouldWeStop := callback(Log{Hash: c.Hash, Msg: msg})
 		if shouldWeStop {
 			return
 		}
@@ -147,10 +158,11 @@ func (r *Repository) getHashByTagName(tagName types.TagName) plumbing.Hash {
 	return tag_ref.Hash()
 }
 
-func (r *Repository) GetLogsFromTag(tagName types.TagName, callback func(log Log) bool) {
+func (r *Repository) GetLogsFromTag(tagName types.TagName, callback func(log Log) ShouldWeStopIteration) {
 	FromHash := r.getHashByTagName(tagName)
+	logus.Debug("GetLogsFromTag is called", logus.TagName(tagName))
 
-	r.ForeachLog(FromHash, func(log Log) bool {
+	r.ForeachLog(FromHash, func(log Log) ShouldWeStopIteration {
 		return callback(log)
 	})
 }

@@ -4,6 +4,7 @@ import (
 	"autogit/semanticgit/conventionalcommits"
 	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
 	"autogit/settings"
+	"autogit/settings/logus"
 	"autogit/settings/types"
 	"autogit/settings/utils"
 	_ "embed"
@@ -80,9 +81,19 @@ type CommitRangeUrlVars struct {
 }
 
 func (templs Templates) NewCommitRangeUrlRender(logs []conventionalcommits.ConventionalCommit, ChangelogVersion types.TagName) string {
+	var from, to conventionalcommitstype.Hash
+	if len(logs) == 0 {
+		logus.Error("for some reason logs count is 0 at NewCommitRangeUrlRender")
+		from = "undefined"
+		to = "undefined"
+	} else {
+		from = logs[len(logs)-1].Hash
+		to = logs[0].Hash
+	}
+
 	r := CommitRangeUrlVars{
-		From:             logs[len(logs)-1].Hash,
-		To:               logs[0].Hash,
+		From:             from,
+		To:               to,
 		REPOSITORY_OWNER: templs.conf.REPOSITORY_OWNER,
 		REPOSITORY_NAME:  templs.conf.REPOSITORY_NAME,
 	}

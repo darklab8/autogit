@@ -29,6 +29,7 @@ func Changelog(params ChangelogParams, gitw *git.Repository) string {
 	params.EnableNewline = false
 
 	g := semanticgit.NewSemanticRepo(gitw)
+	logus.Debug("Getting changelog", logus.TagName(types.TagName(params.Tag)))
 	rendered_changelog := changelog.NewChangelog(g, params.OptionsSemVer, conf, types.TagName(params.Tag)).Render()
 
 	if params.Validate {

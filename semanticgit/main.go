@@ -9,6 +9,7 @@ import (
 	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
 	"autogit/semanticgit/git"
 	"autogit/semanticgit/semver"
+	"autogit/semanticgit/semver/semvertype"
 	"autogit/settings/logus"
 	"autogit/settings/types"
 )
@@ -23,23 +24,23 @@ func NewSemanticRepo(gitRepo *git.Repository) *SemanticGit {
 	return g
 }
 
-func (g *SemanticGit) GetCurrentVersion() *semver.SemVer {
-	returned_vers := &semver.SemVer{
+func (g *SemanticGit) GetCurrentVersion() *semvertype.SemVer {
+	returned_vers := &semvertype.SemVer{
 		Major: 0, Minor: 0, Patch: 0,
-		AugmentedSemver: semver.AugmentedSemver{Alpha: 0, Beta: 0, Rc: 0},
+		AugmentedSemver: semvertype.AugmentedSemver{Alpha: 0, Beta: 0, Rc: 0},
 	}
 
 	latest_hash := g.git.GetLatestCommitHash()
-	g.git.ForeachTag(func(tag git.Tag) bool {
+	g.git.ForeachTag(func(tag git.Tag) git.ShouldWeStopIteration {
 		vers, err := semver.Parse(tag.Name)
 
 		if err != nil {
 			logus.Warn("failed to parse tag=", logus.TagName(tag.Name), logus.OptError(err))
-			return false
+			return git.ShouldWeStopIteration(false)
 		}
 
 		if tag.Hash == latest_hash || (vers.Prerelease == "" && tag.Hash == latest_hash) {
-			return false
+			return git.ShouldWeStopIteration(false)
 		}
 
 		// Process
@@ -57,16 +58,16 @@ func (g *SemanticGit) GetCurrentVersion() *semver.SemVer {
 			returned_vers.Major = vers.Major
 			returned_vers.Minor = vers.Minor
 			returned_vers.Patch = vers.Patch
-			return true
+			return git.ShouldWeStopIteration(true)
 		}
 
-		return false
+		return git.ShouldWeStopIteration(false)
 	})
 
 	return returned_vers
 }
 
-func (g *SemanticGit) CalculateNextVersion(vers *semver.SemVer) *semver.SemVer {
+func (g *SemanticGit) CalculateNextVersion(vers *semvertype.SemVer) *semvertype.SemVer {
 
 	log_records := g.GetChangelogByTag("", false)
 
@@ -123,7 +124,7 @@ func (g *SemanticGit) CalculateNextVersion(vers *semver.SemVer) *semver.SemVer {
 	return vers
 }
 
-func (g *SemanticGit) GetNextVersion(semver_options semver.OptionsSemVer) *semver.SemVer {
+func (g *SemanticGit) GetNextVersion(semver_options semvertype.OptionsSemVer) *semvertype.SemVer {
 	vers := g.GetCurrentVersion()
 	vers.Options = semver_options
 	vers = g.CalculateNextVersion(vers)
@@ -134,42 +135,53 @@ func (g *SemanticGit) GetNextVersion(semver_options semver.OptionsSemVer) *semve
 func (g *SemanticGit) GetChangelogByTag(fromTag types.TagName, enable_warnings bool) []conventionalcommits.ConventionalCommit {
 	var result []conventionalcommits.ConventionalCommit
 
-	g.git.GetLogsFromTag(fromTag, func(log_record git.Log) bool {
-
+	logus.Debug("semantic git.GetChangelogByTag attempting to get logs", logus.TagName(fromTag))
+	g.git.GetLogsFromTag(fromTag, func(log_record git.Log) git.ShouldWeStopIteration {
 		parsed_commit, err := conventionalcommits.ParseCommit(log_record.Msg)
 		if err != nil {
 			if enable_warnings {
 				logus.Warn("unable to parse commit with hash=", logus.CommitHash(log_record.Hash), logus.CommitMessage(log_record.Msg))
 			}
-			return false
+		}
+
+		if parsed_commit == nil {
+			logus.Debug("parsed commit is null", logus.CommitMessage(log_record.Msg), logus.CommitHash(log_record.Hash))
 		}
 
 		// attempt to convert to Semver
-		var foundSemver *semver.SemVer
+		var foundSemver *semvertype.SemVer
 		var foundTag git.Tag
-		g.git.ForeachTag(func(tag git.Tag) bool {
+		g.git.ForeachTag(func(tag git.Tag) git.ShouldWeStopIteration {
 			if log_record.Hash == tag.Hash {
 				semver, err := semver.Parse(tag.Name)
 				if err != nil {
-					return false
+					return git.ShouldWeStopIteration(false)
 				}
 				foundSemver = semver
 				foundTag = tag
-				return true
+				return git.ShouldWeStopIteration(true)
 			}
-			return false
+			return git.ShouldWeStopIteration(false)
 		})
 		if foundSemver != nil {
 			// Get Changelog only until previous stable tag and don't mind first commit
 			if foundSemver.Prerelease == "" && fromTag != foundTag.Name && log_record.Hash != g.git.GetLatestCommitHash() {
-				return true
+				logus.Debug("GetChangelogByTag stopping at this commit",
+					logus.CommitMessage(log_record.Msg),
+					logus.CommitHash(log_record.Hash),
+					logus.Semver(foundSemver),
+				)
+				return git.ShouldWeStopIteration(true)
 			}
 		}
 
-		parsed_commit.Hash = conventionalcommitstype.Hash(log_record.Hash.String()[:8])
-		result = append(result, *parsed_commit)
-
-		return false
+		if parsed_commit != nil {
+			parsed_commit.Hash = conventionalcommitstype.Hash(log_record.Hash.String()[:8])
+			result = append(result, *parsed_commit)
+		} else {
+			logus.Debug("parsed_commit = nil", logus.CommitMessage(log_record.Msg), logus.CommitHash(log_record.Hash))
+		}
+		return git.ShouldWeStopIteration(false)
 	})
 
 	return result

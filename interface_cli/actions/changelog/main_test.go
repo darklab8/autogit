@@ -8,7 +8,7 @@ import (
 
 	"autogit/semanticgit"
 	"autogit/semanticgit/git"
-	"autogit/semanticgit/semver"
+	"autogit/semanticgit/semver/semvertype"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -33,19 +33,19 @@ func TestPrepare(t *testing.T) {
 	gitSemantic, config := FixtureGitSemantic(t)
 
 	// Just for debug
-	rendered := NewChangelog(gitSemantic, semver.OptionsSemVer{}, config, types.TagName(""))
+	rendered := NewChangelog(gitSemantic, semvertype.OptionsSemVer{}, config, types.TagName(""))
 	_ = rendered
-	rendered = NewChangelog(gitSemantic, semver.OptionsSemVer{}, config, types.TagName("v0.0.1"))
+	rendered = NewChangelog(gitSemantic, semvertype.OptionsSemVer{}, config, types.TagName("v0.0.1"))
 	_ = rendered
 }
 
 func TestRender(t *testing.T) {
 	gitSemantic, config := FixtureGitSemantic(t)
 
-	rendered := NewChangelog(gitSemantic, semver.OptionsSemVer{}, config, types.TagName("")).Render()
+	rendered := NewChangelog(gitSemantic, semvertype.OptionsSemVer{}, config, types.TagName("")).Render()
 	assert.Contains(t, rendered, "v0.1.0")
 
 	// historing render
-	rendered = NewChangelog(gitSemantic, semver.OptionsSemVer{}, config, types.TagName("v0.0.1")).Render()
+	rendered = NewChangelog(gitSemantic, semvertype.OptionsSemVer{}, config, types.TagName("v0.0.1")).Render()
 	assert.Contains(t, rendered, "v0.0.1")
 }

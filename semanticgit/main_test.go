@@ -4,7 +4,7 @@ import (
 	_ "autogit/settings/testutils/autouse"
 
 	"autogit/semanticgit/git"
-	"autogit/semanticgit/semver"
+	"autogit/semanticgit/semver/semvertype"
 	"autogit/settings/testutils"
 	"testing"
 
@@ -31,20 +31,20 @@ func TestCurrentNextRegularVersion(t *testing.T) {
 
 	testutils.Equal(t, "v0.0.1", gitSemantic.GetCurrentVersion().ToString())
 
-	testutils.Equal(t, "v0.1.0", gitSemantic.GetNextVersion(semver.OptionsSemVer{}).ToString())
+	testutils.Equal(t, "v0.1.0", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{}).ToString())
 
 	gitInMemory.TestCreateTag("v0.1.0", gitInMemory.TestCommit("fix: thing"))
 
 	gitInMemory.TestCommit("fix: test2")
-	testutils.Equal(t, "v0.1.1", gitSemantic.GetNextVersion(semver.OptionsSemVer{}).ToString())
+	testutils.Equal(t, "v0.1.1", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{}).ToString())
 
 	gitInMemory.TestCommit("feat: test2")
 
-	testutils.Equal(t, "v0.2.0", gitSemantic.GetNextVersion(semver.OptionsSemVer{}).ToString())
+	testutils.Equal(t, "v0.2.0", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{}).ToString())
 
 	// Semantic version should be same if no new comments
 	gitInMemory.TestCreateTag("v0.2.0", gitInMemory.TestCommit("feat: new thing"))
-	testutils.Equal(t, "v0.2.0", gitSemantic.GetNextVersion(semver.OptionsSemVer{}).ToString())
+	testutils.Equal(t, "v0.2.0", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{}).ToString())
 }
 
 func TestGetChangelogs(t *testing.T) {
@@ -76,43 +76,43 @@ func TestTestPrereleaseVersions(t *testing.T) {
 	gitSemantic := NewSemanticRepo(gitInMemory)
 
 	gitInMemory.TestCommit("feat: init")
-	testutils.Equal(t, "v0.1.0-a.1", gitSemantic.GetNextVersion(semver.OptionsSemVer{Alpha: true}).ToString())
+	testutils.Equal(t, "v0.1.0-a.1", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{Alpha: true}).ToString())
 
 	gitInMemory.TestCreateTag("v0.1.0-a.1", gitInMemory.TestCommit("fix: thing"))
 	gitInMemory.TestCommit("feat: thing")
-	testutils.Equal(t, "v0.1.0-a.2", gitSemantic.GetNextVersion(semver.OptionsSemVer{Alpha: true}).ToString())
+	testutils.Equal(t, "v0.1.0-a.2", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{Alpha: true}).ToString())
 
 	gitInMemory.TestCommit("feat: test5")
 	gitInMemory.TestCreateTag("v0.1.0", gitInMemory.TestCommit("fix: thing"))
 	gitInMemory.TestCommit("feat: thing")
-	testutils.Equal(t, "v0.2.0", gitSemantic.GetNextVersion(semver.OptionsSemVer{}).ToString())
-	testutils.Equal(t, "v0.2.0-a.1.b.1", gitSemantic.GetNextVersion(semver.OptionsSemVer{Alpha: true, Beta: true}).ToString())
+	testutils.Equal(t, "v0.2.0", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{}).ToString())
+	testutils.Equal(t, "v0.2.0-a.1.b.1", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{Alpha: true, Beta: true}).ToString())
 
 	gitInMemory.TestCreateTag("v0.2.0-a.1", gitInMemory.TestCommit("fix: thing"))
-	testutils.Equal(t, "v0.2.0", gitSemantic.GetNextVersion(semver.OptionsSemVer{}).ToString())
-	testutils.Equal(t, "v0.2.0-a.1.b.1", gitSemantic.GetNextVersion(semver.OptionsSemVer{Alpha: true, Beta: true}).ToString())
+	testutils.Equal(t, "v0.2.0", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{}).ToString())
+	testutils.Equal(t, "v0.2.0-a.1.b.1", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{Alpha: true, Beta: true}).ToString())
 
 	gitInMemory.TestCreateTag("v0.2.0-a.1.b.1", gitInMemory.TestCommit("fix: thing"))
 	gitInMemory.TestCommit("fix: thing")
-	testutils.Equal(t, "v0.2.0-a.2.b.2", gitSemantic.GetNextVersion(semver.OptionsSemVer{Alpha: true, Beta: true}).ToString())
+	testutils.Equal(t, "v0.2.0-a.2.b.2", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{Alpha: true, Beta: true}).ToString())
 
 	gitInMemory.TestCreateTag("v0.2.0-a.1.b.2", gitInMemory.TestCommit("fix: thing"))
 	gitInMemory.TestCommit("fix: thing")
-	testutils.Equal(t, "v0.2.0-a.2.b.3", gitSemantic.GetNextVersion(semver.OptionsSemVer{Alpha: true, Beta: true}).ToString())
+	testutils.Equal(t, "v0.2.0-a.2.b.3", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{Alpha: true, Beta: true}).ToString())
 
 	gitInMemory.TestCreateTag("v0.2.0-rc.1", gitInMemory.TestCommit("fix: thing"))
 	gitInMemory.TestCommit("fix: thing")
-	testutils.Equal(t, "v0.2.0-rc.2", gitSemantic.GetNextVersion(semver.OptionsSemVer{Rc: true}).ToString())
-	testutils.Equal(t, "v0.2.0-a.2.b.3", gitSemantic.GetNextVersion(semver.OptionsSemVer{Alpha: true, Beta: true}).ToString())
+	testutils.Equal(t, "v0.2.0-rc.2", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{Rc: true}).ToString())
+	testutils.Equal(t, "v0.2.0-a.2.b.3", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{Alpha: true, Beta: true}).ToString())
 
 	gitInMemory.TestCreateTag("v0.2.0", gitInMemory.TestCommit("feat: thing"))
 	gitInMemory.TestCommit("feat: thing")
-	testutils.Equal(t, "v0.3.0", gitSemantic.GetNextVersion(semver.OptionsSemVer{}).ToString())
-	testutils.Equal(t, "v0.3.0-rc.1", gitSemantic.GetNextVersion(semver.OptionsSemVer{Rc: true}).ToString())
+	testutils.Equal(t, "v0.3.0", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{}).ToString())
+	testutils.Equal(t, "v0.3.0-rc.1", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{Rc: true}).ToString())
 	gitInMemory.TestCreateTag("v0.3.0-rc.1", gitInMemory.TestCommit("fix: thing"))
-	testutils.Equal(t, "v0.3.0-rc.1", gitSemantic.GetNextVersion(semver.OptionsSemVer{Rc: true}).ToString())
+	testutils.Equal(t, "v0.3.0-rc.1", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{Rc: true}).ToString())
 	gitInMemory.TestCommit("fix: thing")
-	testutils.Equal(t, "v0.3.0-rc.2", gitSemantic.GetNextVersion(semver.OptionsSemVer{Rc: true}).ToString())
+	testutils.Equal(t, "v0.3.0-rc.2", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{Rc: true}).ToString())
 
 }
 
@@ -121,23 +121,23 @@ func TestBreakingChanges(t *testing.T) {
 	gitSemantic := NewSemanticRepo(gitInMemory)
 	gitInMemory.TestCommit("feat: thing")
 	gitInMemory.TestCommit("feat!: break")
-	testutils.Equal(t, "v0.1.0", gitSemantic.GetNextVersion(semver.OptionsSemVer{}).ToString())
-	testutils.Equal(t, "v1.0.0", gitSemantic.GetNextVersion(semver.OptionsSemVer{Publish: true}).ToString())
+	testutils.Equal(t, "v0.1.0", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{}).ToString())
+	testutils.Equal(t, "v1.0.0", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{Publish: true}).ToString())
 
 	gitInMemory.TestCreateTag("v1.0.0", gitInMemory.TestCommit("fix: thing"))
 	gitInMemory.TestCommit("feat!: break")
-	testutils.Equal(t, "v2.0.0", gitSemantic.GetNextVersion(semver.OptionsSemVer{}).ToString())
+	testutils.Equal(t, "v2.0.0", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{}).ToString())
 
 	gitInMemory.TestCreateTag("v2.0.0", gitInMemory.TestCommit("fix: thing"))
 	gitInMemory.TestCommit("feat!: break")
-	testutils.Equal(t, "v3.0.0", gitSemantic.GetNextVersion(semver.OptionsSemVer{}).ToString())
+	testutils.Equal(t, "v3.0.0", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{}).ToString())
 }
 
 func TestBuildData(t *testing.T) {
 	gitInMemory := git.NewRepoTestInMemory()
 	gitSemantic := NewSemanticRepo(gitInMemory)
 	gitInMemory.TestCommit("feat: thing")
-	testutils.Equal(t, "v0.1.0+123", gitSemantic.GetNextVersion(semver.OptionsSemVer{Build: "123"}).ToString())
+	testutils.Equal(t, "v0.1.0+123", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{Build: "123"}).ToString())
 }
 
 func TestBug(t *testing.T) {
@@ -148,5 +148,15 @@ func TestBug(t *testing.T) {
 	gitInMemory.TestCreateTag("v0.3.0", gitInMemory.TestCommit("feat: thing"))
 	gitInMemory.TestCreateTag("v0.3.0-rc.1", gitInMemory.TestCommit("feat: thing"))
 	gitInMemory.TestCreateTag("v0.3.0-rc.2", gitInMemory.TestCommit("feat: thing"))
-	testutils.Equal(t, "v0.4.0", gitSemantic.GetNextVersion(semver.OptionsSemVer{}).ToString())
+	testutils.Equal(t, "v0.4.0", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{}).ToString())
+}
+
+func TestParseWithoutPatchVers(t *testing.T) {
+	gitInMemory := git.NewRepoTestInMemory()
+	gitSemantic := NewSemanticRepo(gitInMemory)
+	gitInMemory.TestCommit("feat: thing")
+	gitInMemory.TestCreateTag("v0.2", gitInMemory.TestCommit("feat: thing"))
+	gitInMemory.TestCreateTag("v0.3", gitInMemory.TestCommit("feat: thing"))
+
+	testutils.Equal(t, "v0.3.0", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{}).ToString())
 }

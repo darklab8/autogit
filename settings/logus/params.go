@@ -2,6 +2,7 @@ package logus
 
 import (
 	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
+	"autogit/semanticgit/semver/semvertype"
 	"autogit/settings/types"
 	"fmt"
 	"log/slog"
@@ -130,5 +131,15 @@ func OptError(err error) slogParam {
 	return func(c *slogGroup) {
 		c.params["error_msg"] = fmt.Sprintf("%v", err)
 		c.params["error_type"] = fmt.Sprintf("%T", err)
+	}
+}
+
+func Semver(semver *semvertype.SemVer) slogParam {
+	return func(c *slogGroup) {
+		if semver == nil {
+			c.params["semver"] = "nil"
+			return
+		}
+		c.params["semver"] = string(semver.ToString())
 	}
 }

@@ -5,8 +5,9 @@ import (
 	"autogit/semanticgit"
 	"autogit/semanticgit/conventionalcommits"
 	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
-	"autogit/semanticgit/semver"
+	"autogit/semanticgit/semver/semvertype"
 	"autogit/settings"
+	"autogit/settings/logus"
 	"autogit/settings/types"
 	"autogit/settings/utils"
 	"fmt"
@@ -147,13 +148,14 @@ func (changelog *changelogVars) addCommit(
 	}
 }
 
-func NewChangelog(g *semanticgit.SemanticGit, semver_options semver.OptionsSemVer, config settings.ConfigScheme, FromTag types.TagName) changelogVars {
+func NewChangelog(g *semanticgit.SemanticGit, semver_options semvertype.OptionsSemVer, config settings.ConfigScheme, FromTag types.TagName) changelogVars {
 	templs := templates.NewTemplates()
 
 	changelog := changelogVars{}
 	changelog.SemverGroups = make(map[SemverOrder]*changelogSemverGroup)
 
 	logs := g.GetChangelogByTag(FromTag, true)
+	logus.Debug(fmt.Sprintf("NewChangelog, log.count=%d", len(logs)))
 	if FromTag == "" {
 		FromTag = g.GetNextVersion(semver_options).ToString()
 	}

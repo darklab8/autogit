@@ -9,9 +9,9 @@ import (
 func (r *Repository) GetLatestTagString() types.TagName {
 	var return_tag Tag
 
-	r.ForeachTag(func(tag Tag) bool {
+	r.ForeachTag(func(tag Tag) ShouldWeStopIteration {
 		return_tag = tag
-		return true
+		return ShouldWeStopIteration(true)
 	})
 
 	return return_tag.Name

@@ -75,8 +75,10 @@ tasks:
 
   hook:prod:
     cmds:
+      - sudo rm /usr/local/bin/autogit | true
+
       - sudo ln -s {{.PWD}}/dist/autogit-linux-amd64 /usr/local/bin/autogit
-      - go run . hook --global activate
+      - go run . hook activate --global
     vars:
       PWD:
         sh: echo "$(pwd)"
