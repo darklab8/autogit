@@ -5,9 +5,9 @@ tasks:
       - task: tag
       - task: tag-push
 
-  version:
+  semver:
     cmds:
-      - autogit version
+      - autogit semver
   log:
     cmds:
       - git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit {{.CLI_ARGS}}
@@ -23,7 +23,7 @@ tasks:
 
   build-version:
     cmds:
-      - autogit version --publish > settings/version.txt || echo 'not installed autogit' > settings/version.txt
+      - autogit semver --publish > settings/version.txt || echo 'not installed autogit' > settings/version.txt
 
   build:test:
     cmds:

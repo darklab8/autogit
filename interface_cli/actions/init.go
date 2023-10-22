@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	InitAdvice string = "activate hook with `autogit hook activate [--global]`"
+	InitAdvice string = "activate commit msg hook with `autogit hook activate [--global]`"
 )
 
 func init_write_config(config_path types.ConfigPath) {

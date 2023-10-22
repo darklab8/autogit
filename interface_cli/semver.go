@@ -12,10 +12,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// versionCmd represents the version command
-var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "next semantic version",
+// semverCmd represents the version command
+var semverCmd = &cobra.Command{
+	Use:     "semver",
+	Short:   "next semantic version offered for your product",
+	Aliases: []string{"version"},
 	Run: func(cmd *cobra.Command, args []string) {
 		shared.version.Run()
 		fmt.Printf("%s", actions.Version(versionParams, git.NewRepoInWorkDir(git.SshPath(settings.GetConfig().Git.SSHPath))))
@@ -25,6 +26,6 @@ var versionCmd = &cobra.Command{
 var versionParams actions.ActionVersionParams
 
 func init() {
-	rootCmd.AddCommand(versionCmd)
-	versionParams.Bind(versionCmd)
+	rootCmd.AddCommand(semverCmd)
+	versionParams.Bind(semverCmd)
 }

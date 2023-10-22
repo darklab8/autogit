@@ -11,7 +11,7 @@ import (
 
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "init repository settings. " + actions.InitAdvice,
+	Short: "init repository settings for possible overrides. Use global version with --global flag!",
 	Run: func(cmd *cobra.Command, args []string) {
 		shared.init.Run()
 		actions.Initialize(*initGLobally)

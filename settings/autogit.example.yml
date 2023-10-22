@@ -58,7 +58,7 @@ validation:
       subject:
         minWords: 3 # 3 or higher value helps to write more meaningful commits
 
-# expects to find file `id_rsa` in ~/.ssh for `autogit version --push` command
+# expects to find file `id_rsa` in ~/.ssh for `autogit semver --push` command
 # where ~ your home folder discovered with env var HOME
 git:
   sshPath: id_rsa

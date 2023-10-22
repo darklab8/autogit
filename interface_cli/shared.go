@@ -33,7 +33,7 @@ var shared struct {
 }
 
 func init() {
-	shared.version.Bind(versionCmd)
+	shared.version.Bind(semverCmd)
 	shared.hook_activate.Bind(activateCmd)
 	shared.hook_deactivate.Bind(deactivateCmd)
 	shared.hook_commit_msg.Bind(commitMsgCmd)

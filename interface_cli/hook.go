@@ -4,6 +4,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package interface_cli
 
 import (
+	"autogit/interface_cli/actions"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -11,8 +12,10 @@ import (
 
 // hookCmd represents the hook command
 var hookCmd = &cobra.Command{
-	Use:   "hook",
-	Short: "git hooks entry points",
+	Use: "hook",
+	Short: `git hooks entry points.
+			Contains nested sub commands!
+			` + actions.InitAdvice,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("OK autogit hook called")
 		cmd.Help()

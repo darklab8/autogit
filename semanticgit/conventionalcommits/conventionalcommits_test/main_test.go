@@ -55,7 +55,7 @@ footer-key: tralala`)
 }
 
 func TestParse6(t *testing.T) {
-	_, err := conventionalcommits.NewCommit(`refactor: autogit version into about`)
+	_, err := conventionalcommits.NewCommit(`refactor: autogit semver into about`)
 	logus.CheckFatal(err, "failed creating commit")
 }
 

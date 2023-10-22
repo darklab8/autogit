@@ -12,7 +12,7 @@ import (
 // commitMsgCmd represents the commitMsg command
 var commitMsgCmd = &cobra.Command{
 	Use:   "commitMsg",
-	Short: "MACHINE ONLY: git hook for commit-msg. Not for human usage.",
+	Short: "FOR MACHINE USAGE ONLY: git hook for commit-msg. Not for human usage.",
 	Run: func(cmd *cobra.Command, args []string) {
 		shared.hook_commit_msg.Run()
 		actions.CommmitMsg(args)
