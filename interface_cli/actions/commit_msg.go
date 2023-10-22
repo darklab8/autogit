@@ -6,7 +6,9 @@ import (
 	"autogit/settings"
 	"autogit/settings/logus"
 	"autogit/settings/types"
+	"autogit/settings/utils"
 	"os"
+	"path/filepath"
 )
 
 func CommmitMsg(args []string) {
@@ -16,7 +18,7 @@ func CommmitMsg(args []string) {
 
 	conf := settings.GetConfig()
 
-	inputFile := types.FilePath(args[0])
+	inputFile := types.FilePath(filepath.Join(string(utils.GetProjectDir()), args[0]))
 	logus.Debug("Received CommitFile", logus.FilePath(inputFile))
 
 	file, err := os.ReadFile(string(inputFile))

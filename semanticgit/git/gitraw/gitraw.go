@@ -2,20 +2,15 @@ package gitraw
 
 import (
 	"autogit/settings/logus"
-	"os"
+	"autogit/settings/utils"
 
 	"github.com/go-git/go-git/v5"
 )
 
 func NewGitRepo() *git.Repository {
-	path, err := os.Getwd()
-	if folder_override, ok := os.LookupEnv("AUTOGIT_PROJECT_FOLDER"); ok {
-		path = folder_override
-	}
+	path := utils.GetProjectDir()
 
-	logus.CheckFatal(err, "unable to get workdir")
-
-	repo, err := git.PlainOpenWithOptions(path, &git.PlainOpenOptions{DetectDotGit: true})
+	repo, err := git.PlainOpenWithOptions(string(path), &git.PlainOpenOptions{DetectDotGit: true})
 	logus.CheckFatal(err, "unable to open git")
 	return repo
 }
