@@ -5,14 +5,14 @@ import "autogit/semanticgit/conventionalcommits/conventionalcommitstype"
 type TypeAllowLists struct {
 	SemVerMinorIncreasers []conventionalcommitstype.Type `yaml:"semver_minor_increases"`
 	SemverPatchIncreasers []conventionalcommitstype.Type `yaml:"semver_patch_increases"`
-	SemverNotAffects      []conventionalcommitstype.Type `yaml:"semver_is_not_affected"`
+	ForCommitMsgCheckOnly []conventionalcommitstype.Type `yaml:"for_commit_msg_check_only"`
 }
 
 func (a TypeAllowLists) GetAllTypes() []conventionalcommitstype.Type {
 	list := []conventionalcommitstype.Type{}
 	list = append(list, a.SemVerMinorIncreasers...)
 	list = append(list, a.SemverPatchIncreasers...)
-	list = append(list, a.SemverNotAffects...)
+	list = append(list, a.ForCommitMsgCheckOnly...)
 	return list
 }
 

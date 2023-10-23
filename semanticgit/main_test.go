@@ -160,3 +160,17 @@ func TestParseWithoutPatchVers(t *testing.T) {
 
 	testutils.Equal(t, "v0.3.0", gitSemantic.GetNextVersion(semvertype.OptionsSemVer{}).ToString())
 }
+
+func TestParseGHMergingCommits(t *testing.T) {
+	// And commit must maintain GH link to PR like #19
+	gitInMemory := git.NewRepoTestInMemory()
+	gitSemantic := NewSemanticRepo(gitInMemory)
+	gitInMemory.TestCommit("Merge pull request #19 from Company/feat/allow_only_certain_view_routes\n\nfeat: add specifiying which view routes are allowed")
+
+	logs1 := gitSemantic.GetChangelogByTag("", true)
+	assert.Len(t, logs1, 1)
+
+	gitInMemory.TestCommit("feat do not allow to parse this stuff")
+	logs1 = gitSemantic.GetChangelogByTag("", true)
+	assert.Len(t, logs1, 1)
+}

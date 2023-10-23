@@ -1,6 +1,7 @@
 package settings
 
 import (
+	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
 	"autogit/settings/logus"
 	"autogit/settings/types"
 )
@@ -11,6 +12,12 @@ type ChangelogScheme struct {
 	CommitURL        types.TemplateExpression `yaml:"commitUrl"`
 	CommitRangeURL   types.TemplateExpression `yaml:"commitRangeUrl"`
 	IssueURL         types.TemplateExpression `yaml:"issueUrl"`
+
+	MergeCommits struct {
+		MustHaveLinkedPR       bool                           `yaml:"must_have_linked_pull_request"`
+		RedirectMergingCommits bool                           `yaml:"redirect_merging_to_semver_sections_for_changelog"`
+		MergeTypes             []conventionalcommitstype.Type `yaml:"commit_types"`
+	} `yaml:"merge_commits"`
 }
 
 func (conf ConfigScheme) changelogValidate() {

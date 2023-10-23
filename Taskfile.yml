@@ -70,7 +70,7 @@ tasks:
 
       - sudo rm /usr/local/bin/autogit | true
 
-      - echo -e '#!/bin/bash\nset -x\nfilepath=`pwd`\ncd /home/naa/repos/pet_projects/darklab_autogit && AUTOGIT_PROJECT_FOLDER=$filepath go run . "$1\"' | sudo tee /usr/local/bin/autogit
+      - echo -e '#!/bin/bash\nset -x\nfilepath=`pwd`\ncd /home/naa/repos/pet_projects/darklab_autogit && AUTOGIT_PROJECT_FOLDER=$filepath go run . $@' | sudo tee /usr/local/bin/autogit
       - sudo chmod 777 /usr/local/bin/autogit
 
   hook:prod:

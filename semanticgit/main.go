@@ -142,10 +142,8 @@ func (g *SemanticGit) GetChangelogByTag(fromTag types.TagName, enable_warnings b
 			if enable_warnings {
 				logus.Warn("unable to parse commit with hash=", logus.CommitHash(log_record.Hash), logus.CommitMessage(log_record.Msg))
 			}
-		}
-
-		if parsed_commit == nil {
-			logus.Debug("parsed commit is null", logus.CommitMessage(log_record.Msg), logus.CommitHash(log_record.Hash))
+			logus.Debug("unable to parse commit with hash=", logus.CommitHash(log_record.Hash), logus.CommitMessage(log_record.Msg))
+			return git.ShouldWeStopIteration(false)
 		}
 
 		// attempt to convert to Semver

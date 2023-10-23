@@ -1,6 +1,6 @@
 {{.Header}}
 {{range $semver_group := .OrderedSemverGroups }}
-## {{ $semver_group.Name }} Changes
+## {{ $semver_group.Name }}
 {{range $commit_type, $type_group := $semver_group.CommitTypeGroups -}}
 ### {{ $commit_type }}
 {{range $commit := $type_group.NoScopeCommits}}{{$commit}}{{end}}

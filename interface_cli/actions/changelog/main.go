@@ -54,20 +54,38 @@ type commitTypeGroup struct {
 
 type changelogSemverGroup struct {
 	CommitTypeGroups map[conventionalcommitstype.Type]*commitTypeGroup
-	Name             SemverOrder
+	Name             ChangelogSectionName
 }
 
-type SemverOrder string
+type ChangelogSection string
+type ChangelogSectionName string
 
 const (
-	Major SemverOrder = "Major"
-	Minor SemverOrder = "Minor"
-	Patch SemverOrder = "Patch"
+	SemVerMajor  ChangelogSection = "Major Changes"
+	SemVerMinor  ChangelogSection = "Minor Changes"
+	SemVerPatch  ChangelogSection = "Patch Changes"
+	MergeCommits ChangelogSection = "Merge Commits"
 )
+
+func GetSectionName(section ChangelogSection) ChangelogSectionName {
+	is_pr := settings.GetConfig().Changelog.MergeCommits.MustHaveLinkedPR
+	switch section {
+	case MergeCommits:
+		if is_pr {
+			return ChangelogSectionName("Pull Requests")
+		} else {
+			return ChangelogSectionName("Merge Commits")
+		}
+
+	default:
+		return ChangelogSectionName(section)
+	}
+
+}
 
 type changelogVars struct {
 	// Internal for data grouping
-	SemverGroups map[SemverOrder]*changelogSemverGroup
+	SemverGroups map[ChangelogSection]*changelogSemverGroup
 
 	// For template
 	Header              string
@@ -77,14 +95,14 @@ type changelogVars struct {
 func (changelog *changelogVars) find_semver_group(
 	record conventionalcommits.ConventionalCommit,
 	types []conventionalcommitstype.Type,
-	semver_order SemverOrder,
+	semver_order ChangelogSection,
 ) (*changelogSemverGroup, error) {
 	for _, possible_type := range types {
 		if record.Exclamation {
-			semver_group, semver_group_exists := changelog.SemverGroups[Major]
+			semver_group, semver_group_exists := changelog.SemverGroups[SemVerMajor]
 			if !semver_group_exists {
-				semver_group = &changelogSemverGroup{Name: Major}
-				changelog.SemverGroups[Major] = semver_group
+				semver_group = &changelogSemverGroup{Name: GetSectionName(SemVerMajor)}
+				changelog.SemverGroups[SemVerMajor] = semver_group
 			}
 			return semver_group, nil
 		}
@@ -92,7 +110,7 @@ func (changelog *changelogVars) find_semver_group(
 		if record.Type == possible_type {
 			semver_group, semver_group_exists := changelog.SemverGroups[semver_order]
 			if !semver_group_exists {
-				semver_group = &changelogSemverGroup{Name: semver_order}
+				semver_group = &changelogSemverGroup{Name: GetSectionName(semver_order)}
 				changelog.SemverGroups[semver_order] = semver_group
 			}
 			return semver_group, nil
@@ -113,10 +131,65 @@ func (changelog *changelogVars) addCommit(
 	commit_formatted string,
 	config settings.ConfigScheme,
 ) {
+	if config.Changelog.MergeCommits.MustHaveLinkedPR {
+		for _, merge_type := range config.Changelog.MergeCommits.MergeTypes {
+			if record.Type == merge_type {
+				match_pr := settings.RegexPullRequest.FindStringSubmatch(string(record.Subject))
+				if len(match_pr) == 0 {
+					logus.Debug("merging commit is not containing linked PR", logus.Commit(record.ParsedCommit))
+					return
+				} else {
+					logus.Debug(fmt.Sprintf("merging commit contains linked PR=%v", match_pr), logus.Commit(record.ParsedCommit))
+				}
+			}
+		}
+	}
 
-	semver_group, err := changelog.find_semver_group(record, config.Validation.Rules.Header.Type.Allowlists.SemVerMinorIncreasers, Minor)
+	redirect_merging_commit := func(commit *conventionalcommits.ConventionalCommit, redirecting_type conventionalcommitstype.Type) {
+		commit.Type = redirecting_type
+		// Could be replaced with regex. Or it is fine as it is.
+		if strings.Contains(string(commit.Body), fmt.Sprintf("%s!", redirecting_type)) {
+			commit.Exclamation = true
+		}
+		if strings.Contains(string(commit.Body), ")!") {
+			commit.Exclamation = true
+		}
+	}
+	redirect := func(commit *conventionalcommits.ConventionalCommit, iterable_types []conventionalcommitstype.Type) error {
+		for _, iterated_type := range iterable_types {
+			logus.Debug(fmt.Sprintf("RedirectMergingCommits... for type=%s", iterated_type), logus.Commit(commit.ParsedCommit))
+			if strings.Contains(string(commit.Subject), string(iterated_type)) {
+				redirect_merging_commit(commit, iterated_type)
+				return nil
+			}
+			for _, footer_stuff := range commit.Footers {
+				if strings.Contains(string(footer_stuff.Token), string(iterated_type)) {
+					redirect_merging_commit(commit, iterated_type)
+					return nil
+				}
+			}
+		}
+		return NotFound{}
+	}
+	if config.Changelog.MergeCommits.RedirectMergingCommits {
+		for _, merge_type := range config.Changelog.MergeCommits.MergeTypes {
+			if record.Type == merge_type {
+				if redirect(&record, config.Validation.Rules.Header.Type.Allowlists.SemVerMinorIncreasers) == nil {
+					break
+				}
+				if redirect(&record, config.Validation.Rules.Header.Type.Allowlists.SemverPatchIncreasers) == nil {
+					break
+				}
+			}
+		}
+	}
+
+	semver_group, err := changelog.find_semver_group(record, config.Validation.Rules.Header.Type.Allowlists.SemVerMinorIncreasers, SemVerMinor)
 	if err != nil {
-		semver_group, err = changelog.find_semver_group(record, config.Validation.Rules.Header.Type.Allowlists.SemverPatchIncreasers, Patch)
+		semver_group, err = changelog.find_semver_group(record, config.Validation.Rules.Header.Type.Allowlists.SemverPatchIncreasers, SemVerPatch)
+	}
+	if err != nil {
+		semver_group, err = changelog.find_semver_group(record, config.Changelog.MergeCommits.MergeTypes, MergeCommits)
 	}
 	if err != nil {
 		return
@@ -152,7 +225,7 @@ func NewChangelog(g *semanticgit.SemanticGit, semver_options semvertype.OptionsS
 	templs := templates.NewTemplates()
 
 	changelog := changelogVars{}
-	changelog.SemverGroups = make(map[SemverOrder]*changelogSemverGroup)
+	changelog.SemverGroups = make(map[ChangelogSection]*changelogSemverGroup)
 
 	logs := g.GetChangelogByTag(FromTag, true)
 	logus.Debug(fmt.Sprintf("NewChangelog, log.count=%d", len(logs)))
@@ -173,13 +246,16 @@ func NewChangelog(g *semanticgit.SemanticGit, semver_options semvertype.OptionsS
 	}
 
 	// for easier templating as ordered
-	if semver_group, found := changelog.SemverGroups[Major]; found {
+	if semver_group, found := changelog.SemverGroups[MergeCommits]; found {
 		changelog.OrderedSemverGroups = append(changelog.OrderedSemverGroups, semver_group)
 	}
-	if semver_group, found := changelog.SemverGroups[Minor]; found {
+	if semver_group, found := changelog.SemverGroups[SemVerMajor]; found {
 		changelog.OrderedSemverGroups = append(changelog.OrderedSemverGroups, semver_group)
 	}
-	if semver_group, found := changelog.SemverGroups[Patch]; found {
+	if semver_group, found := changelog.SemverGroups[SemVerMinor]; found {
+		changelog.OrderedSemverGroups = append(changelog.OrderedSemverGroups, semver_group)
+	}
+	if semver_group, found := changelog.SemverGroups[SemVerPatch]; found {
 		changelog.OrderedSemverGroups = append(changelog.OrderedSemverGroups, semver_group)
 	}
 
