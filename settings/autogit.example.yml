@@ -12,9 +12,11 @@ changelog:
 regex:
   # regex values are used to parse correctly commit message. Likely hook of any changes necessary is low, but could be useful
   conventionalCommit:
-    header: '^([a-z]+)(?:\(([\w]+)\))?(\!?): (?:([ -~]+))(?:\n\n([\s -~]*)|[\n])?\z' # type(scope): header\n\nbody
+    # type(scope): header\n\nbody.
+    # + Made less restrictive rules to merge Github Merge commits. (1ndA-Z), (2nd)?:?
+    header: '^([a-zA-Z]+)(?:\(([\w]+)\))?(\!?)?:? (?:([ -~]+))(?:\n\n([\s -~]*)|[\n])?\z'
     bodyFooter: '(?:([ -9;-~]+))\: (?:([ -9;-~]+))' # body can have key: value multiple footers
-  issue: '\#([0-9]+)' # Regex to grab linked issue. Adjusted for Github Issues
+  issue: 'i-\#([0-9]+)' # Regex to grab linked issue. Lets grab prefixed i-only. Otherwise conflicts with GH PR links
   # copied from https://semver.org/spec/v2.0.0.html . Modified to make Patch as optional with '\.?(0|[1-9]\d*)?'
   semVer: '^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.?(0|[1-9]\d*)?(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
   prerelease: '(?:a\.([0-9]+))?\.?(?:b\.([0-9]+))?\.?(?:rc\.([0-9]+))?'
@@ -43,6 +45,7 @@ validation:
           # for increasing major vers, write type as `feat!`
           semver_minor_increases: # This group is rendered to changelog
             - "feat" #  Commits, that adds a new feature
+            - "Merge" # Commits to merge branches. Usually uppercase is PR merges to master branch in Github
           semver_patch_increases: # This group is rendered to changelog
             - "fix" #  Commits, that fixes a bug
             - "build" #  Commits, that affect build components like build tool, dependencies, ...
@@ -56,7 +59,7 @@ validation:
             - "test" # Commits, that add missing tests or correcting existing tests
             - "ops" # Commits, that affect operational components like infrastructure, deployment, ...
             - "ci"  # Commits, (Child of ops) Configuring or reparing CI
-            - "merge" # Commits to merge branches
+            - "merge" # Commits to merge branches. Usually we use lowcase ones to update dev branch with master commits
       scope:
         present: false # feat(scope): smth. Forces to write scope of a commit. Participes in changelog generation
         lowercase: true

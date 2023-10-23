@@ -64,7 +64,7 @@ func TestParse6(t *testing.T) {
 func TestParse7(t *testing.T) {
 	commit, err := conventionalcommits.NewCommit(`feat: rendered changelog for task
 
-#1, #2, #3`)
+i-#1, i-#2, i-#3`)
 	logus.CheckFatal(err, "failed creating commits")
 	testutils.Equal(t, "1", commit.Issue[0])
 	testutils.Equal(t, "2", commit.Issue[1])
