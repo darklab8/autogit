@@ -2,50 +2,43 @@
   <img src="assets/logo.png" />
 </p>
 
-## Description
+## 🎯 Goals
 
-CI friendly tool for automatic following of Git Conventional commit rules (standard for more descriptive commits)
+- CI friendly tool for automatic following of [Git Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) rules (standard for more descriptive commits)
+- The tool generates automatically changelogs of new features and bug fixes for your product releases
+- and also calculates next [semantic version](https://semver.org/) your next product release should be having
 
-The tool generates automatically changelogs of new features and bug fixes for your product releases
+Essentially tool... To decrease toll on release documentation writing, and to start writing more descriptive commits \
+It will help to make your repository looking like more professional in terms of commits, tags, versions, releases and changelogs. \
+With ability to see quickly how your changelog looks like, it will motivate you to write more meaningful commits
 
-and also calculates next semantic version your next product release should be having
-
-Essentially tool... To decrease toll on release documentation writing, and to start writing more descriptive commits
-
-See what are git conventional commits: https://www.conventionalcommits.org/en/v1.0.0/
-
-See what is semantic versioning: https://semver.org/
-
-## Features
+## 🌟 Features
 
 - [git conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) validations (and optional other ones) on pre-commit hook
 - validation of your commit history on `autogit changelog --validate` request
-- automatic next [semantic versioning](https://semver.org/spec/v2.0.0.html) calculation for your product release
-- auto generating [changelogs](https://github.com/darklab8/darklab_autogit/releases/tag/v0.3.0-rc.2) new features and bug fixes to your next product release
-- when you create tag with `autogit semver --tag --other-flags`, changelog is automatically added to annotated git tag
-- CI friendly binary file for any OS and arhictecture. Development with CI in mind. [CI examples](https://github.com/darklab8/darklab_autogit/tree/master/.github/workflows)
+- automatic next [semantic versioning](https://semver.org/spec/v2.0.0.html) calculation for your product release. `autogit semver`
+  - creating and pushing tag on `autogit semver --tag --push`. Changelog is automatically auto inserted into this tag.
+- auto generating [changelogs](https://github.com/darklab8/darklab_autogit/releases/tag/v0.3.0-rc.2) new features and bug fixes for your next product release
+- CI friendly binary file for any OS and arhictecture. Development with CI in mind. [CI examples](https://github.com/darklab8/darklab_autogit/tree/master/.github/workflows). Compiled for:
+  - linux-amd64
+  - linux-arm64
+  - linux-386
+  - linux-arm
+  - windows-amd64
+  - windows-386.exe
+  - windows-arm64.exe
+  - windows-arm.exe
+  - macos-amd64
+  - macos-arm64
 - Contains inbuilt git. Not requiring git to be installed for its functionality
 
-## Compiled for:
+## 🤙 Support:
 
-- linux-amd64
-- linux-arm64
-- linux-386
-- linux-arm
-- windows-amd64
-- windows-386.exe
-- windows-arm64.exe
-- windows-arm.exe
-- macos-amd64
-- macos-arm64
-
-## Support:
-
-##### First tier support - issues can solved on our own
+##### First tier support - we will prioritize solving any issues. Unit tests run on every commit.
 
 - for linux and CI usage
 
-##### Second tier support - issues may be solved on our own
+##### Second tier support - periodically checking it works in VM with Windows 10
 
 - for windows
 
@@ -53,7 +46,7 @@ See what is semantic versioning: https://semver.org/
 
 - for macos
 
-## Short opinionated installation
+## 🚀 Short opinionated installation
 
 assuming you have Linux:
 
@@ -69,7 +62,7 @@ assuming you have Linux:
    * `autogit hook activate --global` will turn it on globally for all repos
    * `autogit hook deactivate` (also with possible flag `--global`) can serve to deactivate this functionality
 
-## Detailed installation
+## ✈️ Detailed installation
 
 1. [download latest stable release](https://github.com/darklab8/darklab_autogit/releases) and put to env PATH searchable range
 
@@ -95,7 +88,7 @@ assuming you have Linux:
 
 P.S. Current repository runs on configured autogit as well
 
-## Usages
+## 🤾‍♂️ Usages
 
 ### scenario #1 - validator / Git commit validation / Changelog validation
 
@@ -210,7 +203,7 @@ well, about git conventional commits is here: https://www.conventionalcommits.or
 as an example, all my releases of darktool were made with similar automatation.
 Changelogs and versions https://github.com/darklab8/darklab_freelancer_darktool/releases
 
-## Future development and resources for inspiration
+## ⚛️ Future development and resources for inspiration
 
 - https://www.quora.com/What-is-the-difference-between-alpha-beta-and-RC-software-version // Adding ability of beta versions
 - https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional // Configurable stricter rules to validator
@@ -222,7 +215,7 @@ Changelogs and versions https://github.com/darklab8/darklab_freelancer_darktool/
 
 Discussions about future development and features in [Pull Requests](https://github.com/darklab8/darklab_autogit/issues)
 
-## Dev Requirements
+## 📇 Dev Requirements
 
 - golang
   - wget https://go.dev/dl/go1.20.3.linux-amd64.tar.gz
@@ -235,7 +228,7 @@ Discussions about future development and features in [Pull Requests](https://git
   - `export PATH="$PATH:/usr/local/go/bin:$HOME/go/bin"`
 - install latest stable autogit 😄
 
-## Code architecture
+## 🏛️ Code architecture
 
 ```mermaid
 flowchart TD
@@ -253,13 +246,13 @@ flowchart TD
   
 ```
 
-## Contributions and contacts:
+## 🤝 Contributions and contacts:
 
 - contact author [@dd84ai](https://github.com/dd84ai) at `dark.dreamflyer@gmail.com`
 - open [Pull Requests with bug fix or feat requests](https://github.com/darklab8/darklab_autogit/issues)
 - join [Darklab Discord server](https://discord.gg/aukHmTK82J)
 
-## FAQ
+## ❓ FAQ
 
 - if u have strange bugs, consider as first actions
   - updating to latest verion
