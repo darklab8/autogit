@@ -8,12 +8,8 @@ import (
 
 type RegexScheme struct {
 	ConventionalCommit struct {
-		Header types.RegexExpression `yaml:"header"`
-		Github struct {
-			Enabled     bool                  `yaml:"enabled"`
-			MergeHeader types.RegexExpression `yaml:"merge_header"`
-		} `yaml:"github"`
-		BodyFooter types.RegexExpression `yaml:"bodyFooter"`
+		Headers    []types.RegexExpression `yaml:"headers"`
+		BodyFooter types.RegexExpression   `yaml:"bodyFooter"`
 	} `yaml:"conventionalCommit"`
 	Issue            types.RegexExpression `yaml:"issue"`
 	PullRequestRegex types.RegexExpression `yaml:"pull_request"`
@@ -29,8 +25,7 @@ type RegexScheme struct {
 	} `yaml:"validation"`
 }
 
-var RegexConventionalCommit *regexp.Regexp
-var RegexGithubMergeCommit *regexp.Regexp
+var RegexConventionalCommit []*regexp.Regexp = []*regexp.Regexp{}
 var RegexBodyFooter *regexp.Regexp
 var RegexIssue *regexp.Regexp
 var RegexSemVer *regexp.Regexp
@@ -40,8 +35,14 @@ var RegexPrerelease *regexp.Regexp
 var RegexPullRequest *regexp.Regexp
 
 func (conf *ConfigScheme) regexCompile() {
-	utils.InitRegexExpression(&RegexConventionalCommit, conf.Regex.ConventionalCommit.Header)
-	utils.InitRegexExpression(&RegexGithubMergeCommit, conf.Regex.ConventionalCommit.Github.MergeHeader)
+	if len(RegexConventionalCommit) == 0 {
+		for _, regex_expression := range conf.Regex.ConventionalCommit.Headers {
+			regex := &regexp.Regexp{}
+			utils.InitRegexExpression(&regex, regex_expression)
+			RegexConventionalCommit = append(RegexConventionalCommit, regex)
+		}
+	}
+
 	utils.InitRegexExpression(&RegexBodyFooter, conf.Regex.ConventionalCommit.BodyFooter)
 	utils.InitRegexExpression(&RegexIssue, conf.Regex.Issue)
 	utils.InitRegexExpression(&RegexSemVer, conf.Regex.SemVer)

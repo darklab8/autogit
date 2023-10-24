@@ -26,12 +26,14 @@ changelog:
 regex:
   # regex values are used to parse correctly commit message. Likely hook of any changes necessary is low, but could be useful
   conventionalCommit:
-    # type(scope): header\n\nbody. Default one.
-    header: '^([a-z]+)(?:\(([\w]+)\))?(\!?): (?:([ -~]+))(?:\n\n([\s -~]*)|[\n])?\z'
-    # Default one made less restrictive to parse default Github Merge commits for Pull Requests. (Merge), (2nd)?:?
-    github:
-      enabled: true
-      merge_header: ^(Merge)(?:\(([\w]+)\))?(\!?)?:? (?:([ -~]+))(?:\n\n([\s -~]*)|[\n])?\z
+    headers: 
+      # type(scope): header\n\nbody. Default one. First priority
+      - '^([a-z]+)(?:\(([\w]+)\))?(\!?): (?:([ -~]+))(?:\n\n([\s -~]*)|[\n])?\z'
+
+      # Version one made less restrictive to parse default Github Merge commits for Pull Requests. (Merge), (2nd)?:?
+      # Example: "Merge pull request #13 from Orgname/feat/dev_branch"
+      - '^(Merge)(?:\(([\w]+)\))?(\!?)?:? (?:([ -~]+))(?:\n\n([\s -~]*)|[\n])?\z'
+
     bodyFooter: '(?:([ -9;-~]+))\: (?:([ -9;-~]+))' # body can have key: value multiple footers
   issue: 'i-\#([0-9]+)' # Regex to grab linked issue. Lets grab prefixed i-only. Otherwise conflicts with GH PR links
   pull_request: '\#([0-9]+)'

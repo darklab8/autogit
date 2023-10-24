@@ -36,11 +36,11 @@ func ParseCommit(msg types.CommitOriginalMsg) (*ConventionalCommit, error) {
 	result := ConventionalCommit{}
 	result.Original = msg
 
-	main_match := settings.RegexConventionalCommit.FindStringSubmatch(string(msg))
-	if len(main_match) == 0 {
-		if settings.GetConfig().Regex.ConventionalCommit.Github.Enabled {
-			// May be it is Github Merge commit then?
-			main_match = settings.RegexGithubMergeCommit.FindStringSubmatch(string(msg))
+	main_match := []string{}
+	for _, header_regex := range settings.RegexConventionalCommit {
+		main_match = header_regex.FindStringSubmatch(string(msg))
+		if len(main_match) > 0 {
+			break
 		}
 	}
 
