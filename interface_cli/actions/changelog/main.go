@@ -68,11 +68,16 @@ const (
 )
 
 func GetSectionName(section ChangelogSection) ChangelogSectionName {
-	is_pr := settings.GetConfig().Changelog.MergeCommits.MustHaveLinkedPR
+	config := settings.GetConfig()
+	is_pr := config.Changelog.MergeCommits.MustHaveLinkedPR
 	switch section {
 	case MergeCommits:
 		if is_pr {
-			return ChangelogSectionName("Pull Requests")
+			if config.Changelog.MergeCommits.RedirectMergingCommits {
+				return ChangelogSectionName("Undirected Pull Requests")
+			} else {
+				return ChangelogSectionName("Pull Requests")
+			}
 		} else {
 			return ChangelogSectionName("Merge Commits")
 		}
