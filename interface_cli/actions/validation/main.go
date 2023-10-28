@@ -20,11 +20,17 @@ func Validate(commit conventionalcommits.ConventionalCommit, conf settings.Confi
 		}
 	}
 
-	if conf.Validation.Rules.Header.Scope.Present {
+	for _, commit_type := range conf.Validation.Rules.Header.Scope.EnforcedForTypes {
+		if commit.Type != commit_type {
+			continue
+		}
+
 		if commit.Scope == "" {
 			return valerrors.NewErrorCommitScopeMustBeDefined(commit)
 		}
+	}
 
+	if commit.Scope != "" {
 		if conf.Validation.Rules.Header.Scope.Lowercase {
 			if !settings.RegexScope.MatchString(string(commit.Scope)) {
 				return valerrors.NewerrorCommitScopeMustBeLowercase(commit)

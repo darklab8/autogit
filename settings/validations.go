@@ -39,9 +39,9 @@ type ValidationScheme struct {
 				Allowlists TypeAllowLists `yaml:"allowlists"`
 			} `yaml:"type"`
 			Scope struct {
-				Present   bool                            `yaml:"present"`
-				Lowercase bool                            `yaml:"lowercase"`
-				Allowlist []conventionalcommitstype.Scope `yaml:"allowlist"`
+				EnforcedForTypes []conventionalcommitstype.Type  `yaml:"enforced_for_commit_types"`
+				Lowercase        bool                            `yaml:"lowercase"`
+				Allowlist        []conventionalcommitstype.Scope `yaml:"allowlist"`
 			} `yaml:"scope"`
 			Subject struct {
 				MinWords int `yaml:"minWords"`

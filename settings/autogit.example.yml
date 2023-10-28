@@ -91,9 +91,21 @@ validation:
             - "ci"  # Commits, (Child of ops) Configuring or reparing CI
             - "merge" # Commits to merge branches. Usually we use lowcase ones to update dev branch with master commits
       scope:
-        present: false # feat(scope): smth. Forces to write scope of a commit. Participes in changelog generation
+        # feat(scope): smth. Forces to write scope of a commit. Participes in changelog generation
+        enforced_for_commit_types: []
+          # add any commit type for which u wish to enforce scope being present
+          # or set enforced_for_commit_types: [], for disabling it
+          # - feat
+          # - fix
+          # - build
+          # - docs
+          # - perf
+          # - revert
         lowercase: true
-        allowlist: [] # which scopes are allowed. Empty list means allowed everything.
+        allowlist: [] # which scopes are allowed.
+          # allowlist: []. Empty list means allowed everything.
+          # for example:
+          # - api
       subject:
         minWords: 3 # 3 or higher value helps to write more meaningful commits
 
