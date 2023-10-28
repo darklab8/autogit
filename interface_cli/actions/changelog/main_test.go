@@ -51,7 +51,7 @@ func TestRender(t *testing.T) {
 	assert.Contains(t, rendered, "v0.0.1")
 }
 
-func CountCommitsInChangelog(section changelog_types.ChangelogSection, changelog changelogVars) int {
+func CountCommitsInChangelog(section changelog_types.ChangelogSectionType, changelog changelogVars) int {
 	changeloged_merge_commits_count := 0
 	section_group, ok := changelog.SemverGroups[section]
 	if !ok {
@@ -79,16 +79,16 @@ func TestMergeCommitsInChangelog(t *testing.T) {
 	changelog := NewChangelog(gitSemantic, semvertype.OptionsSemVer{}, config, types.TagName(""))
 	rendered := changelog.Render()
 	assert.Contains(t, rendered, "v0.1.0", "for MustHaveLinkedPR=true, RedirectMergingCommits=false")
-	assert.Equal(t, 2, CountCommitsInChangelog(MergeCommits, changelog))
+	assert.Equal(t, 2, CountCommitsInChangelog(changelog_types.MergeCommits, changelog))
 
 	config.Changelog.MergeCommits.MustHaveLinkedPR = false
 	config.Changelog.MergeCommits.RedirectMergingCommits = false
 	changelog = NewChangelog(gitSemantic, semvertype.OptionsSemVer{}, config, types.TagName(""))
 	rendered = changelog.Render()
 	assert.Contains(t, rendered, "v0.1.0", "for MustHaveLinkedPR=false, RedirectMergingCommits=false")
-	assert.Equal(t, 3, CountCommitsInChangelog(MergeCommits, changelog))
-	assert.Equal(t, 1, CountCommitsInChangelog(SemVerMinor, changelog))
-	assert.Equal(t, 0, CountCommitsInChangelog(SemVerPatch, changelog))
+	assert.Equal(t, 3, CountCommitsInChangelog(changelog_types.MergeCommits, changelog))
+	assert.Equal(t, 1, CountCommitsInChangelog(changelog_types.SemVerMinor, changelog))
+	assert.Equal(t, 0, CountCommitsInChangelog(changelog_types.SemVerPatch, changelog))
 
 	config.Changelog.MergeCommits.MustHaveLinkedPR = true
 	config.Changelog.MergeCommits.RedirectMergingCommits = true
@@ -99,9 +99,9 @@ func TestMergeCommitsInChangelog(t *testing.T) {
 	rendered = changelog.Render()
 	assert.Contains(t, rendered, "v0.1.0", "for MustHaveLinkedPR=false, RedirectMergingCommits=false")
 
-	assert.Equal(t, 2, CountCommitsInChangelog(MergeCommits, changelog), "redirect. Expected 3 merge")
-	assert.Equal(t, 2, CountCommitsInChangelog(SemVerMinor, changelog), "redirect. Expected 2 minor")
-	assert.Equal(t, 2, CountCommitsInChangelog(SemVerPatch, changelog), "redirect. Expected 2 patch")
+	assert.Equal(t, 2, CountCommitsInChangelog(changelog_types.MergeCommits, changelog), "redirect. Expected 3 merge")
+	assert.Equal(t, 2, CountCommitsInChangelog(changelog_types.SemVerMinor, changelog), "redirect. Expected 2 minor")
+	assert.Equal(t, 2, CountCommitsInChangelog(changelog_types.SemVerPatch, changelog), "redirect. Expected 2 patch")
 
 	config.Changelog.MergeCommits.MustHaveLinkedPR = false
 	config.Changelog.MergeCommits.RedirectMergingCommits = true
@@ -109,7 +109,7 @@ func TestMergeCommitsInChangelog(t *testing.T) {
 	rendered = changelog.Render()
 	assert.Contains(t, rendered, "v0.1.0", "for MustHaveLinkedPR=false, RedirectMergingCommits=false")
 
-	assert.Equal(t, 3, CountCommitsInChangelog(MergeCommits, changelog), "redirect. Expected 3 merge")
-	assert.Equal(t, 2, CountCommitsInChangelog(SemVerMinor, changelog), "redirect. Expected 2 minor")
-	assert.Equal(t, 2, CountCommitsInChangelog(SemVerPatch, changelog), "redirect. Expected 2 patch")
+	assert.Equal(t, 3, CountCommitsInChangelog(changelog_types.MergeCommits, changelog), "redirect. Expected 3 merge")
+	assert.Equal(t, 2, CountCommitsInChangelog(changelog_types.SemVerMinor, changelog), "redirect. Expected 2 minor")
+	assert.Equal(t, 2, CountCommitsInChangelog(changelog_types.SemVerPatch, changelog), "redirect. Expected 2 patch")
 }

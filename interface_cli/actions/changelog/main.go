@@ -58,20 +58,13 @@ type changelogSemverGroup struct {
 	Name             changelog_types.ChangelogSectionName
 }
 
-const (
-	SemVerMajor  changelog_types.ChangelogSection = "semver_major"
-	SemVerMinor  changelog_types.ChangelogSection = "semver_minor"
-	SemVerPatch  changelog_types.ChangelogSection = "semver_patch"
-	MergeCommits changelog_types.ChangelogSection = "merge_commits"
-)
-
-func GetSectionName(section changelog_types.ChangelogSection) changelog_types.ChangelogSectionName {
+func GetSectionName(section changelog_types.ChangelogSectionType) changelog_types.ChangelogSectionName {
 	config := settings.GetConfig()
 	is_pr := config.Changelog.MergeCommits.MustHaveLinkedPR
 
 	var merge_heading_prefix changelog_types.ChangelogSectionName
 	switch section {
-	case MergeCommits:
+	case changelog_types.MergeCommits:
 		if is_pr {
 			merge_heading_prefix = config.Changelog.Headings.MergeCommits.WithLinkedPR
 		} else {
@@ -84,11 +77,11 @@ func GetSectionName(section changelog_types.ChangelogSection) changelog_types.Ch
 		}
 
 		return merge_heading_prefix
-	case SemVerMajor:
+	case changelog_types.SemVerMajor:
 		return config.Changelog.Headings.SemverMajor
-	case SemVerMinor:
+	case changelog_types.SemVerMinor:
 		return config.Changelog.Headings.SemverMinor
-	case SemVerPatch:
+	case changelog_types.SemVerPatch:
 		return config.Changelog.Headings.SemverPatch
 	default:
 		panic("GetSectionName encountered not supported section")
@@ -97,7 +90,7 @@ func GetSectionName(section changelog_types.ChangelogSection) changelog_types.Ch
 
 type changelogVars struct {
 	// Internal for data grouping
-	SemverGroups map[changelog_types.ChangelogSection]*changelogSemverGroup
+	SemverGroups map[changelog_types.ChangelogSectionType]*changelogSemverGroup
 
 	// For template
 	Header              string
@@ -106,15 +99,15 @@ type changelogVars struct {
 
 func (changelog *changelogVars) find_semver_group(
 	record conventionalcommits.ConventionalCommit,
-	types []conventionalcommitstype.Type,
-	semver_order changelog_types.ChangelogSection,
+	conventiona_types []conventionalcommitstype.Type,
+	semver_order changelog_types.ChangelogSectionType,
 ) (*changelogSemverGroup, error) {
-	for _, possible_type := range types {
+	for _, possible_type := range conventiona_types {
 		if record.Exclamation {
-			semver_group, semver_group_exists := changelog.SemverGroups[SemVerMajor]
+			semver_group, semver_group_exists := changelog.SemverGroups[changelog_types.SemVerMajor]
 			if !semver_group_exists {
-				semver_group = &changelogSemverGroup{Name: GetSectionName(SemVerMajor)}
-				changelog.SemverGroups[SemVerMajor] = semver_group
+				semver_group = &changelogSemverGroup{Name: GetSectionName(changelog_types.SemVerMajor)}
+				changelog.SemverGroups[changelog_types.SemVerMajor] = semver_group
 			}
 			return semver_group, nil
 		}
@@ -196,12 +189,12 @@ func (changelog *changelogVars) addCommit(
 		}
 	}
 
-	semver_group, err := changelog.find_semver_group(record, config.Validation.Rules.Header.Type.Allowlists.SemVerMinorIncreasers, SemVerMinor)
+	semver_group, err := changelog.find_semver_group(record, config.Validation.Rules.Header.Type.Allowlists.SemVerMinorIncreasers, changelog_types.SemVerMinor)
 	if err != nil {
-		semver_group, err = changelog.find_semver_group(record, config.Validation.Rules.Header.Type.Allowlists.SemverPatchIncreasers, SemVerPatch)
+		semver_group, err = changelog.find_semver_group(record, config.Validation.Rules.Header.Type.Allowlists.SemverPatchIncreasers, changelog_types.SemVerPatch)
 	}
 	if err != nil {
-		semver_group, err = changelog.find_semver_group(record, config.Changelog.MergeCommits.MergeTypes, MergeCommits)
+		semver_group, err = changelog.find_semver_group(record, config.Changelog.MergeCommits.MergeTypes, changelog_types.MergeCommits)
 	}
 	if err != nil {
 		return
@@ -237,7 +230,7 @@ func NewChangelog(g *semanticgit.SemanticGit, semver_options semvertype.OptionsS
 	templs := templates.NewTemplates()
 
 	changelog := changelogVars{}
-	changelog.SemverGroups = make(map[changelog_types.ChangelogSection]*changelogSemverGroup)
+	changelog.SemverGroups = make(map[changelog_types.ChangelogSectionType]*changelogSemverGroup)
 
 	logs := g.GetChangelogByTag(FromTag, true)
 	logus.Debug(fmt.Sprintf("NewChangelog, log.count=%d", len(logs)))
@@ -258,16 +251,16 @@ func NewChangelog(g *semanticgit.SemanticGit, semver_options semvertype.OptionsS
 	}
 
 	// for easier templating as ordered
-	if semver_group, found := changelog.SemverGroups[MergeCommits]; found {
+	if semver_group, found := changelog.SemverGroups[changelog_types.MergeCommits]; found {
 		changelog.OrderedSemverGroups = append(changelog.OrderedSemverGroups, semver_group)
 	}
-	if semver_group, found := changelog.SemverGroups[SemVerMajor]; found {
+	if semver_group, found := changelog.SemverGroups[changelog_types.SemVerMajor]; found {
 		changelog.OrderedSemverGroups = append(changelog.OrderedSemverGroups, semver_group)
 	}
-	if semver_group, found := changelog.SemverGroups[SemVerMinor]; found {
+	if semver_group, found := changelog.SemverGroups[changelog_types.SemVerMinor]; found {
 		changelog.OrderedSemverGroups = append(changelog.OrderedSemverGroups, semver_group)
 	}
-	if semver_group, found := changelog.SemverGroups[SemVerPatch]; found {
+	if semver_group, found := changelog.SemverGroups[changelog_types.SemVerPatch]; found {
 		changelog.OrderedSemverGroups = append(changelog.OrderedSemverGroups, semver_group)
 	}
 
