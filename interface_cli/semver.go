@@ -14,9 +14,8 @@ import (
 
 // semverCmd represents the version command
 var semverCmd = &cobra.Command{
-	Use:     "semver",
-	Short:   "next semantic version offered for your product",
-	Aliases: []string{"version"},
+	Use:   "semver",
+	Short: "next semantic version offered for your product",
 	Run: func(cmd *cobra.Command, args []string) {
 		shared.version.Run()
 		fmt.Printf("%s", actions.Version(versionParams, git.NewRepoInWorkDir(git.SshPath(settings.GetConfig().Git.SSHPath))))

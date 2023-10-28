@@ -12,7 +12,7 @@ import (
 
 // aboutCmd represents the about command
 var aboutCmd = &cobra.Command{
-	Use:   "about",
+	Use:   "version",
 	Short: "Info about autogit version",
 	Run: func(cmd *cobra.Command, args []string) {
 		shared.about.Run()
