@@ -1,6 +1,7 @@
 package changelog
 
 import (
+	"autogit/interface_cli/actions/changelog/changelog_types"
 	"autogit/settings"
 	"autogit/settings/testutils"
 	_ "autogit/settings/testutils/autouse"
@@ -50,7 +51,7 @@ func TestRender(t *testing.T) {
 	assert.Contains(t, rendered, "v0.0.1")
 }
 
-func CountCommitsInChangelog(section ChangelogSection, changelog changelogVars) int {
+func CountCommitsInChangelog(section changelog_types.ChangelogSection, changelog changelogVars) int {
 	changeloged_merge_commits_count := 0
 	section_group, ok := changelog.SemverGroups[section]
 	if !ok {

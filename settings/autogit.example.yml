@@ -8,6 +8,17 @@ changelog:
   commitRangeUrl: "https://github.com/{{.REPOSITORY_OWNER}}/{{.REPOSITORY_NAME}}/compare/{{.From}}...{{.To}}?diff=split"
   issueUrl: "https://github.com/{{.REPOSITORY_OWNER}}/{{.REPOSITORY_NAME}}/issues/{{.Issue}}"
 
+  headings:
+    semver_major: Breaking Changes
+    semver_minor: Features
+    semver_patch: Fixes
+    merge_commits:
+      default: Merge Commits
+      with_linked_pr: Pull Requests
+      # Active if redirect_merging_to_semver_sections_for_changelog: true
+      # commits that which did not get sorted, remain in Section with this prefix
+      prefix_for_undirected: Undirected
+
   merge_commits:
     # gets into changelog only if regex.pull_request is matching
     # renames changelog section Merge Commits into Pull Requests

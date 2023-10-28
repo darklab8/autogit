@@ -1,6 +1,7 @@
 package settings
 
 import (
+	"autogit/interface_cli/actions/changelog/changelog_types"
 	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
 	"autogit/settings/logus"
 	"autogit/settings/types"
@@ -18,6 +19,17 @@ type ChangelogScheme struct {
 		RedirectMergingCommits bool                           `yaml:"redirect_merging_to_semver_sections_for_changelog"`
 		MergeTypes             []conventionalcommitstype.Type `yaml:"commit_types"`
 	} `yaml:"merge_commits"`
+
+	Headings struct {
+		SemverMajor  changelog_types.ChangelogSectionName `yaml:"semver_major"`
+		SemverMinor  changelog_types.ChangelogSectionName `yaml:"semver_minor"`
+		SemverPatch  changelog_types.ChangelogSectionName `yaml:"semver_patch"`
+		MergeCommits struct {
+			Default             changelog_types.ChangelogSectionName `yaml:"default"`
+			WithLinkedPR        changelog_types.ChangelogSectionName `yaml:"with_linked_pr"`
+			PrefixForUndirected string                               `yaml:"prefix_for_undirected"`
+		} `yaml:"merge_commits"`
+	}
 }
 
 func (conf ConfigScheme) changelogValidate() {

@@ -1,6 +1,7 @@
 package changelog
 
 import (
+	"autogit/interface_cli/actions/changelog/changelog_types"
 	"autogit/interface_cli/actions/changelog/templates"
 	"autogit/semanticgit"
 	"autogit/semanticgit/conventionalcommits"
@@ -54,43 +55,49 @@ type commitTypeGroup struct {
 
 type changelogSemverGroup struct {
 	CommitTypeGroups map[conventionalcommitstype.Type]*commitTypeGroup
-	Name             ChangelogSectionName
+	Name             changelog_types.ChangelogSectionName
 }
 
-type ChangelogSection string
-type ChangelogSectionName string
-
 const (
-	SemVerMajor  ChangelogSection = "Major Changes"
-	SemVerMinor  ChangelogSection = "Minor Changes"
-	SemVerPatch  ChangelogSection = "Patch Changes"
-	MergeCommits ChangelogSection = "Merge Commits"
+	SemVerMajor  changelog_types.ChangelogSection = "semver_major"
+	SemVerMinor  changelog_types.ChangelogSection = "semver_minor"
+	SemVerPatch  changelog_types.ChangelogSection = "semver_patch"
+	MergeCommits changelog_types.ChangelogSection = "merge_commits"
 )
 
-func GetSectionName(section ChangelogSection) ChangelogSectionName {
+func GetSectionName(section changelog_types.ChangelogSection) changelog_types.ChangelogSectionName {
 	config := settings.GetConfig()
 	is_pr := config.Changelog.MergeCommits.MustHaveLinkedPR
+
+	var merge_heading_prefix changelog_types.ChangelogSectionName
 	switch section {
 	case MergeCommits:
 		if is_pr {
-			if config.Changelog.MergeCommits.RedirectMergingCommits {
-				return ChangelogSectionName("Undirected Pull Requests")
-			} else {
-				return ChangelogSectionName("Pull Requests")
-			}
+			merge_heading_prefix = config.Changelog.Headings.MergeCommits.WithLinkedPR
 		} else {
-			return ChangelogSectionName("Merge Commits")
+			merge_heading_prefix = config.Changelog.Headings.MergeCommits.Default
 		}
 
-	default:
-		return ChangelogSectionName(section)
-	}
+		if config.Changelog.MergeCommits.RedirectMergingCommits {
+			temp := config.Changelog.Headings.MergeCommits.PrefixForUndirected + " " + string(merge_heading_prefix)
+			merge_heading_prefix = changelog_types.ChangelogSectionName(temp)
+		}
 
+		return merge_heading_prefix
+	case SemVerMajor:
+		return config.Changelog.Headings.SemverMajor
+	case SemVerMinor:
+		return config.Changelog.Headings.SemverMinor
+	case SemVerPatch:
+		return config.Changelog.Headings.SemverPatch
+	default:
+		panic("GetSectionName encountered not supported section")
+	}
 }
 
 type changelogVars struct {
 	// Internal for data grouping
-	SemverGroups map[ChangelogSection]*changelogSemverGroup
+	SemverGroups map[changelog_types.ChangelogSection]*changelogSemverGroup
 
 	// For template
 	Header              string
@@ -100,7 +107,7 @@ type changelogVars struct {
 func (changelog *changelogVars) find_semver_group(
 	record conventionalcommits.ConventionalCommit,
 	types []conventionalcommitstype.Type,
-	semver_order ChangelogSection,
+	semver_order changelog_types.ChangelogSection,
 ) (*changelogSemverGroup, error) {
 	for _, possible_type := range types {
 		if record.Exclamation {
@@ -230,7 +237,7 @@ func NewChangelog(g *semanticgit.SemanticGit, semver_options semvertype.OptionsS
 	templs := templates.NewTemplates()
 
 	changelog := changelogVars{}
-	changelog.SemverGroups = make(map[ChangelogSection]*changelogSemverGroup)
+	changelog.SemverGroups = make(map[changelog_types.ChangelogSection]*changelogSemverGroup)
 
 	logs := g.GetChangelogByTag(FromTag, true)
 	logus.Debug(fmt.Sprintf("NewChangelog, log.count=%d", len(logs)))
