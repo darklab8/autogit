@@ -32,3 +32,37 @@ func TestMaxLengthHeaderErrorYes(t *testing.T) {
 	err = Validate(*commit, *conf)
 	assert.NotEqual(t, nil, err)
 }
+
+func TestScopeEnforcing(t *testing.T) {
+	conf := &settings.ConfigScheme{}
+	conf.Validation.Rules.Header.MaxLength = 72
+
+	conf.Validation.Rules.Header.Scope.EnforcedForTypes = []conventionalcommitstype.Type{}
+	commit, err := conventionalcommits.NewCommit("feat: some common commit")
+	logus.CheckFatal(err, "failed creating commit")
+	err = Validate(*commit, *conf)
+	assert.Nil(t, err)
+
+	conf.Validation.Rules.Header.Scope.EnforcedForTypes = []conventionalcommitstype.Type{"feat"}
+	commit, err = conventionalcommits.NewCommit("feat: some common commit")
+	logus.CheckFatal(err, "failed creating commit")
+	err = Validate(*commit, *conf)
+	assert.Error(t, err)
+
+	commit, err = conventionalcommits.NewCommit("feat(api): some common commit")
+	logus.CheckFatal(err, "failed creating commit")
+	err = Validate(*commit, *conf)
+	assert.Nil(t, err)
+
+	conf.Validation.Rules.Header.Scope.Allowlist = []conventionalcommitstype.Scope{"smth"}
+
+	commit, err = conventionalcommits.NewCommit("feat(api): some common commit")
+	logus.CheckFatal(err, "failed creating commit")
+	err = Validate(*commit, *conf)
+	assert.Error(t, err)
+
+	commit, err = conventionalcommits.NewCommit("feat(smth): some common commit")
+	logus.CheckFatal(err, "failed creating commit")
+	err = Validate(*commit, *conf)
+	assert.Nil(t, err)
+}
