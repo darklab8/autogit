@@ -173,7 +173,9 @@ func configRead(file []byte) *ConfigScheme {
 	logus.CheckFatal(err, "unable to marshal merged config")
 
 	err = yaml.Unmarshal(merged_config_as_bytes, &config)
-	logus.CheckFatal(err, "unable to unmarshal merged config")
+	logus.CheckError(err, `unable to unmarshal merged config.
+	Your autogit.yml settings file is having invalue key: value pairs.
+	Try to remove previous autogit.yml settings files and generate a new one with "autogit init [--global] command"`)
 
 	return &config
 }
@@ -203,7 +205,9 @@ func check_file_is_not_having_invalid[T comparable](example map[T]interface{}, c
 
 		// if key is present in additions hasmap
 		if example_value, is_present := example[checkable_key]; !is_present {
-			logus.Fatal(fmt.Sprintf("key=%v is not allowed", checkable_key))
+			logus.Error(fmt.Sprintf(`autogit.yml file is having not allowed user settings key
+			Please, remove previous autogit.yml local in your repository and user global one and generate new one
+			with "autogit init [--global]" command :). Or remove the specified "settings_key"`), logus.SettingsKey(checkable_key))
 		} else {
 			if reflect.TypeOf(example_value) != reflect.TypeOf(checkable_value) {
 				logus.Fatal(fmt.Sprintf(

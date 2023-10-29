@@ -102,6 +102,12 @@ func CommitMessage(value types.CommitOriginalMsg) slogParam {
 	}
 }
 
+func SettingsKey(value any) slogParam {
+	return func(c *slogGroup) {
+		c.params["settings_key"] = fmt.Sprintf("%v", value)
+	}
+}
+
 func Commit(commit conventionalcommitstype.ParsedCommit) slogParam {
 	return func(c *slogGroup) {
 		c.params["commit_type"] = string(commit.Type)
