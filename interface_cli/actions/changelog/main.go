@@ -259,6 +259,24 @@ func (changelog *changelogVars) addCommit(
 	}
 }
 
+func (changelog changelogVars) orderSemverGroups() []*changelogSemverGroup {
+	result := []*changelogSemverGroup{}
+
+	if semver_group, found := changelog.SemverGroups[changelog_types.MergeCommits]; found {
+		result = append(result, semver_group)
+	}
+	if semver_group, found := changelog.SemverGroups[changelog_types.SemVerMajor]; found {
+		result = append(result, semver_group)
+	}
+	if semver_group, found := changelog.SemverGroups[changelog_types.SemVerMinor]; found {
+		result = append(result, semver_group)
+	}
+	if semver_group, found := changelog.SemverGroups[changelog_types.SemVerPatch]; found {
+		result = append(result, semver_group)
+	}
+	return result
+}
+
 func NewChangelog(g *semanticgit.SemanticGit, semver_options semvertype.OptionsSemVer, config settings.ConfigScheme, FromTag types.TagName) changelogVars {
 	templs := templates.NewTemplates()
 
@@ -282,20 +300,7 @@ func NewChangelog(g *semanticgit.SemanticGit, semver_options semvertype.OptionsS
 		changelog.addCommit(record, config)
 	}
 
-	// for easier templating as ordered
-	if semver_group, found := changelog.SemverGroups[changelog_types.MergeCommits]; found {
-		changelog.OrderedSemverGroups = append(changelog.OrderedSemverGroups, semver_group)
-	}
-	if semver_group, found := changelog.SemverGroups[changelog_types.SemVerMajor]; found {
-		changelog.OrderedSemverGroups = append(changelog.OrderedSemverGroups, semver_group)
-	}
-	if semver_group, found := changelog.SemverGroups[changelog_types.SemVerMinor]; found {
-		changelog.OrderedSemverGroups = append(changelog.OrderedSemverGroups, semver_group)
-	}
-	if semver_group, found := changelog.SemverGroups[changelog_types.SemVerPatch]; found {
-		changelog.OrderedSemverGroups = append(changelog.OrderedSemverGroups, semver_group)
-	}
-
+	changelog.OrderedSemverGroups = changelog.orderSemverGroups()
 	return changelog
 }
 
