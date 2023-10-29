@@ -10,3 +10,5 @@ const (
 	SemVerPatch  ChangelogSectionType = "semver_patch"
 	MergeCommits ChangelogSectionType = "merge_commits"
 )
+
+type ChangelogCommitHeader string

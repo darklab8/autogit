@@ -10,15 +10,11 @@ import (
 	"autogit/settings"
 	"autogit/settings/logus"
 	"autogit/settings/types"
-	"autogit/settings/utils"
 	"fmt"
 	"strings"
-	"text/template"
-
-	_ "embed"
 )
 
-func commitRender(record conventionalcommits.ConventionalCommit) string {
+func commitRender(record conventionalcommits.ConventionalCommit) changelog_types.ChangelogCommitHeader {
 	templs := templates.NewTemplates()
 
 	issue_renderer := strings.Builder{}
@@ -45,12 +41,30 @@ func commitRender(record conventionalcommits.ConventionalCommit) string {
 
 	formatted_url := templs.RenderCommitUrl(record)
 	result := fmt.Sprintf("* %s ([%s](%s)%s)\n", rendered_subject, record.Hash, formatted_url, issue_rendered)
-	return result
+	return changelog_types.ChangelogCommitHeader(result)
+}
+
+type ChangelogCommit struct {
+	Header          changelog_types.ChangelogCommitHeader
+	BreakingFooters []conventionalcommitstype.FooterContent
+}
+
+func newChangelogCommit(record conventionalcommits.ConventionalCommit) ChangelogCommit {
+	header := commitRender(record)
+	changelog_commit := ChangelogCommit{Header: header}
+
+	for _, footer := range record.Footers {
+		if footer.Token == FooterTokenBreakingChange {
+			changelog_commit.BreakingFooters = append(changelog_commit.BreakingFooters, footer.Content)
+		}
+	}
+
+	return changelog_commit
 }
 
 type commitTypeGroup struct {
-	NoScopeCommits []string
-	ScopedCommits  map[conventionalcommitstype.Scope][]string
+	NoScopeCommits []ChangelogCommit
+	ScopedCommits  map[conventionalcommitstype.Scope][]ChangelogCommit
 }
 
 type changelogSemverGroup struct {
@@ -97,13 +111,30 @@ type changelogVars struct {
 	OrderedSemverGroups []*changelogSemverGroup
 }
 
+const FooterTokenBreakingChange conventionalcommitstype.FooterToken = "BREAKING CHANGE"
+
+func isBreakingChangeCommit(record conventionalcommits.ConventionalCommit) bool {
+	if record.Exclamation {
+		return true
+	}
+
+	for _, footer := range record.Footers {
+
+		if footer.Token == FooterTokenBreakingChange {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (changelog *changelogVars) find_semver_group(
 	record conventionalcommits.ConventionalCommit,
 	conventiona_types []conventionalcommitstype.Type,
 	semver_order changelog_types.ChangelogSectionType,
 ) (*changelogSemverGroup, error) {
 	for _, possible_type := range conventiona_types {
-		if record.Exclamation {
+		if isBreakingChangeCommit(record) {
 			semver_group, semver_group_exists := changelog.SemverGroups[changelog_types.SemVerMajor]
 			if !semver_group_exists {
 				semver_group = &changelogSemverGroup{Name: GetSectionName(changelog_types.SemVerMajor)}
@@ -133,7 +164,6 @@ func (n NotFound) Error() string {
 
 func (changelog *changelogVars) addCommit(
 	record conventionalcommits.ConventionalCommit,
-	commit_formatted string,
 	config settings.ConfigScheme,
 ) {
 	if config.Changelog.MergeCommits.MustHaveLinkedPR {
@@ -153,6 +183,7 @@ func (changelog *changelogVars) addCommit(
 	redirect_merging_commit := func(commit *conventionalcommits.ConventionalCommit, redirecting_type conventionalcommitstype.Type) {
 		commit.Type = redirecting_type
 		// Could be replaced with regex. Or it is fine as it is.
+		// P.S. Not very reliable mechanism to identify breaking change commits in merging commits :/
 		if strings.Contains(string(commit.Body), fmt.Sprintf("%s!", redirecting_type)) {
 			commit.Exclamation = true
 		}
@@ -210,19 +241,21 @@ func (changelog *changelogVars) addCommit(
 		semver_group.CommitTypeGroups[record.Type] = commit_type_group
 	}
 
+	changelog_commit := newChangelogCommit(record)
+
 	if record.Scope == "" {
-		commit_type_group.NoScopeCommits = append(commit_type_group.NoScopeCommits, commit_formatted)
+		commit_type_group.NoScopeCommits = append(commit_type_group.NoScopeCommits, changelog_commit)
 	} else {
 		if commit_type_group.ScopedCommits == nil {
-			commit_type_group.ScopedCommits = make(map[conventionalcommitstype.Scope][]string)
+			commit_type_group.ScopedCommits = make(map[conventionalcommitstype.Scope][]ChangelogCommit)
 		}
 
 		commit_list, ok := commit_type_group.ScopedCommits[record.Scope]
 		if !ok {
-			commit_list = []string{}
+			commit_list = []ChangelogCommit{}
 		}
 
-		commit_type_group.ScopedCommits[record.Scope] = append(commit_list, commit_formatted)
+		commit_type_group.ScopedCommits[record.Scope] = append(commit_list, changelog_commit)
 	}
 }
 
@@ -246,8 +279,7 @@ func NewChangelog(g *semanticgit.SemanticGit, semver_options semvertype.OptionsS
 	changelog.Header = templs.NewCommitRangeUrlRender(logs, ChangelogVersionTag)
 
 	for _, record := range logs {
-		commit_formatted := commitRender(record)
-		changelog.addCommit(record, commit_formatted, config)
+		changelog.addCommit(record, config)
 	}
 
 	// for easier templating as ordered
@@ -268,13 +300,43 @@ func NewChangelog(g *semanticgit.SemanticGit, semver_options semvertype.OptionsS
 }
 
 func (changelog changelogVars) Render() string {
-	return utils.TmpRender(changelogTemplate, changelog)
-}
+	var sb strings.Builder = strings.Builder{}
+	sbprintln := func(format string, a ...any) {
+		sb.WriteString(fmt.Sprintf(format+"\n", a...))
+	}
+	sbprint := func(format string, a ...any) {
+		sb.WriteString(fmt.Sprintf(format, a...))
+	}
 
-//go:embed templates/changelog.md
-var changelogMarkup types.TemplateExpression
-var changelogTemplate *template.Template
+	print_commits := func(prefix string, commits []ChangelogCommit) {
+		for _, commit := range commits {
+			sbprint(prefix+"%s", commit.Header)
 
-func init() {
-	changelogTemplate = utils.TmpInit(changelogMarkup)
+			for _, breaking_footer := range commit.BreakingFooters {
+				breaking_footer_lines := strings.Split(string(breaking_footer), "\n")
+				sbprintln(prefix+"  * BC!: %s", breaking_footer_lines[0])
+				for _, other_breaking_change_line := range breaking_footer_lines[1:] {
+					sbprintln(prefix+"        %s", other_breaking_change_line)
+				}
+			}
+		}
+	}
+
+	sbprintln("%s", changelog.Header)
+	sbprintln("")
+	for _, semver_group := range changelog.OrderedSemverGroups {
+		sbprintln("## %s", semver_group.Name)
+		for commit_type, type_group := range semver_group.CommitTypeGroups {
+			sbprintln("### %s", commit_type)
+
+			print_commits("", type_group.NoScopeCommits)
+			for scope, commits := range type_group.ScopedCommits {
+				sbprintln("* %s", scope)
+				print_commits("  ", commits)
+			}
+		}
+		sbprintln("")
+	}
+
+	return sb.String()
 }

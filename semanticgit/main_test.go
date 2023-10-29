@@ -174,3 +174,75 @@ func TestParseGHMergingCommits(t *testing.T) {
 	logs1 = gitSemantic.GetChangelogByTag("", true)
 	assert.Len(t, logs1, 1)
 }
+
+func TestParseBreakingChange1(t *testing.T) {
+	// And commit must maintain GH link to PR like #19
+	gitInMemory := git.NewRepoTestInMemory()
+	gitSemantic := NewSemanticRepo(gitInMemory)
+	gitInMemory.TestCommit(`feat: smth is breaking
+
+BREAKING CHANGE: first thing
+	multiline first continued
+BREAKING CHANGE: second thing
+BREAKING CHANGE: third thing
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Sun Oct 29 02:38:37 2023 +0100
+#
+# On branch master
+# Changes to be committed:
+#       modified:   README.md
+#
+# Changes not staged for commit:
+#       deleted:    autogit.yml
+#`)
+
+	logs1 := gitSemantic.GetChangelogByTag("", true)
+	assert.Len(t, logs1, 1)
+
+	assert.Len(t, logs1[0].Footers, 3)
+
+	testutils.Equal(t, "first thing\n\tmultiline first continued", logs1[0].Footers[0].Content)
+	testutils.Equal(t, "second thing", logs1[0].Footers[1].Content)
+	testutils.Equal(t, "third thing", logs1[0].Footers[2].Content)
+}
+
+func TestParseBreakingChange2(t *testing.T) {
+	// And commit must maintain GH link to PR like #19
+	gitInMemory := git.NewRepoTestInMemory()
+	gitSemantic := NewSemanticRepo(gitInMemory)
+	gitInMemory.TestCommit(`feat: smth is breaking
+
+Some descreiption to why it is happening
+which i am writing in multiline but wihtout two dots thingy
+bla bla
+
+BREAKING CHANGE: first thing
+	multiline first continued
+BREAKING CHANGE: second thing
+BREAKING CHANGE: third thing
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Sun Oct 29 02:38:37 2023 +0100
+#
+# On branch master
+# Changes to be committed:
+#       modified:   README.md
+#
+# Changes not staged for commit:
+#       deleted:    autogit.yml
+#`)
+
+	logs1 := gitSemantic.GetChangelogByTag("", true)
+	assert.Len(t, logs1, 1)
+
+	assert.Len(t, logs1[0].Footers, 3)
+
+	testutils.Equal(t, "first thing\n\tmultiline first continued", logs1[0].Footers[0].Content)
+	testutils.Equal(t, "second thing", logs1[0].Footers[1].Content)
+	testutils.Equal(t, "third thing", logs1[0].Footers[2].Content)
+}

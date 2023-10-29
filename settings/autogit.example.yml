@@ -45,7 +45,9 @@ regex:
       # Example: "Merge pull request #13 from Orgname/feat/dev_branch"
       - '^(Merge)(?:\(([\w]+)\))?(\!?)?:? (?:([ -~]+))(?:\n\n([\s -~]*)|[\n])?\z'
 
-    bodyFooter: '(?:([ -9;-~]+))\: (?:([ -9;-~]+))' # body can have key: value multiple footers
+    # body can have "token: content" multiple footers
+    # content can be multiline as long as additional lines start with at least one space
+    bodyFooter: '(?m)(?:(^[^\#][[ -9;-~]+))\: (?:([ -9;-~]+((\n[ \t]((.*)+))+)?))'
   issue: 'i-\#([0-9]+)' # Regex to grab linked issue. Lets grab prefixed i-only. Otherwise conflicts with GH PR links
   pull_request: '\#([0-9]+)'
   # copied from https://semver.org/spec/v2.0.0.html . Modified to make Patch as optional with '\.?(0|[1-9]\d*)?'

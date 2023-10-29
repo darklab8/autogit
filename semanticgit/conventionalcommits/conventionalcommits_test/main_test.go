@@ -38,7 +38,7 @@ footer-key: tralala`)
 	testutils.Equal(t, "feat", commit.Type)
 	testutils.Equal(t, conventionalcommitstype.Scope("api"), commit.Scope)
 	testutils.Equal(t, "my subject", commit.Subject)
-	testutils.Equal(t, "body message", commit.Body)
+	testutils.Equal(t, "body message\n", commit.Body)
 	testutils.Equal(t, "footer-key", commit.Footers[0].Token)
 	testutils.Equal(t, "tralala", commit.Footers[0].Content)
 }

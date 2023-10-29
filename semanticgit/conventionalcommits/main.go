@@ -61,19 +61,35 @@ func ParseCommit(msg types.CommitOriginalMsg) (*ConventionalCommit, error) {
 		result.Issue = append(result.Issue, conventionalcommitstype.Issue(match[1]))
 	}
 
-	msgs := strings.Split(main_match[5], "\n\n")
+	body_with_footers := main_match[5]
 
-	for index, msg := range msgs {
-		match := settings.RegexBodyFooter.FindStringSubmatch(msg)
-		if index == 0 && len(match) == 0 {
-			result.Body = conventionalcommitstype.Body(msg)
-		} else if len(match) > 0 {
-			result.Footers = append(result.Footers, conventionalcommitstype.Footer{
-				Token:   conventionalcommitstype.FooterToken(match[1]),
-				Content: conventionalcommitstype.FooterContent(match[2]),
-			})
-		}
+	footers := settings.RegexBodyFooter.FindAllStringSubmatch(body_with_footers, -1)
+
+	cleaned_body := body_with_footers
+	for _, footer := range footers {
+		// if u had better regex, it would not be needed to clean it from newlines :wink:
+		token := strings.ReplaceAll(footer[1], "\n", "")
+		result.Footers = append(result.Footers, conventionalcommitstype.Footer{
+			Token:   conventionalcommitstype.FooterToken(token),
+			Content: conventionalcommitstype.FooterContent(footer[2]),
+		})
+		cleaned_body = strings.Replace(cleaned_body, footer[0], "", -1)
 	}
+
+	cleaned_body_lines := strings.Split(cleaned_body, "\n")
+	purrified_body_lines := []string{}
+	for _, body_line := range cleaned_body_lines {
+		if strings.HasPrefix(body_line, "#") {
+			continue
+		}
+
+		purrified_body_lines = append(purrified_body_lines, body_line)
+	}
+	purrified_body := strings.Join(purrified_body_lines, "\n")
+	purrified_body = strings.ReplaceAll(purrified_body, "\n\n", "\n")
+	purrified_body = strings.ReplaceAll(purrified_body, "\n\n", "\n")
+
+	result.Body = conventionalcommitstype.Body(purrified_body)
 
 	return &result, nil
 }
