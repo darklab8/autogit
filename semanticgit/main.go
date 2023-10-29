@@ -67,6 +67,23 @@ func (g *SemanticGit) GetCurrentVersion() *semvertype.SemVer {
 	return returned_vers
 }
 
+const FooterTokenBreakingChange conventionalcommitstype.FooterToken = "BREAKING CHANGE"
+
+func IsBreakingChangeCommit(record conventionalcommits.ConventionalCommit) bool {
+	if record.Exclamation {
+		return true
+	}
+
+	for _, footer := range record.Footers {
+
+		if footer.Token == FooterTokenBreakingChange {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (g *SemanticGit) CalculateNextVersion(vers *semvertype.SemVer) *semvertype.SemVer {
 
 	log_records := g.GetChangelogByTag("", false)
@@ -78,7 +95,7 @@ func (g *SemanticGit) CalculateNextVersion(vers *semvertype.SemVer) *semvertype.
 			major_change = true
 		}
 
-		if record.Exclamation {
+		if IsBreakingChangeCommit(record) {
 			if vers.Major != 0 {
 				major_change = true
 			}

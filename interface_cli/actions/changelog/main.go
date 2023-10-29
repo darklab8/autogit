@@ -54,7 +54,7 @@ func newChangelogCommit(record conventionalcommits.ConventionalCommit) changelog
 	changelog_commit := changelogCommit{Header: header}
 
 	for _, footer := range record.Footers {
-		if footer.Token == FooterTokenBreakingChange {
+		if footer.Token == semanticgit.FooterTokenBreakingChange {
 			changelog_commit.BreakingFooters = append(changelog_commit.BreakingFooters, footer.Content)
 		}
 	}
@@ -111,30 +111,13 @@ type changelogVars struct {
 	OrderedSemverGroups []*changelogSemverGroup
 }
 
-const FooterTokenBreakingChange conventionalcommitstype.FooterToken = "BREAKING CHANGE"
-
-func isBreakingChangeCommit(record conventionalcommits.ConventionalCommit) bool {
-	if record.Exclamation {
-		return true
-	}
-
-	for _, footer := range record.Footers {
-
-		if footer.Token == FooterTokenBreakingChange {
-			return true
-		}
-	}
-
-	return false
-}
-
 func (changelog *changelogVars) find_semver_group(
 	record conventionalcommits.ConventionalCommit,
 	conventiona_types []conventionalcommitstype.Type,
 	semver_order changelog_types.ChangelogSectionType,
 ) (*changelogSemverGroup, error) {
 	for _, possible_type := range conventiona_types {
-		if isBreakingChangeCommit(record) {
+		if semanticgit.IsBreakingChangeCommit(record) {
 			semver_group, semver_group_exists := changelog.SemverGroups[changelog_types.SemVerMajor]
 			if !semver_group_exists {
 				semver_group = &changelogSemverGroup{Name: getSectionName(changelog_types.SemVerMajor)}
