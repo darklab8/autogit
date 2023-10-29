@@ -44,14 +44,14 @@ func commitRender(record conventionalcommits.ConventionalCommit) changelog_types
 	return changelog_types.ChangelogCommitHeader(result)
 }
 
-type ChangelogCommit struct {
+type changelogCommit struct {
 	Header          changelog_types.ChangelogCommitHeader
 	BreakingFooters []conventionalcommitstype.FooterContent
 }
 
-func newChangelogCommit(record conventionalcommits.ConventionalCommit) ChangelogCommit {
+func newChangelogCommit(record conventionalcommits.ConventionalCommit) changelogCommit {
 	header := commitRender(record)
-	changelog_commit := ChangelogCommit{Header: header}
+	changelog_commit := changelogCommit{Header: header}
 
 	for _, footer := range record.Footers {
 		if footer.Token == FooterTokenBreakingChange {
@@ -63,8 +63,8 @@ func newChangelogCommit(record conventionalcommits.ConventionalCommit) Changelog
 }
 
 type commitTypeGroup struct {
-	NoScopeCommits []ChangelogCommit
-	ScopedCommits  map[conventionalcommitstype.Scope][]ChangelogCommit
+	NoScopeCommits []changelogCommit
+	ScopedCommits  map[conventionalcommitstype.Scope][]changelogCommit
 }
 
 type changelogSemverGroup struct {
@@ -72,7 +72,7 @@ type changelogSemverGroup struct {
 	Name             changelog_types.ChangelogSectionName
 }
 
-func GetSectionName(section changelog_types.ChangelogSectionType) changelog_types.ChangelogSectionName {
+func getSectionName(section changelog_types.ChangelogSectionType) changelog_types.ChangelogSectionName {
 	config := settings.GetConfig()
 	is_pr := config.Changelog.MergeCommits.MustHaveLinkedPR
 
@@ -137,7 +137,7 @@ func (changelog *changelogVars) find_semver_group(
 		if isBreakingChangeCommit(record) {
 			semver_group, semver_group_exists := changelog.SemverGroups[changelog_types.SemVerMajor]
 			if !semver_group_exists {
-				semver_group = &changelogSemverGroup{Name: GetSectionName(changelog_types.SemVerMajor)}
+				semver_group = &changelogSemverGroup{Name: getSectionName(changelog_types.SemVerMajor)}
 				changelog.SemverGroups[changelog_types.SemVerMajor] = semver_group
 			}
 			return semver_group, nil
@@ -146,7 +146,7 @@ func (changelog *changelogVars) find_semver_group(
 		if record.Type == possible_type {
 			semver_group, semver_group_exists := changelog.SemverGroups[semver_order]
 			if !semver_group_exists {
-				semver_group = &changelogSemverGroup{Name: GetSectionName(semver_order)}
+				semver_group = &changelogSemverGroup{Name: getSectionName(semver_order)}
 				changelog.SemverGroups[semver_order] = semver_group
 			}
 			return semver_group, nil
@@ -247,12 +247,12 @@ func (changelog *changelogVars) addCommit(
 		commit_type_group.NoScopeCommits = append(commit_type_group.NoScopeCommits, changelog_commit)
 	} else {
 		if commit_type_group.ScopedCommits == nil {
-			commit_type_group.ScopedCommits = make(map[conventionalcommitstype.Scope][]ChangelogCommit)
+			commit_type_group.ScopedCommits = make(map[conventionalcommitstype.Scope][]changelogCommit)
 		}
 
 		commit_list, ok := commit_type_group.ScopedCommits[record.Scope]
 		if !ok {
-			commit_list = []ChangelogCommit{}
+			commit_list = []changelogCommit{}
 		}
 
 		commit_type_group.ScopedCommits[record.Scope] = append(commit_list, changelog_commit)
@@ -313,7 +313,7 @@ func (changelog changelogVars) Render() string {
 		sb.WriteString(fmt.Sprintf(format, a...))
 	}
 
-	print_commits := func(prefix string, commits []ChangelogCommit) {
+	print_commits := func(prefix string, commits []changelogCommit) {
 		for _, commit := range commits {
 			sbprint(prefix+"%s", commit.Header)
 
