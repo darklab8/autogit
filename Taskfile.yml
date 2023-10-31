@@ -51,10 +51,13 @@ tasks:
       - GOOS=darwin GOARCH=arm64 go build -v -o dist/autogit-macos-arm64 main.go
   test:
     cmds:
-      - go test ./... {{.CLI_ARGS}}
+      - go test ./... -coverprofile=cover.out {{.CLI_ARGS}}
     env:
       AUTOGIT_PROJECT_FOLDER:
         sh: echo "$(pwd)"
+
+  test:cover:
+      go tool cover -html=cover.out
 
   doc-web:
     cmds:
