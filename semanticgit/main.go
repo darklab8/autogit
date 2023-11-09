@@ -10,6 +10,7 @@ import (
 	"autogit/semanticgit/git"
 	"autogit/semanticgit/semver"
 	"autogit/semanticgit/semver/semvertype"
+	"autogit/settings"
 	"autogit/settings/logus"
 	"autogit/settings/types"
 )
@@ -101,12 +102,16 @@ func (g *SemanticGit) CalculateNextVersion(vers *semvertype.SemVer) *semvertype.
 			}
 		}
 
-		if record.Type == "feat" {
-			minor_change = true
+		for _, minor_type := range settings.GetConfig().Validation.Rules.Header.Type.Allowlists.SemVerMinorIncreasers {
+			if record.Type == minor_type {
+				minor_change = true
+			}
 		}
 
-		if record.Type == "fix" {
-			patch_change = true
+		for _, patch_type := range settings.GetConfig().Validation.Rules.Header.Type.Allowlists.SemverPatchIncreasers {
+			if record.Type == patch_type {
+				patch_change = true
+			}
 		}
 	}
 
@@ -138,6 +143,7 @@ func (g *SemanticGit) CalculateNextVersion(vers *semvertype.SemVer) *semvertype.
 	if vers.Options.Build != "" {
 		vers.Build = vers.Options.Build
 	}
+	logus.Debug("calculated next version", logus.Semver(vers))
 	return vers
 }
 
