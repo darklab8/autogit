@@ -41,8 +41,7 @@ func Changelog(params ChangelogParams, gitw *git.Repository) string {
 	case changelog.FormatBBCode:
 		changelogus = changelog.NewChangelogBBCode(g, params.OptionsSemVer, conf, types.TagName(params.Tag))
 	default:
-		logus.Error(fmt.Sprintf("Not allowed format=%s, expected=%v", params.Format, changelog.Formats))
-		return ""
+		changelogus = changelog.NewChangelogMarkdown(g, params.OptionsSemVer, conf, types.TagName(params.Tag))
 	}
 	rendered_changelog := changelogus.Render()
 
