@@ -43,17 +43,18 @@ func TestPrepare(t *testing.T) {
 func TestRender(t *testing.T) {
 	_, gitSemantic, config := FixtureGitSemantic(t)
 
-	rendered := NewChangelog(gitSemantic, semvertype.OptionsSemVer{}, config, types.TagName("")).Render()
+	rendered := NewChangelogMarkdown(gitSemantic, semvertype.OptionsSemVer{}, config, types.TagName("")).Render()
 	assert.Contains(t, rendered, "v0.1.0")
 
 	// historing render
-	rendered = NewChangelog(gitSemantic, semvertype.OptionsSemVer{}, config, types.TagName("v0.0.1")).Render()
+	rendered = NewChangelogMarkdown(gitSemantic, semvertype.OptionsSemVer{}, config, types.TagName("v0.0.1")).Render()
 	assert.Contains(t, rendered, "v0.0.1")
 }
 
-func CountCommitsInChangelog(section changelog_types.ChangelogSectionType, changelog changelogVars) int {
+func CountCommitsInChangelog[ChangelogType IChangelog](section changelog_types.ChangelogSectionType, changelog ChangelogType) int {
+
 	changeloged_merge_commits_count := 0
-	section_group, ok := changelog.SemverGroups[section]
+	section_group, ok := changelog.GetSemverGroups()[section]
 	if !ok {
 		return changeloged_merge_commits_count
 	}
@@ -76,14 +77,14 @@ func TestMergeCommitsInChangelog(t *testing.T) {
 
 	config.Changelog.MergeCommits.MustHaveLinkedPR = true
 	config.Changelog.MergeCommits.RedirectMergingCommits = false
-	changelog := NewChangelog(gitSemantic, semvertype.OptionsSemVer{}, config, types.TagName(""))
+	changelog := NewChangelogMarkdown(gitSemantic, semvertype.OptionsSemVer{}, config, types.TagName(""))
 	rendered := changelog.Render()
 	assert.Contains(t, rendered, "v0.1.0", "for MustHaveLinkedPR=true, RedirectMergingCommits=false")
 	assert.Equal(t, 2, CountCommitsInChangelog(changelog_types.MergeCommits, changelog))
 
 	config.Changelog.MergeCommits.MustHaveLinkedPR = false
 	config.Changelog.MergeCommits.RedirectMergingCommits = false
-	changelog = NewChangelog(gitSemantic, semvertype.OptionsSemVer{}, config, types.TagName(""))
+	changelog = NewChangelogMarkdown(gitSemantic, semvertype.OptionsSemVer{}, config, types.TagName(""))
 	rendered = changelog.Render()
 	assert.Contains(t, rendered, "v0.1.0", "for MustHaveLinkedPR=false, RedirectMergingCommits=false")
 	assert.Equal(t, 3, CountCommitsInChangelog(changelog_types.MergeCommits, changelog))
@@ -95,7 +96,7 @@ func TestMergeCommitsInChangelog(t *testing.T) {
 	gitInMemory.TestCommit("merge: pull request #1 from feat/branch")
 	gitInMemory.TestCommit("merge: pull request #2 from fix/branch")
 	gitInMemory.TestCommit("merge: pull request #3 from fix/branch")
-	changelog = NewChangelog(gitSemantic, semvertype.OptionsSemVer{}, config, types.TagName(""))
+	changelog = NewChangelogMarkdown(gitSemantic, semvertype.OptionsSemVer{}, config, types.TagName(""))
 	rendered = changelog.Render()
 	assert.Contains(t, rendered, "v0.1.0", "for MustHaveLinkedPR=false, RedirectMergingCommits=false")
 
@@ -105,7 +106,7 @@ func TestMergeCommitsInChangelog(t *testing.T) {
 
 	config.Changelog.MergeCommits.MustHaveLinkedPR = false
 	config.Changelog.MergeCommits.RedirectMergingCommits = true
-	changelog = NewChangelog(gitSemantic, semvertype.OptionsSemVer{}, config, types.TagName(""))
+	changelog = NewChangelogMarkdown(gitSemantic, semvertype.OptionsSemVer{}, config, types.TagName(""))
 	rendered = changelog.Render()
 	assert.Contains(t, rendered, "v0.1.0", "for MustHaveLinkedPR=false, RedirectMergingCommits=false")
 

@@ -8,7 +8,6 @@ import (
 	"autogit/settings/types"
 	"autogit/settings/utils"
 	_ "embed"
-	"fmt"
 	"text/template"
 	"time"
 )
@@ -80,7 +79,7 @@ type CommitRangeUrlVars struct {
 	REPOSITORY_NAME  string
 }
 
-func (templs Templates) NewCommitRangeUrlRender(logs []conventionalcommits.ConventionalCommit, ChangelogVersion types.TagName) string {
+func (templs Templates) NewCommitRangeUrlRender(logs []conventionalcommits.ConventionalCommit, ChangelogVersion types.TagName) Header {
 	var from, to conventionalcommitstype.Hash
 	if len(logs) == 0 {
 		logus.Error("for some reason logs count is 0 at NewCommitRangeUrlRender")
@@ -98,5 +97,19 @@ func (templs Templates) NewCommitRangeUrlRender(logs []conventionalcommits.Conve
 		REPOSITORY_NAME:  templs.conf.REPOSITORY_NAME,
 	}
 	currentTime := time.Now()
-	return fmt.Sprintf("## **%s** <sub><sub>%s ([%s...%s](%s))</sub></sub>", ChangelogVersion, currentTime.Format("2006-01-02"), r.From, r.To, utils.TmpRender(templs.commitRangeUrl.Template, r))
+	return Header{
+		ChangelogVersion: ChangelogVersion,
+		Timestamp:        currentTime.Format("2006-01-02"),
+		From:             r.From,
+		To:               r.To,
+		CommitRangeURL:   utils.TmpRender(templs.commitRangeUrl.Template, r),
+	}
+}
+
+type Header struct {
+	ChangelogVersion types.TagName
+	Timestamp        string
+	From             conventionalcommitstype.Hash
+	To               conventionalcommitstype.Hash
+	CommitRangeURL   string
 }

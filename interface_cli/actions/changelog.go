@@ -8,6 +8,7 @@ import (
 	"autogit/settings"
 	"autogit/settings/logus"
 	"autogit/settings/types"
+	"fmt"
 
 	"github.com/spf13/cobra"
 )
@@ -16,12 +17,14 @@ type ChangelogParams struct {
 	VersionParams
 	Tag      string
 	Validate bool
+	Format   string
 }
 
 func (v *ChangelogParams) Bind(cmd *cobra.Command) {
 	v.VersionParams.Bind(cmd)
 	cmd.PersistentFlags().StringVar(&v.Tag, "tag", "", "Select from which tag")
 	cmd.PersistentFlags().BoolVar(&v.Validate, "validate", false, "Validate to rules")
+	cmd.PersistentFlags().StringVar(&v.Format, "format", string(changelog.FormatMarkdown), fmt.Sprintf("expected formats=%v", changelog.Formats))
 }
 
 func Changelog(params ChangelogParams, gitw *git.Repository) string {
@@ -30,7 +33,18 @@ func Changelog(params ChangelogParams, gitw *git.Repository) string {
 
 	g := semanticgit.NewSemanticRepo(gitw)
 	logus.Debug("Getting changelog", logus.TagName(types.TagName(params.Tag)))
-	rendered_changelog := changelog.NewChangelog(g, params.OptionsSemVer, conf, types.TagName(params.Tag)).Render()
+
+	var changelogus changelog.IChangelog
+	switch changelog.ChangelogFormat(params.Format) {
+	case changelog.FormatMarkdown:
+		changelogus = changelog.NewChangelogMarkdown(g, params.OptionsSemVer, conf, types.TagName(params.Tag))
+	case changelog.FormatBBCode:
+		changelogus = changelog.NewChangelogBBCode(g, params.OptionsSemVer, conf, types.TagName(params.Tag))
+	default:
+		logus.Error(fmt.Sprintf("Not allowed format=%s, expected=%v", params.Format, changelog.Formats))
+		return ""
+	}
+	rendered_changelog := changelogus.Render()
 
 	if params.Validate {
 		log_commits := g.GetChangelogByTag(types.TagName(params.Tag), false)

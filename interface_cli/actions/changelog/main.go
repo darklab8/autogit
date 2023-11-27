@@ -14,44 +14,13 @@ import (
 	"strings"
 )
 
-func commitRender(record conventionalcommits.ConventionalCommit) changelog_types.ChangelogCommitHeader {
-	templs := templates.NewTemplates()
-
-	issue_renderer := strings.Builder{}
-	for _, issue_n := range record.Issue {
-		issue_renderer.WriteString(fmt.Sprintf(", [#%s](%s)", issue_n, templs.RenderIssueUrl(issue_n)))
-	}
-	issue_rendered := issue_renderer.String()
-
-	rendered_subject := record.Subject
-	IssueMatch := settings.RegexIssue.FindAllStringSubmatch(string(record.Subject), -1)
-	for _, match := range IssueMatch {
-		rendered_subject = conventionalcommitstype.Subject(strings.Replace(
-			string(rendered_subject),
-			match[0],
-			fmt.Sprintf(
-				"[#%s](%s)",
-				match[1],
-				templs.RenderIssueUrl(conventionalcommitstype.Issue(match[1])),
-			),
-			-1,
-		),
-		)
-	}
-
-	formatted_url := templs.RenderCommitUrl(record)
-	result := fmt.Sprintf("* %s ([%s](%s)%s)\n", rendered_subject, record.Hash, formatted_url, issue_rendered)
-	return changelog_types.ChangelogCommitHeader(result)
-}
-
 type changelogCommit struct {
-	Header          changelog_types.ChangelogCommitHeader
+	Commit          conventionalcommits.ConventionalCommit
 	BreakingFooters []conventionalcommitstype.FooterContent
 }
 
 func newChangelogCommit(record conventionalcommits.ConventionalCommit) changelogCommit {
-	header := commitRender(record)
-	changelog_commit := changelogCommit{Header: header}
+	changelog_commit := changelogCommit{Commit: record}
 
 	for _, footer := range record.Footers {
 		if footer.Token == semanticgit.FooterTokenBreakingChange {
@@ -102,16 +71,16 @@ func getSectionName(section changelog_types.ChangelogSectionType) changelog_type
 	}
 }
 
-type changelogVars struct {
+type Changelog struct {
 	// Internal for data grouping
 	SemverGroups map[changelog_types.ChangelogSectionType]*changelogSemverGroup
 
 	// For template
-	Header              string
+	Header              templates.Header
 	OrderedSemverGroups []*changelogSemverGroup
 }
 
-func (changelog *changelogVars) find_semver_group(
+func (changelog *Changelog) find_semver_group(
 	record conventionalcommits.ConventionalCommit,
 	conventiona_types []conventionalcommitstype.Type,
 	semver_order changelog_types.ChangelogSectionType,
@@ -145,7 +114,7 @@ func (n NotFound) Error() string {
 	return "not found SemverGroup"
 }
 
-func (changelog *changelogVars) addCommit(
+func (changelog *Changelog) addCommit(
 	record conventionalcommits.ConventionalCommit,
 	config settings.ConfigScheme,
 ) {
@@ -242,7 +211,7 @@ func (changelog *changelogVars) addCommit(
 	}
 }
 
-func (changelog changelogVars) orderSemverGroups() []*changelogSemverGroup {
+func (changelog Changelog) orderSemverGroups() []*changelogSemverGroup {
 	result := []*changelogSemverGroup{}
 
 	if semver_group, found := changelog.SemverGroups[changelog_types.MergeCommits]; found {
@@ -260,10 +229,15 @@ func (changelog changelogVars) orderSemverGroups() []*changelogSemverGroup {
 	return result
 }
 
-func NewChangelog(g *semanticgit.SemanticGit, semver_options semvertype.OptionsSemVer, config settings.ConfigScheme, FromTag types.TagName) changelogVars {
+func NewChangelog(
+	g *semanticgit.SemanticGit,
+	semver_options semvertype.OptionsSemVer,
+	config settings.ConfigScheme,
+	FromTag types.TagName,
+) Changelog {
 	templs := templates.NewTemplates()
 
-	changelog := changelogVars{}
+	changelog := Changelog{}
 	changelog.SemverGroups = make(map[changelog_types.ChangelogSectionType]*changelogSemverGroup)
 
 	logs := g.GetChangelogByTag(FromTag, true)
@@ -285,46 +259,4 @@ func NewChangelog(g *semanticgit.SemanticGit, semver_options semvertype.OptionsS
 
 	changelog.OrderedSemverGroups = changelog.orderSemverGroups()
 	return changelog
-}
-
-func (changelog changelogVars) Render() string {
-	var sb strings.Builder = strings.Builder{}
-	sbprintln := func(format string, a ...any) {
-		sb.WriteString(fmt.Sprintf(format+"\n", a...))
-	}
-	sbprint := func(format string, a ...any) {
-		sb.WriteString(fmt.Sprintf(format, a...))
-	}
-
-	print_commits := func(prefix string, commits []changelogCommit) {
-		for _, commit := range commits {
-			sbprint(prefix+"%s", commit.Header)
-
-			for _, breaking_footer := range commit.BreakingFooters {
-				breaking_footer_lines := strings.Split(string(breaking_footer), "\n")
-				sbprintln(prefix+"  * BC!: %s", breaking_footer_lines[0])
-				for _, other_breaking_change_line := range breaking_footer_lines[1:] {
-					sbprintln(prefix+"        %s", other_breaking_change_line)
-				}
-			}
-		}
-	}
-
-	sbprintln("%s", changelog.Header)
-	sbprintln("")
-	for _, semver_group := range changelog.OrderedSemverGroups {
-		sbprintln("## %s", semver_group.Name)
-		for commit_type, type_group := range semver_group.CommitTypeGroups {
-			sbprintln("### %s", commit_type)
-
-			print_commits("", type_group.NoScopeCommits)
-			for scope, commits := range type_group.ScopedCommits {
-				sbprintln("* %s", scope)
-				print_commits("  ", commits)
-			}
-		}
-		sbprintln("")
-	}
-
-	return sb.String()
 }
