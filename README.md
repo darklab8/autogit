@@ -97,9 +97,7 @@ your githook is activated and tries to parse your commit name accroding to git c
 
 ```mermaid
 flowchart TD
-  GitCommit[attempt to fixate commit like
-  git commit -m 'feat: add md rendering'
-  with 'autogit hook activate' enabled]
+  GitCommit[attempt to fixate commit like\ngit commit -m 'feat: add md rendering'\nwith 'autogit hook activate' enabled]
   RequestValidatingChangelog[Request changelog with --validate flag] --> TryParsingCommitMessage
   GitCommit --> TryParsingCommitMessage[Try parsing commit message\nto git conventional commit\ntype \ scope \ subject \ body \ footers]
   TryParsingCommitMessage --> ReportFail[Reporting errors if unable]
