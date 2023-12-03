@@ -167,8 +167,8 @@ flowchart TD
   RequestNextSemanticVersioning --> FindCommits[Find commits\nfrom HEAD^1 to previous stable semantic version like v0.3.0]
   FindCommits --> CalculateVersionChange[Calculate main version change\nChoose only ONE path]
   CalculateVersionChange --> MajorChange[if git conventional commits\nwith breaking changes\nlike feat! are present\nand it is not 0.*.* development mode\nor flag `--publish` is present,\nthen add MAJOR version\nand reset MINOR and PATCH to 0\nchange: +1.0.0]
-  CalculateVersionChange -->MinorChange[If commits with `feat` type are present\nincrease MINOR version and reset PATCH version to zero\n change: *.+1.0,]
-  CalculateVersionChange -->PatchChange[if only commits with `fix`\n are present\nthen change only PATCH\nchange: *.*.+1]
+  CalculateVersionChange --> MinorChange[If commits with `feat` type are present\nincrease MINOR version\nand reset PATCH version\nto zero change: *.+1.0,]
+  CalculateVersionChange --> PatchChange[if only commits with `fix`\n are present\nthen change only PATCH\nchange: *.*.+1]
   MajorChange --> CalculatedMainVersion
   MinorChange --> CalculatedMainVersion
   PatchChange --> CalculatedMainVersion
@@ -182,7 +182,7 @@ flowchart TD
   BetaFlag --> CombineIntoTotalPrereleaseVersion
   RcFlag --> CombineIntoTotalPrereleaseVersion
   CombineIntoTotalPrereleaseVersion[Combine into latest prerelease version]
-  CalculatedMainVersion --> AddBuildMetaData[Add build meta data as +$BuildMetaData\nto the end of version]
+  CalculatedMainVersion ----> AddBuildMetaData[Add build meta data\nas +$BuildMetaData\nto the end of version]
   CombineIntoTotalPrereleaseVersion --> OutputFinalSemanticVersion
   AddBuildMetaData --> OutputFinalSemanticVersion[Render Final Semantic Version]
 ```
