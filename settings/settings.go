@@ -44,24 +44,11 @@ type ConfigScheme struct {
 	} `yaml:"git"`
 }
 
-var GlobalConfigPath types.ConfigPath
+// var GlobalConfigPath types.ConfigPath
 
-var ProjectConfigPath types.ConfigPath
-
-var ProjectPath types.FilePath
+// var ProjectConfigPath types.ConfigPath
 
 const ConfigFileName types.ConfigPath = "autogit.yml"
-
-func init() {
-	GlobalConfigPath = types.ConfigPath(filepath.Join(string(envs.PathUserHome), string(ConfigFileName)))
-
-	g := gitraw.NewGitRepo()
-	w, err := g.Worktree()
-	logus.CheckFatal(err, "are we not in git repo folder?")
-	ProjectPath = types.FilePath(w.Filesystem.Root())
-
-	ProjectConfigPath = types.ConfigPath(filepath.Join(string(ProjectPath), string(ConfigFileName)))
-}
 
 var cachedConfigFile []byte = []byte{}
 
@@ -92,7 +79,7 @@ func readSettingsfile(configPath types.ConfigPath) []byte {
 
 	global_file_is_not_found := false
 	if local_file_is_not_found {
-		file, err = os.ReadFile(string(GlobalConfigPath))
+		file, err = os.ReadFile(string(GetGlobalConfigPath()))
 		if err != nil {
 			if is_file_missing(err) {
 				logus.Debug("not found at path repository global file with config. Fallback to other in memory config", logus.FilePath(configPath.ToFilePath()), logus.OptError(err))
@@ -240,6 +227,7 @@ func validate_file_config(file []byte) {
 }
 
 func NewConfig(configPath types.ConfigPath) *ConfigScheme {
+
 	file := readSettingsfile(configPath)
 
 	config := configRead(file)
@@ -254,9 +242,21 @@ func NewConfig(configPath types.ConfigPath) *ConfigScheme {
 
 var config *ConfigScheme
 
+func GetGlobalConfigPath() types.ConfigPath {
+	return types.ConfigPath(filepath.Join(string(envs.PathUserHome), string(ConfigFileName)))
+}
+
+func GetProjectConfigPath() types.ConfigPath {
+	g := gitraw.NewGitRepo()
+	w, err := g.Worktree()
+	logus.CheckFatal(err, "are we not in git repo folder?")
+	project_path := types.FilePath(w.Filesystem.Root())
+	return types.ConfigPath(filepath.Join(string(project_path), string(ConfigFileName)))
+}
+
 func GetConfig() ConfigScheme {
 	if config == nil {
-		config = NewConfig(ProjectConfigPath)
+		config = NewConfig(GetProjectConfigPath())
 	}
 	return *config
 }

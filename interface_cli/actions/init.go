@@ -36,9 +36,9 @@ func init_write_config(config_path types.ConfigPath) {
 }
 
 func Initialize(init_globally bool) {
-	config_path := settings.ProjectConfigPath
+	config_path := settings.GetProjectConfigPath()
 	if init_globally {
-		config_path = settings.GlobalConfigPath
+		config_path = settings.GetGlobalConfigPath()
 	}
 	init_write_config(config_path)
 }
