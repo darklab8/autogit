@@ -93,8 +93,9 @@ flowchart TD
 ### Architecture goals
 
 - Unit testable first. everything else later.
-- Abstractions will appear with a strict minimal interface to reduce overall complexity of a code.
+- Justified abstractions will appear with a strict minimal interface to reduce overall complexity of a code.
 - High usage of `type NewType string` for more self documentation
+- Trying to find domain language of the tool
 - Minimize third party lib dependencies
 - Simplify end user installation
 - No autoupdates inside the program. Everything should work offline.
