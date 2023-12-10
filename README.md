@@ -54,7 +54,7 @@ text version at ubuntu 22.04:
 
 - install curl if not installed.(`apt update && apt install -y curl` for debian/ubuntu)
 - install git if not present (`apt update && apt install -y git` for debian/ubuntu)
-- install autogit with `rm /usr/local/bin/autogit ; curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/darklab_autogit/releases/latest | sed "s/releases\/tag/releases\/download/")/autogit-linux-amd64 -o /usr/local/bin/autogit && chmod 777 /usr/local/bin/autogit`
+- install autogit with `rm $(which autogit) ; curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/darklab_autogit/releases/latest | sed "s/releases\/tag/releases\/download/")/autogit-linux-amd64 -o /usr/local/bin/autogit && chmod 777 /usr/local/bin/autogit`
 - check installation with `autogit version` command. Expect to see `OK autogit version: v{version}`
 
 ### install specific version
@@ -64,7 +64,7 @@ text version at ubuntu 22.04:
 ## Windows
 
 - install [Git Bash](https://git-scm.com/downloads)
-- instal lautogit `mkdir -p ~/bin ; rm ~/bin/autogit.exe ; curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/darklab_autogit/releases/latest | sed "s/releases\/tag/releases\/download/")/autogit-windows-amd64.exe -o ~/bin/autogit.exe && chmod 777 ~/bin/autogit.exe`
+- instal lautogit `mkdir -p ~/bin ; rm $(which autogit) ; curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/darklab_autogit/releases/latest | sed "s/releases\/tag/releases\/download/")/autogit-windows-amd64.exe -o ~/bin/autogit.exe && chmod 777 ~/bin/autogit.exe`
 - check installation with `autogit version` command. Expect to see `OK autogit version: v{version}`
 
 ## Contacts
