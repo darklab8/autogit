@@ -6,27 +6,27 @@
 
 **Communicating through git professionally**
 
-autogit is a CLI tool to validate submitted commits according to [git conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) standard. the tool allows to generate changelogs for releases in different formats. With ability to see quickly how your changelog looks like, it motivates you to write more meaningful commits
+autogit is a CLI tool to validate submitted commits according to [git conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) standard. the tool allows to generate changelogs for releases in different formats. the ability to see quickly how your changelog looks motivates you to write more meaningful commits.
 
-as a result of a tool work, you have decreased toll on release documentation writing and you communicate your developer work better to other developers/users and have more professional looking repository in terms of commits, tags, versions, releases and changelogs.
+as a result of the tool work, you have decreased toll on release documentation writing, you communicate developer work better to other developers/users, and have a more professional-looking repository in terms of commits, tags, versions, releases, and changelogs.
 
 # Features
 
 - hooks to git-hooks and works to validate your git commits to [git conventional commits]((https://www.conventionalcommits.org/en/v1.0.0/)) standard for any git tool.
-  - has extra possible validating rules to configure, like having minimum 3 words in a subject of a commit.
+  - has extra possible validating rules to configure, like having a minimum of 3 words in a subject of commit.
   - `autogit hook activate --global`(flag to turn it on for all repos)
 - suggests next [semantic version](https://semver.org/) for your product release with `autogit semver`
-  - has options to sugest next version as alpha, beta, prerelease version with build meta data.
+  - has options to suggest the next version as alpha, beta, or pre-release version with build metadata.
 - generates changelogs with `autogit changelog` command
   - currently supports markdown and bbcode formats
   - has option `--validate` to run validation of commits (for CI usage)
-- easy create and push of a git tag with autoinserted changelog through `autogit semver --tag --push`
-- initialize settings for more customization with `autogit init` inside git repo
+- easy create and push of a git tag with auto-inserted changelog through `autogit semver --tag --push`
+- initialize settings for more customization with `autogit init` inside a git repo
   - uncomment and override desired settings
 - find out more commands and options with `autogit [any set of sub commands] --help`
-- CI friendly binary file, not requires any dependencies for its usage for everything
+- CI-friendly binary file, which not require any dependencies for its usage for everything
   - see [CI example](.github/workflows/validate.yml)
-  - compliled for linux/windows/macos and amd64/arm64/386/arm
+  - compiled for linux/windows/macos and amd64/arm64/386/arm
   - Contains inbuilt git. Not requiring git to be installed for its functionality
 
 
@@ -92,15 +92,15 @@ flowchart TD
 
 ### Architecture goals
 
-- Unit testable first. everything else later.
-- Justified abstractions will appear with a strict minimal interface to reduce overall complexity of a code.
-- High usage of `type NewType string` for more self documentation
-- Trying to find domain language of the tool
-- Minimize third party lib dependencies
-- Simplify end user installation
-- No autoupdates inside the program. Everything should work offline.
-- CI friendly, zero system dependencies solution
-- Unit testing for linux, checking for windows and compiling for macos.
+- Unit testable first, everything else later.
+- Justified abstractions will appear with a strict minimal interface to reduce the overall complexity of a code.
+- High usage of `type NewType string` for more self-documentation
+- Trying to find the domain language of the tool
+- Minimize third-party lib dependencies
+- Simplify end-user installation
+- No auto-updates inside the program. Everything should work offline.
+- CI-friendly, zero system dependencies solution
+- Unit testing for Linux, checking for Windows, and compiling for macOS.
 
 # Other docs
 
