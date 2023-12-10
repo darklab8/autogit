@@ -3,6 +3,7 @@ package conventionalcommits
 import (
 	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
 	"autogit/settings"
+	"autogit/settings/logus"
 	"autogit/settings/types"
 	"autogit/settings/utils"
 	"fmt"
@@ -26,10 +27,10 @@ func (commit ConventionalCommit) StringHeader() string {
 	return sb.String()
 }
 
-type NotParsed struct{}
+type NotParsedCommit struct{}
 
-func (m NotParsed) Error() string {
-	return "not parsed at all"
+func (m NotParsedCommit) Error() string {
+	return "not parsed commit at all"
 }
 
 func ParseCommit(msg types.CommitOriginalMsg) (*ConventionalCommit, error) {
@@ -45,7 +46,8 @@ func ParseCommit(msg types.CommitOriginalMsg) (*ConventionalCommit, error) {
 	}
 
 	if len(main_match) == 0 {
-		return nil, NotParsed{}
+		logus.Debug("original msg:\n" + string(msg))
+		return nil, NotParsedCommit{}
 	}
 
 	result.Type = conventionalcommitstype.Type(main_match[1])

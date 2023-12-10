@@ -20,7 +20,7 @@ func Parse(msg types.TagName) (*semvertype.SemVer, error) {
 	matched := settings.RegexSemVer.FindStringSubmatch(string(msg))
 
 	if len(matched) == 0 {
-		return nil, NotParsed{}
+		return nil, NotParsedSemver{}
 	}
 
 	// Allowing not defining patch always

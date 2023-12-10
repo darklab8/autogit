@@ -1,7 +1,7 @@
 package semver
 
-type NotParsed struct{}
+type NotParsedSemver struct{}
 
-func (m NotParsed) Error() string {
-	return "not parsed at all"
+func (m NotParsedSemver) Error() string {
+	return "not parsed semver at all"
 }

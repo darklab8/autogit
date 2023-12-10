@@ -246,3 +246,19 @@ BREAKING CHANGE: third thing
 	testutils.Equal(t, "second thing", logs1[0].Footers[1].Content)
 	testutils.Equal(t, "third thing", logs1[0].Footers[2].Content)
 }
+
+func TestParseBreakingChange3(t *testing.T) {
+	// And commit must maintain GH link to PR like #19
+	gitInMemory := git.NewRepoTestInMemory()
+	gitSemantic := NewSemanticRepo(gitInMemory)
+	gitInMemory.TestCommit(`feat!: new super feature
+
+BREAKING CHANGE: api for endpoint /status changed to /users/status`)
+
+	logs1 := gitSemantic.GetChangelogByTag("", true)
+	assert.Len(t, logs1, 1)
+
+	assert.Len(t, logs1[0].Footers, 1)
+
+	testutils.Equal(t, "api for endpoint /status changed to /users/status", logs1[0].Footers[0].Content)
+}
