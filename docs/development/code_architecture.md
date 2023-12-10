@@ -12,14 +12,7 @@
 
 ## Diagram
 
-<!DOCTYPE html>
-
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-</head>
-<body>
-  <pre class="mermaid">
+```mermaid
 flowchart TD
   UI[Interface-CLI\nUser interface via Cobra CLI third party lib]
   UI --> Actions[Actions\nreusable actions without\nattachements to UI details]
@@ -31,9 +24,7 @@ flowchart TD
   SemanticGit --> SemVer[SemVer\nimplements original Semantic Version\naccording to SemVer2.0.0 standard\nImplemented in current repo]
   SemanticGit --> Git[Git\ngit wrapper to simple interface\nfor current repository logic\nimplemented in current repo]
   Git --> GitGo[Git-Go\nEngine under the hood for\nGit repository operations\nImplemented by third party]
-  </pre>
-</body>
-</html>
+```
 
 ## Support promises:
 

@@ -5,14 +5,7 @@
 You try to write git commit -m "feat: add rendering in format format"
 your githook is activated and tries to parse your commit name accroding to git conventional commits standard. If unable, it will give you error and prevent commit
 
-<!DOCTYPE html>
-
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-</head>
-<body>
-  <pre class="mermaid">
+```mermaid
 flowchart TD
   GitCommit[attempt to fixate commit like
   git commit -m 'feat: add md rendering'
@@ -29,22 +22,13 @@ flowchart TD
   CheckOptionalValidationRulesIfEnabled --> WhenAppliedRules[when applied rules]
   WhenAppliedRules --> IfCommit[if it was commit,\nthen fixate if passed rules,\nor cancel fixation]
   WhenAppliedRules --> IfChangelog[if it was changelog validation\nthen report no errors and exit code 0\nfor pipeline checks]
-  </pre>
-</body>
-</html>
+```
 
 ## scenario #2 - changelog / Your wish to see changelog of additions you made, what are new features, what are fixes. For user view
 
 You wish to have changelog auto generated.
 
-<!DOCTYPE html>
-
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-</head>
-<body>
-  <pre class="mermaid">
+```mermaid
 flowchart TD
     RequestingChangelog[Requesting changelog]
     RequestingChangelog --> ChangelogFromLatestCommitToPreviousTagVersion
@@ -71,9 +55,7 @@ flowchart TD
     RenderChangelogMarkdown[Render in markdown\n--implemented--]
     RenderChangelogRst[Render in rst\n--not implemented--]
     RenderChangelogHtml[Render in html\n--not implemented--]
-  </pre>
-</body>
-</html>
+```
 
 ### example of rendered changelog
 
@@ -91,14 +73,7 @@ Program checks if u made no commits, or only refactoring and styling.
 
 more detailed algorithm, accounting also prerelease version calculations:
 
-<!DOCTYPE html>
-
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-</head>
-<body>
-  <pre class="mermaid">
+```mermaid
 flowchart TD
   RequestNextSemanticVersioning[Request next semantic versioning]
   RequestNextSemanticVersioning --> FindCommits[Find commits\nfrom HEAD^1 to previous stable semantic version like v0.3.0]
@@ -122,6 +97,4 @@ flowchart TD
   CalculatedMainVersion ----> AddBuildMetaData[Add build meta data\nas +$BuildMetaData\nto the end of version]
   CombineIntoTotalPrereleaseVersion --> OutputFinalSemanticVersion
   AddBuildMetaData --> OutputFinalSemanticVersion[Render Final Semantic Version]
-  </pre>
-</body>
-</html>
+```

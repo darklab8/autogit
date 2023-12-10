@@ -6,16 +6,16 @@
 
 **Communicating through git professionally**
 
-autogit is a CLI tool to validate submitted commits according to [git conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) standard. the tool allows to generate changelogs for releases in different formats. When you generate changelogs and see quick feedback of an end result, it promotes you to write commits better.
+autogit is a CLI tool to validate submitted commits according to [git conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) standard. the tool allows to generate changelogs for releases in different formats. With ability to see quickly how your changelog looks like, it motivates you to write more meaningful commits
 
-as a result of a tool work, you communicate your developer work better to other developers and have more professional looking repository.
+as a result of a tool work, you have decreased toll on release documentation writing and you communicate your developer work better to other developers/users and have more professional looking repository in terms of commits, tags, versions, releases and changelogs.
 
 # Features
 
 - hooks to git-hooks and works to validate your git commits to [git conventional commits]((https://www.conventionalcommits.org/en/v1.0.0/)) standard for any git tool.
   - has extra possible validating rules to configure, like having minimum 3 words in a subject of a commit.
   - `autogit hook activate --global`(flag to turn it on for all repos)
-- suggests next [semantic version](https://semver.org/) with `autogit semver`
+- suggests next [semantic version](https://semver.org/) for your product release with `autogit semver`
   - has options to sugest next version as alpha, beta, prerelease version with build meta data.
 - generates changelogs with `autogit changelog` command
   - currently supports markdown and bbcode formats
@@ -24,7 +24,11 @@ as a result of a tool work, you communicate your developer work better to other 
 - initialize settings for more customization with `autogit init` inside git repo
   - uncomment and override desired settings
 - find out more commands and options with `autogit [any set of sub commands] --help`
-- CI friendly, not requires any dependencies for its usage for everything (inbuilt git-go to access git information)
+- CI friendly binary file, not requires any dependencies for its usage for everything
+  - see [CI example](.github/workflows/validate.yml)
+  - compliled for linux/windows/macos and amd64/arm64/386/arm
+  - Contains inbuilt git. Not requiring git to be installed for its functionality
+
 
 # Getting started
 
