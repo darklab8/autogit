@@ -59,7 +59,7 @@ text version at ubuntu 22.04:
 
 ### install specific version
 
-- install with `rm /usr/local/bin/autogit ; curl -L https://github.com/darklab8/darklab_autogit/releases/download/v2.1.0/autogit-linux-amd64 -o /usr/local/bin/autogit && chmod 777 /usr/local/bin/autogit`
+- install with `rm $(which autogit) ; curl -L https://github.com/darklab8/darklab_autogit/releases/download/v{VERSION}/autogit-linux-amd64 -o /usr/local/bin/autogit && chmod 777 /usr/local/bin/autogit`
 
 ## Windows
 
