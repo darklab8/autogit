@@ -71,7 +71,43 @@ text version at ubuntu 22.04:
 - instal lautogit `mkdir -p ~/bin ; rm $(which autogit) ; curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/darklab_autogit/releases/latest | sed "s/releases\/tag/releases\/download/")/autogit-windows-amd64.exe -o ~/bin/autogit.exe && chmod 777 ~/bin/autogit.exe`
 - check installation with `autogit version` command. Expect to see `OK autogit version: v{version}`
 
-## Contacts
+## Code architecture
+
+```mermaid
+flowchart TD
+  UI[Interface-CLI\nUser interface via Cobra CLI third party lib]
+  UI --> Actions[Actions\nreusable actions without\nattachements to UI details]
+  Actions --> SemanticGit[Semantic Git\nImplements main business logic of repository\nwith added logic of conventional commits\nAnd semantic versioning]
+  Actions --> Validator[Validator\nRules for optional validations]
+  Validator --> SemanticGit
+  Actions --> Changelog[Changelog\nHow to generate one]
+  Changelog ---> SemanticGit
+    Changelog --> Markdown[in Markdown]
+  Changelog ---> OtherFormats[in other formats]
+
+  SemanticGit --> SemVer[SemVer\nimplements original Semantic Version\naccording to SemVer2.0.0 standard\nImplemented in current repo]
+  SemanticGit --> Git[Git\ngit wrapper to simple interface\nfor current repository logic\nimplemented in current repo]
+  Git --> GitGo[Git-Go\nEngine under the hood for\nGit repository operations\nImplemented by third party]
+```
+
+### Architecture goals
+
+- Unit testable first. everything else later.
+- Abstractions will appear with a strict minimal interface to reduce overall complexity of a code.
+- High usage of `type NewType string` for more self documentation
+- Minimize third party lib dependencies
+- Simplify end user installation
+- No autoupdates inside the program. Everything should work offline.
+- CI friendly, zero system dependencies solution
+- Unit testing for linux, checking for windows and compiling for macos.
+
+# Other docs
+
+- [Algorithms](docs/development/algos.md)
+- [Dev setup](docs/development/dev_setup.md)
+- [Future plans](docs/development/plans.md)
+
+# Contacts
 
 - [@dd84ai](https://github.com/dd84ai) at `dark.dreamflyer@gmail.com`
 - open [Pull Requests with question](https://github.com/darklab8/darklab_autogit/issues)

@@ -7,9 +7,7 @@ your githook is activated and tries to parse your commit name accroding to git c
 
 ```mermaid
 flowchart TD
-  GitCommit[attempt to fixate commit like
-  git commit -m 'feat: add md rendering'
-  with 'autogit hook activate' enabled]
+  GitCommit[attempt to fixate commit like\ngit commit -m 'feat: add md rendering'\nwith 'autogit hook activate' enabled]
   RequestValidatingChangelog[Request changelog with --validate flag] --> TryParsingCommitMessage
   GitCommit --> TryParsingCommitMessage[Try parsing commit message\nto git conventional commit\ntype \ scope \ subject \ body \ footers]
   TryParsingCommitMessage --> ReportFail[Reporting errors if unable]
@@ -21,7 +19,7 @@ flowchart TD
   CheckOtherEnabledRulesInSettings --> WhenAppliedRules
   CheckOptionalValidationRulesIfEnabled --> WhenAppliedRules[when applied rules]
   WhenAppliedRules --> IfCommit[if it was commit,\nthen fixate if passed rules,\nor cancel fixation]
-  WhenAppliedRules --> IfChangelog[if it was changelog validation\nthen report no errors and exit code 0\nfor pipeline checks]
+  WhenAppliedRules --> IfChangelog[if it was changelog validation\nthen report no errors and exit code 0 \n for pipeline checks]
 ```
 
 ## scenario #2 - changelog / Your wish to see changelog of additions you made, what are new features, what are fixes. For user view
@@ -41,9 +39,9 @@ flowchart TD
     ChangelogFromChosenTagToPreviousTag --> GenerateChangelog
     GenerateChangelog --> ParseCommits
     ParseCommits --> SelectAllowedTypesForRender
-    SelectAllowedTypesForRender[Filter conventional commit `types` like `feat` allowed for render]
+    SelectAllowedTypesForRender[Filter conventional commit 'types' like 'feat' allowed for render]
     SelectAllowedTypesForRender --> SubgroupIntoConventionalCommitScopes
-    SubgroupIntoConventionalCommitScopes[Sub group commits according to conventional commit `scope`]
+    SubgroupIntoConventionalCommitScopes[Sub group commits according to conventional commit 'scope']
     GenerateChangelog --> CalculateNextSemver
     CalculateNextSemver[Calculate Next Semantic Version]
     CalculateNextSemver --> SendChangelogToRender
@@ -51,10 +49,10 @@ flowchart TD
     SendChangelogToRender[Receive changelog for render]
     SendChangelogToRender --> RenderChangelogMarkdown
     SendChangelogToRender --> RenderChangelogRst
-    SendChangelogToRender --> RenderChangelogHtml
-    RenderChangelogMarkdown[Render in markdown\n--implemented--]
-    RenderChangelogRst[Render in rst\n--not implemented--]
-    RenderChangelogHtml[Render in html\n--not implemented--]
+    SendChangelogToRender --> RenderChangelogOtherFormat
+    RenderChangelogMarkdown[Render in markdown]
+    RenderChangelogBBcode[Render in bbcode]
+    RenderChangelogOtherFormat[Insert to render in other format]
 ```
 
 ### example of rendered changelog
