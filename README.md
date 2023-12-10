@@ -26,7 +26,7 @@ as a result of a tool work, you communicate your developer work better to other 
 - find out more commands and options with `autogit [any set of sub commands] --help`
 - CI friendly, not requires any dependencies for its usage for everything (inbuilt git-go to access git information)
 
-# Example
+# Getting started
 
 text version at ubuntu 22.04:
 - `apt update && apt install -y curl` (install curl if not installed)
@@ -62,9 +62,10 @@ text version at ubuntu 22.04:
 
 - install with `rm /usr/local/bin/autogit ; curl -L https://github.com/darklab8/darklab_autogit/releases/download/v2.1.0/autogit-linux-amd64 -o /usr/local/bin/autogit && chmod 777 /usr/local/bin/autogit`
 
-### See other installations
+### At windows
 
-- at {INSERT LINK TO OTHER INSTALLATIONS}
+- open [Git Bash](https://git-scm.com/downloads)
+- run `mkdir -p ~/bin ; rm ~/bin/autogit.exe ; curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/darklab_autogit/releases/latest | sed "s/releases\/tag/releases\/download/")/autogit-windows-amd64.exe -o ~/bin/autogit.exe && chmod 777 ~/bin/autogit.exe`
 
 ## Contacts
 
