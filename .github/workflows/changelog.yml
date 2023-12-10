@@ -8,7 +8,8 @@ jobs:
   validate:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout git repo with tags and commits for autogit
+      uses: actions/checkout@v3
       with:
         fetch-depth: 0
 

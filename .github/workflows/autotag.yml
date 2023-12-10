@@ -18,10 +18,7 @@ jobs:
 
     - name: Install Autogit
       run: |
-        sudo apt install -y wget
-        wget https://github.com/darklab8/darklab_autogit/releases/download/v1.4.0/autogit-linux-amd64
-        mv autogit-linux-amd64 /usr/local/bin/autogit
-        chmod +x /usr/local/bin/autogit
+        curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/darklab_autogit/releases/latest | sed "s/releases\/tag/releases\/download/")/autogit-linux-amd64 -o /usr/local/bin/autogit && chmod 777 /usr/local/bin/autogit
 
     - name: Checkout repostiory with commit history!
       uses: actions/checkout@v3
