@@ -21,6 +21,9 @@ as a result of a tool work, you communicate your developer work better to other 
   - currently supports markdown and bbcode formats
   - has option `--validate` to run validation of commits (for CI usage)
 - easy create and push of a git tag with autoinserted changelog through `autogit semver --tag --push`
+- initialize settings for more customization with `autogit init` inside git repo
+  - uncomment and override desired settings
+- find out more commands and options with `autogit [any set of sub commands] --help`
 - CI friendly, not requires any dependencies for its usage for everything (inbuilt git-go to access git information)
 
 # Example
