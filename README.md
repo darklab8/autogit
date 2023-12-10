@@ -68,7 +68,7 @@ text version at ubuntu 22.04:
 ## Windows
 
 - install [Git Bash](https://git-scm.com/downloads)
-- instal lautogit `mkdir -p ~/bin ; rm $(which autogit) ; curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/darklab_autogit/releases/latest | sed "s/releases\/tag/releases\/download/")/autogit-windows-amd64.exe -o ~/bin/autogit.exe && chmod 777 ~/bin/autogit.exe`
+- install lautogit `mkdir -p ~/bin ; rm $(which autogit) ; curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/darklab_autogit/releases/latest | sed "s/releases\/tag/releases\/download/")/autogit-windows-amd64.exe -o ~/bin/autogit.exe && chmod 777 ~/bin/autogit.exe`
 - check installation with `autogit version` command. Expect to see `OK autogit version: v{version}`
 
 ## Code architecture
