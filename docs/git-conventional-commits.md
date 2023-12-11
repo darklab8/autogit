@@ -6,7 +6,7 @@
 
 ## Intro
 
-Software development is often seen as a place for geeks without social skills, controversary software development requires often communication skills to gather requirements and explain what we did and why.
+Software development is often seen as a place for geeks without social skills, controversary software development requires often communication skills to gather requirements and explain what we did and why. We write code not just for machines, but for other humans to read (including my ourselves a year later)
 
 Messaging apps change, and the history of messages is rarely preserved. Git always remains to save another commit of code change and the message attached to it. A Git repository is the ultimate source of truth regarding a project. Every cloned git repository is a full decentralized backup of it.
 
@@ -15,7 +15,7 @@ We can traverse for [example](https://github.com/torvalds/linux/commit/2099306c4
 It is hard writing good atomic commit messages though. It takes some getting used to operating [git with best practices](https://deepsource.com/blog/git-best-practices)
 
 But how we can ensure that every member will be adhering to such practices? Or even how to remember to do it yourself?
-The answer is, we can enforce it with [linter](https://github.com/darklab8/darklab_autogit) 😄
+The answer is, we can enforce it with [linter](../) 😄
 
 ## Standard
 
@@ -23,10 +23,10 @@ The answer is, we can enforce it with [linter](https://github.com/darklab8/darkl
 
 It operates through [git hooks](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) of your repository. Once linked, it will enforce itself on git commit at any your Git GUI tool.
 
-you will be encouraged writing commits like that (by preventing you to submit commit unless it adheres to the set rules)
+you will be encouraged writing commits like that (the tool will prevent commit being submitted unless it adheres to the set rules)
 
 ```
-<type>(<optional scope>)(optional exclamation mark ): <description>
+<type>(<optional scope>)(optional breaking change '!' char): <subject>
 empty separator line
 <optional body>
 empty separator line
@@ -63,6 +63,7 @@ Refs: #123
   - each code line is easier understood why was added
 - u can utilize `git blame` onto your git files like that
   for each code line u will see author of the line and exact commit why it was added
+  - that will help you investigating curious bugs and problems later
 
 ```
 $ git blame main.go
@@ -82,7 +83,7 @@ def7cc5c (dd84ai 2023-10-21 23:30:37 +0200 11)  interface_cli.Execute()
 
 - u can use tools made for git conventional commits standard parsing,
   that will generate changelogs of changes for product releases!
-  - This feature is available in [autogit](https://github.com/darklab8/darklab_autogit)
+  - This feature is available in [autogit](../)
 
 example of changelog:
 ![changelog example](../assets/changelog_example.png)
@@ -91,20 +92,21 @@ example of changelog:
 
 There are many [tools for conventional commits](https://www.conventionalcommits.org/en/about/)
 
-What makes this tool difference?
+What makes this tool different?
 
-- It was written with [CI usage in mind](https://github.com/darklab8/darklab_autogit/blob/master/.github/workflows/validate.yml)
-  - it is easy to insert it into any other CI instrument with such example.
-  - just ensure you clone repository with history of your tags and commits 😉
-- as a golang compiled binary it is not requiring you to install node.js of a specific version or any other heavy interpreter for its running in CI or at local dev machine.
-- as a golang written tool it has a good capacity to add a lot of extra features 😃
-- it is written to be as automated as possible and operate as CLI tool helping to release products more professionally.
+- It was written with [CI usage in mind](../.github/workflows/validate.yml)
+  - it is easy to insert it into any other CI instrument with such an example.
+  - just ensure you clone a repository with the history of your tags and commits 😉
+- as a Golang compiled binary it does not require you to install node.js of a specific version or any other heavy interpreter for its running in CI or at the local dev machine.
+    - even having `git` installed is not required for this tool to operate.
+- as a Golang written tool it has a good capacity to add a lot of extra features 😃
+- it is written to be as automated as possible and operate as a CLI tool helping to release products more professionally.
 - it can operate with all defaults out of the box, and at the same time it can be customized with `autogit.yml` config of settings to specific needs.
 - with operating through git hooks, it will work for you for any Git GUI tool and any IDE.
 
 ## Recap
 
 - We learned that communicating our work to other developers (and yourself in a year) is important.
-- Git serves utilmate source of truth for that.
-- In order for Git commits to be a more readable history, we can utilize `git conventional commits` enforced by linters.
-- We can use history of `git conventional commits` to generate automatically changelogs of changes for releases.
+- Git serves ultimate source of truth for that.
+- For Git commits to be a more readable history, we can utilize `git conventional commits` enforced by linters.
+- We can use the history of `git conventional commits` to generate automatically changelogs of changes for releases.
