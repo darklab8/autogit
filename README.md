@@ -108,10 +108,10 @@ flowchart TD
 
 # Other docs
 
-## [Git Conventional Commits]((docs/git-conventional-commits.md))
-## [Algorithms](docs/development/algos.md)
-## [Dev setup](docs/development/dev_setup.md)
-## [Future plans](docs/development/plans.md)
+- [Article](docs/git-conventional-commits.md)
+- [Algorithms](docs/development/algos.md)
+- [Dev setup](docs/development/dev_setup.md)
+- [Future plans](docs/development/plans.md)
 
 # Contacts
 
