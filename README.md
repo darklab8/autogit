@@ -32,7 +32,7 @@ as a result of the tool work, you have decreased toll on release documentation w
 
 # Getting started
 
-text version at ubuntu 22.04:
+## text version at ubuntu 22.04:
 - [install latest](#install-latest)
 - install git if not present with `apt install -y git`
 - init git repo if not present `git init && git config user.email "you@example.com" && git config user.name example`
@@ -49,6 +49,10 @@ text version at ubuntu 22.04:
   - generate changelog with `autogit changelog`
 
 ![changelog example](assets/changelog_example.png)
+
+## video version:
+
+https://github.com/darklab8/darklab_autogit/assets/20555918/44a05f9b-393f-4f6c-aea5-f4732f4fde73
 
 # Installation
 
