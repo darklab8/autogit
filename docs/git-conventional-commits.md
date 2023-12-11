@@ -10,7 +10,7 @@ Software development is often seen as a place for geeks without social skills, c
 
 Messaging apps change, and the history of messages is rarely preserved. [Git]([https://www.oreilly.com/library/view/head-first-git/9781492092506/](https://www.oreilly.com/library/view/head-first-git/9781492092506/)) always remains to save another commit of code change and the message attached to it. A Git repository is the ultimate source of truth regarding a project. Every cloned git repository is a full decentralized backup of it.
 
-We can traverse for [example](https://github.com/torvalds/linux/commit/2099306c4e1d5d772b150aeac68fdd1d0331b09d) through Linux repository to see... git commits used as equivalent to emailing.
+We can traverse for [example](https://github.com/torvalds/linux/commit/2099306c4e1d5d772b150aeac68fdd1d0331b09d) Linux repository to see... git commits used as equivalent to emailing.
 
 It is hard writing good atomic commit messages though. It takes some getting used to operating [git with best practices](https://deepsource.com/blog/git-best-practices)
 
@@ -34,7 +34,8 @@ empty separator line
 <optional footer2 key: footer2 key value>
 ```
 
-for example
+
+### Example of usage
 
 ```
 docs: correct spelling of CHANGELOG
@@ -57,9 +58,7 @@ Reviewed-by: Z
 Refs: #123
 ```
 
-How can we enforce it for all developers of the repository though?
 
-- By using [CI run with autogit](../.github/workflows/validate.yml) for every commit push or pull request!
 
 ## How it benefits you?
 
@@ -93,6 +92,10 @@ example of changelog:
 ![changelog example](../assets/changelog_example.png)
 
 - Your repository will look professionally with neat git commits, git tags, releases and changelogs! 😎
+
+How can we enforce it for all developers of the repository though?
+
+- By using [CI run with autogit](../.github/workflows/validate.yml) for every commit push or pull request!
 
 ## Tools
 
