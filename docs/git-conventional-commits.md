@@ -6,9 +6,9 @@
 
 ## Intro
 
-Software development is often seen as a place for geeks without social skills, controversary software development requires often communication skills to gather requirements and explain what we did and why. We write code not just for machines, but for other humans to read (including my ourselves a year later)
+Software development is often seen as a place for geeks without social skills, controversary software development requires often communication skills to gather requirements and explain what we did and why. We write code not just for machines, but for other humans to read (including by ourselves a year later)
 
-Messaging apps change, and the history of messages is rarely preserved. Git always remains to save another commit of code change and the message attached to it. A Git repository is the ultimate source of truth regarding a project. Every cloned git repository is a full decentralized backup of it.
+Messaging apps change, and the history of messages is rarely preserved. [Git]([https://www.oreilly.com/library/view/head-first-git/9781492092506/](https://www.oreilly.com/library/view/head-first-git/9781492092506/)) always remains to save another commit of code change and the message attached to it. A Git repository is the ultimate source of truth regarding a project. Every cloned git repository is a full decentralized backup of it.
 
 We can traverse for [example](https://github.com/torvalds/linux/commit/2099306c4e1d5d772b150aeac68fdd1d0331b09d) through Linux repository to see... git commits used as equivalent to emailing.
 
@@ -19,7 +19,7 @@ The answer is, we can enforce it with [linter](../) 😄
 
 ## Standard
 
-[This linter](../) was made to help enforcing [Git conventional commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) standard
+[This linter - autogit](../) will help enforcing [Git conventional commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) standard
 
 It operates through [git hooks](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) of your repository. Once linked, it will enforce itself on git commit at any your Git GUI tool.
 
@@ -57,6 +57,10 @@ Reviewed-by: Z
 Refs: #123
 ```
 
+How can we enforce it for all developers of the repository though?
+
+- By using [CI run with autogit](../.github/workflows/validate.yml) for every commit push or pull request!
+
 ## How it benefits you?
 
 - it is easier to review your and others Pull requests of submitted code.
@@ -88,6 +92,8 @@ def7cc5c (dd84ai 2023-10-21 23:30:37 +0200 11)  interface_cli.Execute()
 example of changelog:
 ![changelog example](../assets/changelog_example.png)
 
+- Your repository will look professionally with neat git commits, git tags, releases and changelogs! 😎
+
 ## Tools
 
 There are many [tools for conventional commits](https://www.conventionalcommits.org/en/about/)
@@ -98,7 +104,7 @@ What makes this tool different?
   - it is easy to insert it into any other CI instrument with such an example.
   - just ensure you clone a repository with the history of your tags and commits 😉
 - as a Golang compiled binary it does not require you to install node.js of a specific version or any other heavy interpreter for its running in CI or at the local dev machine.
-    - even having `git` installed is not required for this tool to operate.
+  - even having `git` installed is not required for this tool to operate.
 - as a Golang written tool it has a good capacity to add a lot of extra features 😃
 - it is written to be as automated as possible and operate as a CLI tool helping to release products more professionally.
 - it can operate with all defaults out of the box, and at the same time it can be customized with `autogit.yml` config of settings to specific needs.
