@@ -1,6 +1,6 @@
 # Git Conventional Commits
 
-**Communicating with other devs through git**
+**Standardized communicating with other devs through git**
 
 <p align="center">
   <img src="../assets/logo.png" style="width: 200px; height: 200px;"/>
