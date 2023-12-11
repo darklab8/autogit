@@ -75,6 +75,8 @@ https://github.com/darklab8/darklab_autogit/assets/20555918/44a05f9b-393f-4f6c-a
 - install lautogit `mkdir -p ~/bin ; rm $(which autogit) ; curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/darklab_autogit/releases/latest | sed "s/releases\/tag/releases\/download/")/autogit-windows-amd64.exe -o ~/bin/autogit.exe && chmod 777 ~/bin/autogit.exe`
 - check installation with `autogit version` command. Expect to see `OK autogit version: v{version}`
 
+P.S. `~/bin/autogit.exe` must be any valid bin path (`echo $PATH`, `echo %PATH%` to get the list) accessable by your tool from where u are going to use it.
+
 ## Code architecture
 
 ```mermaid
