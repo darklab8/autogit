@@ -48,7 +48,9 @@ as a result of the tool work, you have decreased toll on release documentation w
   - `echo 123 >> README.md && git add -A && git commit -m "fix(api): example of scoped bug fix"`
   - generate changelog with `autogit changelog`
 
-![changelog example](assets/changelog_example.png)
+<p align="center" class="custom_borser">
+  <img src="assets/changelog_example.png" style="border: 5px solid #FFF;"/>
+</p>
 
 ## video version:
 
