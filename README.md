@@ -41,16 +41,14 @@ as a result of the tool work, you have decreased toll on release documentation w
   - `echo 123 >> README.md && git add -A && git commit -m "feat: init repo with first code"`
   - `echo 123 >> README.md && git add -A && git commit -m "fix: memory leak in sql connection opener"`
   - `echo 123 >> README.md && git add -A && git commit -m "feat: new super feature"`
-  - `echo 123 >> README.md && git add -A && git commit -m 'feat!: new super feature`
+  - `echo 123 >> README.md && git add -A && git commit -m 'feat!: new super feature'`
 
 `BREAKING CHANGE: api for endpoint status changed to users-status'`
     - due to bash using `!` as a keyword syntax, we need to use `''` single quotes
   - `echo 123 >> README.md && git add -A && git commit -m "fix(api): example of scoped bug fix"`
   - generate changelog with `autogit changelog`
 
-<p align="center" class="custom_borser">
-  <img src="assets/changelog_example.png" style="border: 5px solid #FFF;"/>
-</p>
+![changelog example](assets/changelog_example.png)
 
 ## video version:
 
