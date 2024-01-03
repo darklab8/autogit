@@ -1,11 +1,13 @@
 package envs
 
 import (
-	"autogit/settings/types"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/darklab8/darklab_goutils/goutils/logus_core/logus_types"
+	"github.com/darklab8/darklab_goutils/goutils/utils/utils_types"
 )
 
 /*
@@ -17,10 +19,10 @@ TODO fix actually to detect root folder of it, then it will not be necessary val
 
 var LogTurnJSONLogging bool
 var LogShowFileLocations bool
-var LogLevel types.LogLevel
+var LogLevel logus_types.LogLevel
 
-var PathUserHome types.FilePath
-var PathGitConfig types.FilePath
+var PathUserHome utils_types.FilePath
+var PathGitConfig utils_types.FilePath
 
 const (
 	EnvTrue = "true"
@@ -34,14 +36,14 @@ func init() {
 	if !is_log_level_set {
 		log_level_str = "INFO"
 	}
-	LogLevel = types.LogLevel(log_level_str)
+	LogLevel = logus_types.LogLevel(log_level_str)
 
-	PathUserHome = types.FilePath(os.Getenv("HOME"))
+	PathUserHome = utils_types.FilePath(os.Getenv("HOME"))
 
 	dirname, err := os.UserHomeDir()
 	if err != nil {
 		fmt.Printf("Unable to get UserHomeDir, e=%v", err)
 	}
-	PathUserHome = types.FilePath(dirname)
-	PathGitConfig = types.FilePath(filepath.Join(string(PathUserHome), ".gitconfig"))
+	PathUserHome = utils_types.FilePath(dirname)
+	PathGitConfig = utils_types.FilePath(filepath.Join(string(PathUserHome), ".gitconfig"))
 }

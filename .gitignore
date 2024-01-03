@@ -7,3 +7,4 @@ version.txt
 testfile.txt
 /autogit.yml
 cover.out
+go.work*

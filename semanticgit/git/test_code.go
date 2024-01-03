@@ -2,9 +2,9 @@ package git
 
 import (
 	"autogit/settings/logus"
-	"autogit/settings/utils"
 	"fmt"
 
+	"github.com/darklab8/darklab_goutils/goutils/utils"
 	"github.com/go-git/go-billy/v5/memfs"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
@@ -18,23 +18,23 @@ func NewRepoTestInMemory() *Repository {
 	fs := memfs.New()
 
 	r.repo, err = git.Init(memory.NewStorage(), fs)
-	logus.CheckFatal(err, "failed git init")
+	logus.Log.CheckFatal(err, "failed git init")
 
 	r.wt, err = r.repo.Worktree()
-	logus.CheckFatal(err, "failed to get worktree of repo")
+	logus.Log.CheckFatal(err, "failed to get worktree of repo")
 
 	r.author = &object.Signature{Name: "abc", Email: "abc@example.com"}
 	return r
 }
 
 func (r *Repository) TestCommit(msg string) plumbing.Hash {
-	file := utils.NewFile("testfile.txt").CreateToWriteF()
-	defer file.Close()
-	file.WritelnF(utils.TokenHex(10))
+	utils.NewWriteFile("testfile.txt", func(file *utils.FileWrite) {
+		file.WritelnF(utils.TokenHex(10))
+	})
 
 	r.wt.Add("testfile.txt")
 	hash, err := r.wt.Commit(msg, &git.CommitOptions{Author: r.author})
-	logus.CheckFatal(err, "unable to form commit")
+	logus.Log.CheckFatal(err, "unable to form commit")
 	return hash
 }
 

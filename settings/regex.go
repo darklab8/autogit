@@ -1,26 +1,27 @@
 package settings
 
 import (
-	"autogit/settings/types"
-	"autogit/settings/utils"
 	"regexp"
+
+	"github.com/darklab8/darklab_goutils/goutils/utils"
+	"github.com/darklab8/darklab_goutils/goutils/utils/utils_types"
 )
 
 type RegexScheme struct {
 	ConventionalCommit struct {
-		Headers    []types.RegexExpression `yaml:"headers"`
-		BodyFooter types.RegexExpression   `yaml:"bodyFooter"`
+		Headers    []utils_types.RegExp `yaml:"headers"`
+		BodyFooter utils_types.RegExp   `yaml:"bodyFooter"`
 	} `yaml:"conventionalCommit"`
-	Issue            types.RegexExpression `yaml:"issue"`
-	PullRequestRegex types.RegexExpression `yaml:"pull_request"`
-	SemVer           types.RegexExpression `yaml:"semVer"`
-	Prerelease       types.RegexExpression `yaml:"prerelease"`
+	Issue            utils_types.RegExp `yaml:"issue"`
+	PullRequestRegex utils_types.RegExp `yaml:"pull_request"`
+	SemVer           utils_types.RegExp `yaml:"semVer"`
+	Prerelease       utils_types.RegExp `yaml:"prerelease"`
 	Validation       struct {
 		Scope struct {
-			Lowercase types.RegexExpression `yaml:"lowercase"`
+			Lowercase utils_types.RegExp `yaml:"lowercase"`
 		} `yaml:"scope"`
 		Type struct {
-			Lowercase types.RegexExpression `yaml:"lowercase"`
+			Lowercase utils_types.RegExp `yaml:"lowercase"`
 		} `yaml:"type"`
 	} `yaml:"validation"`
 }

@@ -123,10 +123,10 @@ func (changelog *Changelog) addCommit(
 			if record.Type == merge_type {
 				match_pr := settings.RegexPullRequest.FindStringSubmatch(string(record.Subject))
 				if len(match_pr) == 0 {
-					logus.Debug("merging commit is not containing linked PR", logus.Commit(record.ParsedCommit))
+					logus.Log.Debug("merging commit is not containing linked PR", logus.Commit(record.ParsedCommit))
 					return
 				} else {
-					logus.Debug(fmt.Sprintf("merging commit contains linked PR=%v", match_pr), logus.Commit(record.ParsedCommit))
+					logus.Log.Debug(fmt.Sprintf("merging commit contains linked PR=%v", match_pr), logus.Commit(record.ParsedCommit))
 				}
 			}
 		}
@@ -145,7 +145,7 @@ func (changelog *Changelog) addCommit(
 	}
 	redirect := func(commit *conventionalcommits.ConventionalCommit, iterable_types []conventionalcommitstype.Type) error {
 		for _, iterated_type := range iterable_types {
-			logus.Debug(fmt.Sprintf("RedirectMergingCommits... for type=%s", iterated_type), logus.Commit(commit.ParsedCommit))
+			logus.Log.Debug(fmt.Sprintf("RedirectMergingCommits... for type=%s", iterated_type), logus.Commit(commit.ParsedCommit))
 			if strings.Contains(string(commit.Subject), string(iterated_type)) {
 				redirect_merging_commit(commit, iterated_type)
 				return nil
@@ -241,7 +241,7 @@ func NewChangelog(
 	changelog.SemverGroups = make(map[changelog_types.ChangelogSectionType]*changelogSemverGroup)
 
 	logs := g.GetChangelogByTag(FromTag, true)
-	logus.Debug(fmt.Sprintf("NewChangelog, log.count=%d", len(logs)))
+	logus.Log.Debug(fmt.Sprintf("NewChangelog, log.count=%d", len(logs)))
 	if FromTag == "" {
 		FromTag = g.GetNextVersion(semver_options).ToString()
 	}

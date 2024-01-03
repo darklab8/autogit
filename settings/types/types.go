@@ -1,18 +1,14 @@
 package types
 
-type FilePath string
+import "github.com/darklab8/darklab_goutils/goutils/utils/utils_types"
 
-type ConfigPath FilePath
+type ConfigPath utils_types.FilePath
 
-func (c ConfigPath) ToFilePath() FilePath {
-	return FilePath(c)
+func (c ConfigPath) ToFilePath() utils_types.FilePath {
+	return utils_types.FilePath(c)
 }
 
-type ProjectFolder FilePath
-
-type RegexExpression string
-
-type TemplateExpression string
+type ProjectFolder utils_types.FilePath
 
 type TagName string
 
@@ -21,5 +17,3 @@ type CommitOriginalMsg string
 func (c CommitOriginalMsg) ToString() string {
 	return string(c)
 }
-
-type LogLevel string

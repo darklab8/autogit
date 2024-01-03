@@ -6,10 +6,11 @@ import (
 	"autogit/settings"
 	"autogit/settings/logus"
 	"autogit/settings/types"
-	"autogit/settings/utils"
 	_ "embed"
 	"text/template"
 	"time"
+
+	"github.com/darklab8/darklab_goutils/goutils/utils"
 )
 
 type Templates struct {
@@ -82,7 +83,7 @@ type CommitRangeUrlVars struct {
 func (templs Templates) NewCommitRangeUrlRender(logs []conventionalcommits.ConventionalCommit, ChangelogVersion types.TagName) Header {
 	var from, to conventionalcommitstype.Hash
 	if len(logs) == 0 {
-		logus.Error("for some reason logs count is 0 at NewCommitRangeUrlRender")
+		logus.Log.Error("for some reason logs count is 0 at NewCommitRangeUrlRender")
 		from = "undefined"
 		to = "undefined"
 	} else {

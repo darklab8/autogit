@@ -14,12 +14,12 @@ import (
 
 func TestParse(t *testing.T) {
 	_, err := conventionalcommits.NewCommit("feat: abc")
-	logus.CheckFatal(err, "failled creating commit")
+	logus.Log.CheckFatal(err, "failled creating commit")
 }
 
 func TestParse2(t *testing.T) {
 	_, err := conventionalcommits.NewCommit("fix: dsfsdf")
-	logus.CheckFatal(err, "failed creating commit")
+	logus.Log.CheckFatal(err, "failed creating commit")
 }
 
 func TestParse3(t *testing.T) {
@@ -33,7 +33,7 @@ func TestParse4(t *testing.T) {
 body message
 
 footer-key: tralala`)
-	logus.CheckFatal(err, "failed creating commit")
+	logus.Log.CheckFatal(err, "failed creating commit")
 
 	testutils.Equal(t, "feat", commit.Type)
 	testutils.Equal(t, conventionalcommitstype.Scope("api"), commit.Scope)
@@ -45,7 +45,7 @@ footer-key: tralala`)
 
 func TestParse5(t *testing.T) {
 	_, err := conventionalcommits.NewCommit("feat: hook commit msg")
-	logus.CheckFatal(err, "failed creating commit")
+	logus.Log.CheckFatal(err, "failed creating commit")
 }
 
 func TestNotAllowedNewLineAtSecondLine(t *testing.T) {
@@ -58,14 +58,14 @@ footer-key: tralala`)
 
 func TestParse6(t *testing.T) {
 	_, err := conventionalcommits.NewCommit(`refactor: autogit semver into about`)
-	logus.CheckFatal(err, "failed creating commit")
+	logus.Log.CheckFatal(err, "failed creating commit")
 }
 
 func TestParse7(t *testing.T) {
 	commit, err := conventionalcommits.NewCommit(`feat: rendered changelog for task
 
 i-#1, i-#2, i-#3`)
-	logus.CheckFatal(err, "failed creating commits")
+	logus.Log.CheckFatal(err, "failed creating commits")
 	testutils.Equal(t, "1", commit.Issue[0])
 	testutils.Equal(t, "2", commit.Issue[1])
 	testutils.Equal(t, "3", commit.Issue[2])

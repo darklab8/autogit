@@ -4,15 +4,16 @@ import (
 	"autogit/interface_cli/actions/changelog/changelog_types"
 	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
 	"autogit/settings/logus"
-	"autogit/settings/types"
+
+	"github.com/darklab8/darklab_goutils/goutils/utils/utils_types"
 )
 
 type ChangelogScheme struct {
-	REPOSITORY_OWNER string                   `yaml:"REPOSITORY_OWNER"`
-	REPOSITORY_NAME  string                   `yaml:"REPOSITORY_NAME"`
-	CommitURL        types.TemplateExpression `yaml:"commitUrl"`
-	CommitRangeURL   types.TemplateExpression `yaml:"commitRangeUrl"`
-	IssueURL         types.TemplateExpression `yaml:"issueUrl"`
+	REPOSITORY_OWNER string                         `yaml:"REPOSITORY_OWNER"`
+	REPOSITORY_NAME  string                         `yaml:"REPOSITORY_NAME"`
+	CommitURL        utils_types.TemplateExpression `yaml:"commitUrl"`
+	CommitRangeURL   utils_types.TemplateExpression `yaml:"commitRangeUrl"`
+	IssueURL         utils_types.TemplateExpression `yaml:"issueUrl"`
 
 	MergeCommits struct {
 		MustHaveLinkedPR       bool                           `yaml:"must_have_linked_pull_request"`
@@ -34,12 +35,12 @@ type ChangelogScheme struct {
 
 func (conf ConfigScheme) changelogValidate() {
 	if conf.Changelog.CommitURL == "" {
-		logus.Fatal("autogit.yml->Changelog.CommitUrl is empty")
+		logus.Log.Fatal("autogit.yml->Changelog.CommitUrl is empty")
 	}
 	if conf.Changelog.CommitRangeURL == "" {
-		logus.Fatal("autogit.yml->Changelog.CommitRangeURL is empty")
+		logus.Log.Fatal("autogit.yml->Changelog.CommitRangeURL is empty")
 	}
 	if conf.Changelog.IssueURL == "" {
-		logus.Fatal("autogit.yml->Changelog.IssueURL is empty")
+		logus.Log.Fatal("autogit.yml->Changelog.IssueURL is empty")
 	}
 }

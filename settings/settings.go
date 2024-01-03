@@ -14,6 +14,9 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/darklab8/darklab_goutils/goutils/logus_core"
+	"github.com/darklab8/darklab_goutils/goutils/utils/utils_types"
+
 	"gopkg.in/yaml.v3"
 )
 
@@ -68,13 +71,13 @@ func readSettingsfile(configPath types.ConfigPath) []byte {
 	local_file_is_not_found := false
 	if err != nil {
 		if is_file_missing(err) {
-			logus.Debug("not found at path repository local file with config. Fallback to global config", logus.FilePath(configPath.ToFilePath()), logus.OptError(err))
+			logus.Log.Debug("not found at path repository local file with config. Fallback to global config", logus_core.FilePath(configPath.ToFilePath()), logus_core.OptError(err))
 			local_file_is_not_found = true
 		} else {
-			logus.CheckFatal(err, "Could not read the file due to error", logus.ConfigPath(configPath), logus.OptError(err))
+			logus.Log.CheckFatal(err, "Could not read the file due to error", logus.ConfigPath(configPath), logus_core.OptError(err))
 		}
 	} else {
-		logus.Debug("succesfuly read config from local repository project path", logus.ConfigPath(configPath))
+		logus.Log.Debug("succesfuly read config from local repository project path", logus.ConfigPath(configPath))
 	}
 
 	global_file_is_not_found := false
@@ -82,16 +85,16 @@ func readSettingsfile(configPath types.ConfigPath) []byte {
 		file, err = os.ReadFile(string(GetGlobalConfigPath()))
 		if err != nil {
 			if is_file_missing(err) {
-				logus.Debug("not found at path repository global file with config. Fallback to other in memory config", logus.FilePath(configPath.ToFilePath()), logus.OptError(err))
+				logus.Log.Debug("not found at path repository global file with config. Fallback to other in memory config", logus_core.FilePath(configPath.ToFilePath()), logus_core.OptError(err))
 				global_file_is_not_found = true
 			} else {
-				logus.CheckFatal(err, "Could not read the file due to error", logus.ConfigPath(configPath), logus.OptError(err))
+				logus.Log.CheckFatal(err, "Could not read the file due to error", logus.ConfigPath(configPath), logus_core.OptError(err))
 			}
 		}
 	}
 
 	if local_file_is_not_found && global_file_is_not_found {
-		logus.Debug("fallback to memory settings file")
+		logus.Log.Debug("fallback to memory settings file")
 		file = []byte(ConfigExample)
 	}
 
@@ -130,7 +133,7 @@ func merge_maps[T comparable](result map[T]interface{}, additions map[T]interfac
 				if asserted_result_value, ok := result_value.(map[string]interface{}); ok {
 					merge_maps(asserted_result_value, asserted_addition_value)
 				} else {
-					logus.Fatal(`
+					logus.Log.Fatal(`
 						failed to assert value of config in memory being of same type as value in input config
 						potentially broken config
 					`)
@@ -147,20 +150,20 @@ func configRead(file []byte) *ConfigScheme {
 
 	file_config := make(map[interface{}]interface{})
 	err := yaml.Unmarshal(file, &file_config)
-	logus.CheckFatal(err, "unable to unmarshal input config")
+	logus.Log.CheckFatal(err, "unable to unmarshal input config")
 
 	memory_config := make(map[interface{}]interface{})
 	err = yaml.Unmarshal([]byte(ConfigExample), &memory_config)
-	logus.CheckFatal(err, "unable to unmrashal memory config")
+	logus.Log.CheckFatal(err, "unable to unmrashal memory config")
 
 	// merged file content onto memory config
 	merged_config := merge_maps(memory_config, file_config)
 
 	merged_config_as_bytes, err := yaml.Marshal(&merged_config)
-	logus.CheckFatal(err, "unable to marshal merged config")
+	logus.Log.CheckFatal(err, "unable to marshal merged config")
 
 	err = yaml.Unmarshal(merged_config_as_bytes, &config)
-	logus.CheckError(err, `unable to unmarshal merged config.
+	logus.Log.CheckError(err, `unable to unmarshal merged config.
 	Your autogit.yml settings file is having invalue key: value pairs.
 	Try to remove previous autogit.yml settings files and generate a new one with "autogit init [--global] command"`)
 
@@ -181,7 +184,7 @@ func (config *ConfigScheme) configLoadEnvOverrides() {
 
 	if value, ok := os.LookupEnv("AUTOGIT_CONFIG_VALIDATION_RULES_HEADER_SUBJECT_MIN_WORDS"); ok {
 		res, err := strconv.Atoi(value)
-		logus.CheckFatal(err, "crashed when trying to atoi min words env value")
+		logus.Log.CheckFatal(err, "crashed when trying to atoi min words env value")
 		config.Validation.Rules.Header.Subject.MinWords = res
 	}
 }
@@ -192,12 +195,12 @@ func check_file_is_not_having_invalid[T comparable](example map[T]interface{}, c
 
 		// if key is present in additions hasmap
 		if example_value, is_present := example[checkable_key]; !is_present {
-			logus.Error(fmt.Sprintf(`autogit.yml file is having not allowed user settings key
+			logus.Log.Error(fmt.Sprintf(`autogit.yml file is having not allowed user settings key
 			Please, remove previous autogit.yml local in your repository and user global one and generate new one
 			with "autogit init [--global]" command :). Or remove the specified "settings_key"`), logus.SettingsKey(checkable_key))
 		} else {
 			if reflect.TypeOf(example_value) != reflect.TypeOf(checkable_value) {
-				logus.Fatal(fmt.Sprintf(
+				logus.Log.Fatal(fmt.Sprintf(
 					"wrong value type in config. Expected: %v, Received:%v",
 					reflect.TypeOf(example_value),
 					reflect.TypeOf(checkable_value),
@@ -217,11 +220,11 @@ func validate_file_config(file []byte) {
 
 	file_config := make(map[interface{}]interface{})
 	err := yaml.Unmarshal(file, &file_config)
-	logus.CheckFatal(err, "unable to unmarshal input config")
+	logus.Log.CheckFatal(err, "unable to unmarshal input config")
 
 	memory_config := make(map[interface{}]interface{})
 	err = yaml.Unmarshal([]byte(ConfigExample), &memory_config)
-	logus.CheckFatal(err, "unable to unmrashal memory config")
+	logus.Log.CheckFatal(err, "unable to unmrashal memory config")
 
 	check_file_is_not_having_invalid(memory_config, file_config)
 }
@@ -249,9 +252,9 @@ func GetGlobalConfigPath() types.ConfigPath {
 func GetProjectConfigPath() types.ConfigPath {
 	g := gitraw.NewGitRepo()
 	w, err := g.Worktree()
-	logus.CheckFatal(err, "are we not in git repo folder?")
-	project_path := types.FilePath(w.Filesystem.Root())
-	return types.ConfigPath(filepath.Join(string(project_path), string(ConfigFileName)))
+	logus.Log.CheckFatal(err, "are we not in git repo folder?")
+	project_path := utils_types.FilePath(w.Filesystem.Root())
+	return types.ConfigPath(utils_types.FilePath(filepath.Join(string(project_path), string(ConfigFileName))))
 }
 
 func GetConfig() ConfigScheme {

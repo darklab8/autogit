@@ -43,7 +43,7 @@ var HEAD_Hash plumbing.Hash
 
 func (r *Repository) GetLatestCommitHash() plumbing.Hash {
 	ref, err := r.repo.Head()
-	logus.CheckFatal(err, "unabled to get latest Head commit")
+	logus.Log.CheckFatal(err, "unabled to get latest Head commit")
 	return ref.Hash()
 }
 
@@ -54,7 +54,7 @@ func (r *Repository) ForeachTag(callback func(tag Tag) ShouldWeStopIteration) {
 
 	// ... retrieves the commit history
 	cIter, err := r.repo.Log(&git.LogOptions{From: From})
-	logus.CheckFatal(err, "unable to get git log")
+	logus.Log.CheckFatal(err, "unable to get git log")
 
 	tags := r.getUnorderedTags()
 	// ... just iterates over the commits, printing it
@@ -74,15 +74,15 @@ func (r *Repository) ForeachTag(callback func(tag Tag) ShouldWeStopIteration) {
 }
 
 func (r *Repository) ForeachLog(From plumbing.Hash, callback func(log Log) ShouldWeStopIteration) {
-	logus.Debug(fmt.Sprintf("ForeachLog. From1=%v", From))
+	logus.Log.Debug(fmt.Sprintf("ForeachLog. From1=%v", From))
 	// retrieves the branch pointed by HEAD
 	if From.IsZero() {
 		var err error
 		ref, err := r.repo.Head()
-		logus.CheckFatal(err, "unable getting Head commit")
+		logus.Log.CheckFatal(err, "unable getting Head commit")
 		From = ref.Hash()
 	}
-	logus.Debug(fmt.Sprintf("ForeachLog. From2=%v", From))
+	logus.Log.Debug(fmt.Sprintf("ForeachLog. From2=%v", From))
 
 	// get the commit object, pointed by ref
 	// commit, err := r.CommitObject(ref.Hash())
@@ -94,13 +94,13 @@ func (r *Repository) ForeachLog(From plumbing.Hash, callback func(log Log) Shoul
 			Order: git.LogOrderCommitterTime, // necessary to see commits between merging commits
 		},
 	)
-	logus.CheckFatal(err, "unable getting git log")
+	logus.Log.CheckFatal(err, "unable getting git log")
 
 	// ... just iterates over the commits, printing it
 	c, _ := cIter.Next()
 	for ; c != nil; c, _ = cIter.Next() {
 		msg := types.CommitOriginalMsg(c.Message)
-		// logus.Debug("ForeachLog retrieved", logus.CommitMessage(msg), logus.CommitHash(c.Hash))
+		// autogit_logus.Log.Debug("ForeachLog retrieved", logus_core.CommitMessage(msg), logus_core.CommitHash(c.Hash))
 		shouldWeStop := callback(Log{Hash: c.Hash, Msg: msg})
 		if shouldWeStop {
 			return
@@ -118,7 +118,7 @@ type Tag struct {
 func (r *Repository) getUnorderedTags() []Tag {
 	var results []Tag
 	iter, err := r.repo.Tags()
-	logus.CheckFatal(err, "unable to get repository tags")
+	logus.Log.CheckFatal(err, "unable to get repository tags")
 
 	if err := iter.ForEach(func(ref *plumbing.Reference) error {
 		if !ref.Name().IsTag() {
@@ -127,7 +127,7 @@ func (r *Repository) getUnorderedTags() []Tag {
 		tag, err := r.repo.Tag(ref.Name().Short())
 		tag_name := types.TagName(tag.Name())
 		if err != nil {
-			logus.Fatal("failed to get tag ", logus.TagName(tag_name))
+			logus.Log.Fatal("failed to get tag ", logus.TagName(tag_name))
 		}
 
 		tag_obj, err := r.repo.TagObject(ref.Hash())
@@ -139,7 +139,7 @@ func (r *Repository) getUnorderedTags() []Tag {
 		results = append(results, Tag{Hash: tag.Hash(), Name: types.TagName(tag.Name().Short()), Ref: ref})
 		return nil
 	}); err != nil {
-		logus.CheckFatal(err, "failed iterating repository refs")
+		logus.Log.CheckFatal(err, "failed iterating repository refs")
 	}
 
 	return results
@@ -160,7 +160,7 @@ func (r *Repository) getHashByTagName(tagName types.TagName) plumbing.Hash {
 
 func (r *Repository) GetLogsFromTag(tagName types.TagName, callback func(log Log) ShouldWeStopIteration) {
 	FromHash := r.getHashByTagName(tagName)
-	logus.Debug("GetLogsFromTag is called", logus.TagName(tagName))
+	logus.Log.Debug("GetLogsFromTag is called", logus.TagName(tagName))
 
 	r.ForeachLog(FromHash, func(log Log) ShouldWeStopIteration {
 		return callback(log)
@@ -169,7 +169,7 @@ func (r *Repository) GetLogsFromTag(tagName types.TagName, callback func(log Log
 
 func (r *Repository) CreateTag(name types.TagName, msg string) {
 	hash, err := r.repo.Head()
-	logus.CheckFatal(err, "failed getting Head commit")
+	logus.Log.CheckFatal(err, "failed getting Head commit")
 	ref, err := r.repo.CreateTag(string(name), hash.Hash(), &git.CreateTagOptions{Message: msg})
 	fmt.Printf("CreateTag=%v,%v\n", ref, err)
 }
@@ -181,21 +181,21 @@ func (r *Repository) PushTag(name types.TagName) {
 	sshPath := filepath.Join(string(envs.PathUserHome), ".ssh", string(r.sshPath))
 	sshKey, _ := os.ReadFile(sshPath)
 	publicKey, keyError := ssh.NewPublicKeys("git", []byte(sshKey), "")
-	logus.CheckFatal(keyError, "failed initializing git ssh keys")
+	logus.Log.CheckFatal(keyError, "failed initializing git ssh keys")
 
 	refs := []config.RefSpec{
 		config.RefSpec("+refs/tags/" + name + ":refs/tags/" + name),
 	}
-	logus.CheckFatal(refs[0].Validate(), "failed to validate push tag")
+	logus.Log.CheckFatal(refs[0].Validate(), "failed to validate push tag")
 	err := r.repo.Push(&git.PushOptions{RemoteName: defaultRemoteName, Auth: publicKey, RefSpecs: refs, Progress: os.Stdout})
-	logus.CheckFatal(err, "failed to push")
+	logus.Log.CheckFatal(err, "failed to push")
 	fmt.Printf("PushTag=%v\n", err)
 }
 
 func (r *Repository) HookEnabled(enabled bool) {
 	hooksPathkey := "hooksPath"
 	cfg, err := r.repo.Config()
-	logus.CheckFatal(err, "failed to read config")
+	logus.Log.CheckFatal(err, "failed to read config")
 
 	if enabled {
 		cfg.Raw.Section("core").SetOption(hooksPathkey, settings.HookFolderName)
@@ -203,5 +203,5 @@ func (r *Repository) HookEnabled(enabled bool) {
 		cfg.Raw.Section("core").RemoveOption(hooksPathkey)
 	}
 	r.repo.SetConfig(cfg)
-	logus.CheckFatal(err, "failed to write config")
+	logus.Log.CheckFatal(err, "failed to write config")
 }

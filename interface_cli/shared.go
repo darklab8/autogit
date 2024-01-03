@@ -4,6 +4,7 @@ import (
 	"autogit/settings/logus"
 	"fmt"
 
+	"github.com/darklab8/darklab_goutils/goutils/logus_core"
 	"github.com/spf13/cobra"
 )
 
@@ -17,9 +18,9 @@ func (s *sharedFlags) Bind(Cmd *cobra.Command) {
 
 func (s *sharedFlags) Run() {
 	if *(s.verboseLogging) {
-		logus.Slogger = logus.NewLogger(logus.LEVEL_DEBUG)
+		logus.Log = logus_core.NewLogger(logus_core.LEVEL_DEBUG, false, false)
 	}
-	logus.Debug(fmt.Sprintf("verbose=%t\n", *(s.verboseLogging)))
+	logus.Log.Debug(fmt.Sprintf("verbose=%t\n", *(s.verboseLogging)))
 }
 
 var shared struct {

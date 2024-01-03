@@ -32,7 +32,7 @@ func Changelog(params ChangelogParams, gitw *git.Repository) string {
 	params.EnableNewline = false
 
 	g := semanticgit.NewSemanticRepo(gitw)
-	logus.Debug("Getting changelog", logus.TagName(types.TagName(params.Tag)))
+	logus.Log.Debug("Getting changelog", logus.TagName(types.TagName(params.Tag)))
 
 	var changelogus changelog.IChangelog
 	switch changelog.ChangelogFormat(params.Format) {
@@ -49,7 +49,7 @@ func Changelog(params ChangelogParams, gitw *git.Repository) string {
 		log_commits := g.GetChangelogByTag(types.TagName(params.Tag), false)
 		for _, commit := range log_commits {
 			err := validation.Validate(commit, conf)
-			logus.CheckError(err, "failed to validate", logus.Commit(commit.ParsedCommit))
+			logus.Log.CheckError(err, "failed to validate", logus.Commit(commit.ParsedCommit))
 		}
 	}
 

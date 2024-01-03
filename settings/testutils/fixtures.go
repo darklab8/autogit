@@ -3,8 +3,9 @@ package testutils
 import (
 	"autogit/settings"
 	"autogit/settings/types"
-	"autogit/settings/utils"
 	"path/filepath"
+
+	"github.com/darklab8/darklab_goutils/goutils/utils"
 )
 
 func FixtureSettings() {

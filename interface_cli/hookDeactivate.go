@@ -9,7 +9,7 @@ import (
 	"autogit/settings/envs"
 	"autogit/settings/logus"
 	"fmt"
-	"io/ioutil"
+	"os"
 
 	"github.com/go-git/go-git/v5/config"
 	"github.com/spf13/cobra"
@@ -27,19 +27,19 @@ var deactivateCmd = &cobra.Command{
 			git.HookEnabled(false)
 		} else {
 			cfg, err := config.LoadConfig(config.GlobalScope)
-			logus.CheckFatal(err, "failed to read global scoped config")
+			logus.Log.CheckFatal(err, "failed to read global scoped config")
 			for section_number, section := range cfg.Raw.Sections {
 				if section.Name == "core" {
 					cfg.Raw.Sections[section_number] = section.RemoveOption("hooksPath")
 				}
 			}
-			logus.CheckFatal(cfg.Validate(), "failed to validate global config")
+			logus.Log.CheckFatal(cfg.Validate(), "failed to validate global config")
 			file, err := cfg.Marshal()
-			logus.CheckFatal(err, "failed to marshal global settings")
+			logus.Log.CheckFatal(err, "failed to marshal global settings")
 			fmt.Println("file", string(file))
 
-			err = ioutil.WriteFile(string(envs.PathGitConfig), file, 0777)
-			logus.CheckFatal(err, "failed to write global settings")
+			err = os.WriteFile(string(envs.PathGitConfig), file, 0777)
+			logus.Log.CheckFatal(err, "failed to write global settings")
 		}
 	},
 }

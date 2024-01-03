@@ -4,10 +4,12 @@ import (
 	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
 	"autogit/settings"
 	"autogit/settings/logus"
+
 	"autogit/settings/types"
-	"autogit/settings/utils"
 	"fmt"
 	"strings"
+
+	"github.com/darklab8/darklab_goutils/goutils/utils"
 )
 
 type ConventionalCommit struct {
@@ -46,7 +48,7 @@ func ParseCommit(msg types.CommitOriginalMsg) (*ConventionalCommit, error) {
 	}
 
 	if len(main_match) == 0 {
-		logus.Debug("original msg:\n" + string(msg))
+		logus.Log.Debug("original msg:\n" + string(msg))
 		return nil, NotParsedCommit{}
 	}
 

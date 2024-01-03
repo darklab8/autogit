@@ -5,121 +5,60 @@ import (
 	"autogit/semanticgit/semver/semvertype"
 	"autogit/settings/types"
 	"fmt"
-	"log/slog"
 	"strconv"
 
+	"github.com/darklab8/darklab_goutils/goutils/logus_core"
 	"github.com/go-git/go-git/v5/plumbing"
 )
 
-func logGroupFiles() slog.Attr {
-	return slog.Group("files",
-		"file3", GetCallingFile(3),
-		"file4", GetCallingFile(4),
-	)
-}
-
-type slogGroup struct {
-	params map[string]string
-}
-
-func (s slogGroup) Render() slog.Attr {
-	anies := []any{}
-	for key, value := range s.params {
-		anies = append(anies, key)
-		anies = append(anies, value)
-	}
-
-	return slog.Group("extras", anies...)
-}
-
-type slogParam func(r *slogGroup)
-
-func newSlogGroup(opts ...slogParam) slog.Attr {
-	client := &slogGroup{params: make(map[string]string)}
-	for _, opt := range opts {
-		opt(client)
-	}
-
-	return (*client).Render()
-}
-
-func TestParam(value int) slogParam {
-	return func(c *slogGroup) {
-		c.params["test_param"] = fmt.Sprintf("%d", value)
+func ConfigPath(value types.ConfigPath) logus_core.SlogParam {
+	return func(c *logus_core.SlogGroup) {
+		c.Params["config_path"] = string(value)
 	}
 }
 
-func ConfigPath(value types.ConfigPath) slogParam {
-	return func(c *slogGroup) {
-		c.params["config_path"] = string(value)
+func CommitHash(value plumbing.Hash) logus_core.SlogParam {
+	return func(c *logus_core.SlogGroup) {
+		c.Params["commit_hash"] = value.String()
 	}
 }
 
-func Expected(value any) slogParam {
-	return func(c *slogGroup) {
-		c.params["expected"] = fmt.Sprintf("%v", value)
-	}
-}
-func Actual(value any) slogParam {
-	return func(c *slogGroup) {
-		c.params["actual"] = fmt.Sprintf("%v", value)
+func TagName(value types.TagName) logus_core.SlogParam {
+	return func(c *logus_core.SlogGroup) {
+		c.Params["tag_name"] = string(value)
 	}
 }
 
-func CommitHash(value plumbing.Hash) slogParam {
-	return func(c *slogGroup) {
-		c.params["commit_hash"] = value.String()
+func ProjectFolder(value types.ProjectFolder) logus_core.SlogParam {
+	return func(c *logus_core.SlogGroup) {
+		c.Params["project_folder"] = string(value)
 	}
 }
 
-func TagName(value types.TagName) slogParam {
-	return func(c *slogGroup) {
-		c.params["tag_name"] = string(value)
+func CommitMessage(value types.CommitOriginalMsg) logus_core.SlogParam {
+	return func(c *logus_core.SlogGroup) {
+		c.Params["commit_file"] = string(value)
 	}
 }
 
-func ProjectFolder(value types.ProjectFolder) slogParam {
-	return func(c *slogGroup) {
-		c.params["project_folder"] = string(value)
+func SettingsKey(value any) logus_core.SlogParam {
+	return func(c *logus_core.SlogGroup) {
+		c.Params["settings_key"] = fmt.Sprintf("%v", value)
 	}
 }
 
-func FilePath(value types.FilePath) slogParam {
-	return func(c *slogGroup) {
-		c.params["file_path"] = string(value)
-	}
-}
-
-func Regex(value types.RegexExpression) slogParam {
-	return func(c *slogGroup) {
-		c.params["regex"] = string(value)
-	}
-}
-
-func CommitMessage(value types.CommitOriginalMsg) slogParam {
-	return func(c *slogGroup) {
-		c.params["commit_file"] = string(value)
-	}
-}
-
-func SettingsKey(value any) slogParam {
-	return func(c *slogGroup) {
-		c.params["settings_key"] = fmt.Sprintf("%v", value)
-	}
-}
-
-func Commit(commit conventionalcommitstype.ParsedCommit) slogParam {
-	return func(c *slogGroup) {
-		c.params["commit_type"] = string(commit.Type)
-		c.params["commit_scope"] = string(commit.Scope)
-		c.params["commit_subject"] = string(commit.Subject)
-		c.params["commit_body"] = string(commit.Body)
-		c.params["commit_exlamation"] = strconv.FormatBool(commit.Exclamation)
-		c.params["commit_hash"] = string(commit.Hash)
+func Commit(commit conventionalcommitstype.ParsedCommit) logus_core.SlogParam {
+	return func(c *logus_core.SlogGroup) {
+		c.Params["commit_type"] = string(commit.Type)
+		c.Params["commit_scope"] = string(commit.Scope)
+		c.Params["commit_subject"] = string(commit.Subject)
+		c.Params["commit_body"] = string(commit.Body)
+		c.Params["commit_exlamation"] = strconv.FormatBool(commit.Exclamation)
+		c.Params["commit_hash"] = string(commit.Hash)
 		for index, footer := range commit.Footers {
 			// Should have made structured logging allowing nested dictionaries.
 			// Using as work around more lazy option
-			c.params[fmt.Sprintf("commit_footer_%d", index)] = fmt.Sprintf(
+			c.Params[fmt.Sprintf("commit_footer_%d", index)] = fmt.Sprintf(
 				"token: %s, content: %s",
 				footer.Token,
 				footer.Content,
@@ -128,24 +67,17 @@ func Commit(commit conventionalcommitstype.ParsedCommit) slogParam {
 		for index, issue := range commit.Issue {
 			// Should have made structured logging allowing nested dictionaries.
 			// Using as work around more lazy option
-			c.params[fmt.Sprintf("commit_issue_%d", index)] = string(issue)
+			c.Params[fmt.Sprintf("commit_issue_%d", index)] = string(issue)
 		}
 	}
 }
 
-func OptError(err error) slogParam {
-	return func(c *slogGroup) {
-		c.params["error_msg"] = fmt.Sprintf("%v", err)
-		c.params["error_type"] = fmt.Sprintf("%T", err)
-	}
-}
-
-func Semver(semver *semvertype.SemVer) slogParam {
-	return func(c *slogGroup) {
+func Semver(semver *semvertype.SemVer) logus_core.SlogParam {
+	return func(c *logus_core.SlogGroup) {
 		if semver == nil {
-			c.params["semver"] = "nil"
+			c.Params["semver"] = "nil"
 			return
 		}
-		c.params["semver"] = string(semver.ToString())
+		c.Params["semver"] = string(semver.ToString())
 	}
 }

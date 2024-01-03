@@ -13,6 +13,8 @@ import (
 	"autogit/settings"
 	"autogit/settings/logus"
 	"autogit/settings/types"
+
+	"github.com/darklab8/darklab_goutils/goutils/logus_core"
 )
 
 type SemanticGit struct {
@@ -36,7 +38,7 @@ func (g *SemanticGit) GetCurrentVersion() *semvertype.SemVer {
 		vers, err := semver.Parse(tag.Name)
 
 		if err != nil {
-			logus.Warn("failed to parse tag=", logus.TagName(tag.Name), logus.OptError(err))
+			logus.Log.Warn("failed to parse tag=", logus.TagName(tag.Name), logus_core.OptError(err))
 			return git.ShouldWeStopIteration(false)
 		}
 
@@ -143,7 +145,7 @@ func (g *SemanticGit) CalculateNextVersion(vers *semvertype.SemVer) *semvertype.
 	if vers.Options.Build != "" {
 		vers.Build = vers.Options.Build
 	}
-	logus.Debug("calculated next version", logus.Semver(vers))
+	logus.Log.Debug("calculated next version", logus.Semver(vers))
 	return vers
 }
 
@@ -158,14 +160,14 @@ func (g *SemanticGit) GetNextVersion(semver_options semvertype.OptionsSemVer) *s
 func (g *SemanticGit) GetChangelogByTag(fromTag types.TagName, enable_warnings bool) []conventionalcommits.ConventionalCommit {
 	var result []conventionalcommits.ConventionalCommit
 
-	logus.Debug("semantic git.GetChangelogByTag attempting to get logs", logus.TagName(fromTag))
+	logus.Log.Debug("semantic git.GetChangelogByTag attempting to get logs", logus.TagName(fromTag))
 	g.git.GetLogsFromTag(fromTag, func(log_record git.Log) git.ShouldWeStopIteration {
 		parsed_commit, err := conventionalcommits.ParseCommit(log_record.Msg)
 		if err != nil {
 			if enable_warnings {
-				logus.Warn("unable to parse commit with hash=", logus.CommitHash(log_record.Hash), logus.CommitMessage(log_record.Msg))
+				logus.Log.Warn("unable to parse commit with hash=", logus.CommitHash(log_record.Hash), logus.CommitMessage(log_record.Msg))
 			}
-			logus.Debug("unable to parse commit with hash=", logus.CommitHash(log_record.Hash), logus.CommitMessage(log_record.Msg))
+			logus.Log.Debug("unable to parse commit with hash=", logus.CommitHash(log_record.Hash), logus.CommitMessage(log_record.Msg))
 			return git.ShouldWeStopIteration(false)
 		}
 
@@ -187,7 +189,7 @@ func (g *SemanticGit) GetChangelogByTag(fromTag types.TagName, enable_warnings b
 		if foundSemver != nil {
 			// Get Changelog only until previous stable tag and don't mind first commit
 			if foundSemver.Prerelease == "" && fromTag != foundTag.Name && log_record.Hash != g.git.GetLatestCommitHash() {
-				logus.Debug("GetChangelogByTag stopping at this commit",
+				logus.Log.Debug("GetChangelogByTag stopping at this commit",
 					logus.CommitMessage(log_record.Msg),
 					logus.CommitHash(log_record.Hash),
 					logus.Semver(foundSemver),
@@ -200,7 +202,7 @@ func (g *SemanticGit) GetChangelogByTag(fromTag types.TagName, enable_warnings b
 			parsed_commit.Hash = conventionalcommitstype.Hash(log_record.Hash.String()[:8])
 			result = append(result, *parsed_commit)
 		} else {
-			logus.Debug("parsed_commit = nil", logus.CommitMessage(log_record.Msg), logus.CommitHash(log_record.Hash))
+			logus.Log.Debug("parsed_commit = nil", logus.CommitMessage(log_record.Msg), logus.CommitHash(log_record.Hash))
 		}
 		return git.ShouldWeStopIteration(false)
 	})
