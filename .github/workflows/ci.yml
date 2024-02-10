@@ -5,6 +5,9 @@ name: CI
 
 on:
   push: {}
+  schedule:
+    # every sunday
+    - cron: '40 10 * * 0'
 
 jobs:
 
