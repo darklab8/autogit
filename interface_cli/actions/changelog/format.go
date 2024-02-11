@@ -1,6 +1,6 @@
 package changelog
 
-import "autogit/interface_cli/actions/changelog/changelog_types"
+import "github.com/darklab8/autogit/interface_cli/actions/changelog/changelog_types"
 
 type IChangelog interface {
 	Render() string

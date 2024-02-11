@@ -1,13 +1,14 @@
 package actions
 
 import (
-	"autogit/interface_cli/actions/validation"
-	"autogit/semanticgit/conventionalcommits"
-	"autogit/settings"
-	"autogit/settings/logus"
-	"autogit/settings/types"
 	"os"
 	"path/filepath"
+
+	"github.com/darklab8/autogit/interface_cli/actions/validation"
+	"github.com/darklab8/autogit/semanticgit/conventionalcommits"
+	"github.com/darklab8/autogit/settings"
+	"github.com/darklab8/autogit/settings/logus"
+	"github.com/darklab8/autogit/settings/types"
 
 	"github.com/darklab8/go-utils/goutils/utils"
 	"github.com/darklab8/go-utils/goutils/utils/utils_logus"

@@ -1,11 +1,12 @@
 package semver
 
 import (
-	"autogit/semanticgit/semver/semvertype"
-	"autogit/settings"
-	"autogit/settings/types"
 	"log"
 	"strconv"
+
+	"github.com/darklab8/autogit/semanticgit/semver/semvertype"
+	"github.com/darklab8/autogit/settings"
+	"github.com/darklab8/autogit/settings/types"
 )
 
 func ParseToInt(msg string) int {

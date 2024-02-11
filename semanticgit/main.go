@@ -5,14 +5,14 @@ and conventional commits to it
 package semanticgit
 
 import (
-	"autogit/semanticgit/conventionalcommits"
-	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
-	"autogit/semanticgit/git"
-	"autogit/semanticgit/semver"
-	"autogit/semanticgit/semver/semvertype"
-	"autogit/settings"
-	"autogit/settings/logus"
-	"autogit/settings/types"
+	"github.com/darklab8/autogit/semanticgit/conventionalcommits"
+	"github.com/darklab8/autogit/semanticgit/conventionalcommits/conventionalcommitstype"
+	"github.com/darklab8/autogit/semanticgit/git"
+	"github.com/darklab8/autogit/semanticgit/semver"
+	"github.com/darklab8/autogit/semanticgit/semver/semvertype"
+	"github.com/darklab8/autogit/settings"
+	"github.com/darklab8/autogit/settings/logus"
+	"github.com/darklab8/autogit/settings/types"
 
 	"github.com/darklab8/go-typelog/typelog"
 )

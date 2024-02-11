@@ -1,9 +1,10 @@
 package semver
 
 import (
-	"autogit/settings/testutils"
-	_ "autogit/settings/testutils/autouse"
 	"testing"
+
+	"github.com/darklab8/autogit/settings/testutils"
+	_ "github.com/darklab8/autogit/settings/testutils/autouse"
 
 	"github.com/stretchr/testify/assert"
 )

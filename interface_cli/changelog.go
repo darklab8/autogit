@@ -4,10 +4,11 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package interface_cli
 
 import (
-	"autogit/interface_cli/actions"
-	"autogit/semanticgit/git"
-	"autogit/settings"
 	"fmt"
+
+	"github.com/darklab8/autogit/interface_cli/actions"
+	"github.com/darklab8/autogit/semanticgit/git"
+	"github.com/darklab8/autogit/settings"
 
 	"github.com/spf13/cobra"
 )

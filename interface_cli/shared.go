@@ -1,8 +1,9 @@
 package interface_cli
 
 import (
-	"autogit/settings/logus"
 	"fmt"
+
+	"github.com/darklab8/autogit/settings/logus"
 
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/spf13/cobra"
@@ -18,7 +19,7 @@ func (s *sharedFlags) Bind(Cmd *cobra.Command) {
 
 func (s *sharedFlags) Run() {
 	if *(s.verboseLogging) {
-		logus.Log = typelog.NewLogger("autogit", typelog.WithLogLevel(typelog.LEVEL_DEBUG))
+		logus.Log = typelog.NewLogger("github.com/darklab8/autogit", typelog.WithLogLevel(typelog.LEVEL_DEBUG))
 	}
 	logus.Log.Debug(fmt.Sprintf("verbose=%t\n", *(s.verboseLogging)))
 }

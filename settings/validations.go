@@ -1,6 +1,6 @@
 package settings
 
-import "autogit/semanticgit/conventionalcommits/conventionalcommitstype"
+import "github.com/darklab8/autogit/semanticgit/conventionalcommits/conventionalcommitstype"
 
 type TypeAllowLists struct {
 	SemVerMinorIncreasers []conventionalcommitstype.Type `yaml:"semver_minor_increases"`

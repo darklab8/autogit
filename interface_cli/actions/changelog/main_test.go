@@ -1,16 +1,17 @@
 package changelog
 
 import (
-	"autogit/interface_cli/actions/changelog/changelog_types"
-	"autogit/settings"
-	"autogit/settings/testutils"
-	_ "autogit/settings/testutils/autouse"
-	"autogit/settings/types"
+	"github.com/darklab8/autogit/interface_cli/actions/changelog/changelog_types"
+	"github.com/darklab8/autogit/settings"
+	"github.com/darklab8/autogit/settings/testutils"
+	_ "github.com/darklab8/autogit/settings/testutils/autouse"
+	"github.com/darklab8/autogit/settings/types"
 
-	"autogit/semanticgit"
-	"autogit/semanticgit/git"
-	"autogit/semanticgit/semver/semvertype"
 	"testing"
+
+	"github.com/darklab8/autogit/semanticgit"
+	"github.com/darklab8/autogit/semanticgit/git"
+	"github.com/darklab8/autogit/semanticgit/semver/semvertype"
 
 	"github.com/stretchr/testify/assert"
 )

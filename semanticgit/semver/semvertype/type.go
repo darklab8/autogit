@@ -1,9 +1,10 @@
 package semvertype
 
 import (
-	"autogit/settings/types"
 	"fmt"
 	"strings"
+
+	"github.com/darklab8/autogit/settings/types"
 )
 
 type OptionsSemVer struct {

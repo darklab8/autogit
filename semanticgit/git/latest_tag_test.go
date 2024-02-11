@@ -1,9 +1,10 @@
 package git
 
 import (
-	"autogit/settings/testutils"
-	"autogit/settings/types"
 	"testing"
+
+	"github.com/darklab8/autogit/settings/testutils"
+	"github.com/darklab8/autogit/settings/types"
 )
 
 func (r *Repository) GetLatestTagString() types.TagName {

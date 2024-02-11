@@ -1,9 +1,10 @@
 package git
 
 import (
-	"autogit/settings/testutils"
 	"fmt"
 	"testing"
+
+	"github.com/darklab8/autogit/settings/testutils"
 )
 
 func TestGitRepo(t *testing.T) {

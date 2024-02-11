@@ -1,9 +1,10 @@
 package valerrors
 
 import (
-	"autogit/semanticgit/conventionalcommits"
-	"autogit/settings"
 	"fmt"
+
+	"github.com/darklab8/autogit/semanticgit/conventionalcommits"
+	"github.com/darklab8/autogit/settings"
 )
 
 type errorInvalidMaxLength struct {

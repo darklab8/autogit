@@ -4,12 +4,13 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package interface_cli
 
 import (
-	"autogit/semanticgit/git"
-	"autogit/settings"
-	"autogit/settings/envs"
-	"autogit/settings/logus"
 	"fmt"
 	"os"
+
+	"github.com/darklab8/autogit/semanticgit/git"
+	"github.com/darklab8/autogit/settings"
+	"github.com/darklab8/autogit/settings/envs"
+	"github.com/darklab8/autogit/settings/logus"
 
 	"github.com/go-git/go-git/v5/config"
 	"github.com/spf13/cobra"

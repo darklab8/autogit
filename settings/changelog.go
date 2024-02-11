@@ -1,9 +1,9 @@
 package settings
 
 import (
-	"autogit/interface_cli/actions/changelog/changelog_types"
-	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
-	"autogit/settings/logus"
+	"github.com/darklab8/autogit/interface_cli/actions/changelog/changelog_types"
+	"github.com/darklab8/autogit/semanticgit/conventionalcommits/conventionalcommitstype"
+	"github.com/darklab8/autogit/settings/logus"
 
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
@@ -35,12 +35,12 @@ type ChangelogScheme struct {
 
 func (conf ConfigScheme) changelogValidate() {
 	if conf.Changelog.CommitURL == "" {
-		logus.Log.Fatal("autogit.yml->Changelog.CommitUrl is empty")
+		logus.Log.Fatal("github.com/darklab8/autogit.yml->Changelog.CommitUrl is empty")
 	}
 	if conf.Changelog.CommitRangeURL == "" {
-		logus.Log.Fatal("autogit.yml->Changelog.CommitRangeURL is empty")
+		logus.Log.Fatal("github.com/darklab8/autogit.yml->Changelog.CommitRangeURL is empty")
 	}
 	if conf.Changelog.IssueURL == "" {
-		logus.Log.Fatal("autogit.yml->Changelog.IssueURL is empty")
+		logus.Log.Fatal("github.com/darklab8/autogit.yml->Changelog.IssueURL is empty")
 	}
 }

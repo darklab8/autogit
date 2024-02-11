@@ -1,16 +1,17 @@
 package changelog
 
 import (
-	"autogit/interface_cli/actions/changelog/changelog_types"
-	"autogit/interface_cli/actions/changelog/templates"
-	"autogit/semanticgit"
-	"autogit/semanticgit/conventionalcommits"
-	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
-	"autogit/semanticgit/semver/semvertype"
-	"autogit/settings"
-	"autogit/settings/types"
 	"fmt"
 	"strings"
+
+	"github.com/darklab8/autogit/interface_cli/actions/changelog/changelog_types"
+	"github.com/darklab8/autogit/interface_cli/actions/changelog/templates"
+	"github.com/darklab8/autogit/semanticgit"
+	"github.com/darklab8/autogit/semanticgit/conventionalcommits"
+	"github.com/darklab8/autogit/semanticgit/conventionalcommits/conventionalcommitstype"
+	"github.com/darklab8/autogit/semanticgit/semver/semvertype"
+	"github.com/darklab8/autogit/settings"
+	"github.com/darklab8/autogit/settings/types"
 )
 
 type ChangelogBBCode struct {

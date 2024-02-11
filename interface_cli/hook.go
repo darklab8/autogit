@@ -4,8 +4,9 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package interface_cli
 
 import (
-	"autogit/interface_cli/actions"
 	"fmt"
+
+	"github.com/darklab8/autogit/interface_cli/actions"
 
 	"github.com/spf13/cobra"
 )

@@ -2,14 +2,15 @@
 package git
 
 import (
-	"autogit/semanticgit/git/gitraw"
-	"autogit/settings"
-	"autogit/settings/envs"
-	"autogit/settings/logus"
-	"autogit/settings/types"
 	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/darklab8/autogit/semanticgit/git/gitraw"
+	"github.com/darklab8/autogit/settings"
+	"github.com/darklab8/autogit/settings/envs"
+	"github.com/darklab8/autogit/settings/logus"
+	"github.com/darklab8/autogit/settings/types"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/config"

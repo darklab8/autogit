@@ -1,12 +1,13 @@
 package actions
 
 import (
-	"autogit/settings/logus"
-	"autogit/settings/types"
 	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/darklab8/autogit/settings/logus"
+	"github.com/darklab8/autogit/settings/types"
 
 	"github.com/darklab8/go-utils/goutils/utils"
 )

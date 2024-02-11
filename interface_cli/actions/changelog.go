@@ -1,14 +1,15 @@
 package actions
 
 import (
-	"autogit/interface_cli/actions/changelog"
-	"autogit/interface_cli/actions/validation"
-	"autogit/semanticgit"
-	"autogit/semanticgit/git"
-	"autogit/settings"
-	"autogit/settings/logus"
-	"autogit/settings/types"
 	"fmt"
+
+	"github.com/darklab8/autogit/interface_cli/actions/changelog"
+	"github.com/darklab8/autogit/interface_cli/actions/validation"
+	"github.com/darklab8/autogit/semanticgit"
+	"github.com/darklab8/autogit/semanticgit/git"
+	"github.com/darklab8/autogit/settings"
+	"github.com/darklab8/autogit/settings/logus"
+	"github.com/darklab8/autogit/settings/types"
 
 	"github.com/spf13/cobra"
 )

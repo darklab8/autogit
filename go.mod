@@ -1,4 +1,4 @@
-module autogit
+module github.com/darklab8/autogit
 
 go 1.21.1
 

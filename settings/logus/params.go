@@ -1,12 +1,13 @@
 package logus
 
 import (
-	"autogit/semanticgit/conventionalcommits/conventionalcommitstype"
-	"autogit/semanticgit/semver/semvertype"
-	"autogit/settings/types"
 	"fmt"
 	"log/slog"
 	"strconv"
+
+	"github.com/darklab8/autogit/semanticgit/conventionalcommits/conventionalcommitstype"
+	"github.com/darklab8/autogit/semanticgit/semver/semvertype"
+	"github.com/darklab8/autogit/settings/types"
 
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/go-git/go-git/v5/plumbing"

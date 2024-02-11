@@ -1,12 +1,13 @@
 package semanticgit
 
 import (
-	_ "autogit/settings/testutils/autouse"
+	_ "github.com/darklab8/autogit/settings/testutils/autouse"
 
-	"autogit/semanticgit/git"
-	"autogit/semanticgit/semver/semvertype"
-	"autogit/settings/testutils"
 	"testing"
+
+	"github.com/darklab8/autogit/semanticgit/git"
+	"github.com/darklab8/autogit/semanticgit/semver/semvertype"
+	"github.com/darklab8/autogit/settings/testutils"
 
 	"github.com/stretchr/testify/assert"
 )

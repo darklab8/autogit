@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"autogit/settings/testutils"
+	"github.com/darklab8/autogit/settings/testutils"
 )
 
 func init() {

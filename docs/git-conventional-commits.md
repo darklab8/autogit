@@ -78,7 +78,7 @@ $ git blame main.go
 ^3e43b5c (dd84ai 2022-12-10 19:54:42 +0100  4) package main
 ^3e43b5c (dd84ai 2022-12-10 19:54:42 +0100  5)
 d4745237 (dd84ai 2023-12-10 00:09:35 +0100  6) import (
-d4745237 (dd84ai 2023-12-10 00:09:35 +0100  7)  "autogit/interface_cli"
+d4745237 (dd84ai 2023-12-10 00:09:35 +0100  7)  "github.com/darklab8/autogit/interface_cli"
 d4745237 (dd84ai 2023-12-10 00:09:35 +0100  8) )
 ^3e43b5c (dd84ai 2022-12-10 19:54:42 +0100  9)
 ^3e43b5c (dd84ai 2022-12-10 19:54:42 +0100 10) func main() {

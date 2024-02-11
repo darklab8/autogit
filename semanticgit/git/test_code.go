@@ -1,8 +1,9 @@
 package git
 
 import (
-	"autogit/settings/logus"
 	"fmt"
+
+	"github.com/darklab8/autogit/settings/logus"
 
 	"github.com/darklab8/go-utils/goutils/utils"
 	"github.com/go-git/go-billy/v5/memfs"
