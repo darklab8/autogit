@@ -57,7 +57,7 @@ flowchart TD
 
 ### example of rendered changelog
 
-[Full example of rendered changelog](https://github.com/darklab8/darklab_autogit/releases/tag/v0.3.0-rc.2)
+[Full example of rendered changelog](https://github.com/darklab8/autogit/releases/tag/v0.3.0-rc.2)
 
 ## Scenario #3 - nextSemVer / You wish to know which next semantic version / semantic tag should be applied to your release.
 

@@ -35,9 +35,9 @@
       "breakingChange": "BREAKING CHANGES"
     },
 
-    "commitUrl": "https://github.com/darklab8/darklab_autogit/commit/%commit%",
-    "commitRangeUrl": "https://github.com/darklab8/darklab_autogit/compare/%from%...%to%?diff=split",
+    "commitUrl": "https://github.com/darklab8/autogit/commit/%commit%",
+    "commitRangeUrl": "https://github.com/darklab8/autogit/compare/%from%...%to%?diff=split",
     "issueRegexPattern": "#\\d+",
-    "issueUrl": "https://github.com/darklab8/darklab_autogit/issues/%issue%"
+    "issueUrl": "https://github.com/darklab8/autogit/issues/%issue%"
   }
 }

@@ -8,4 +8,4 @@
 - https://github.com/c4urself/bump2version/blob/master/RELATED.md // research alternatives
 - https://gist.github.com/qoomon/5dfcdf8eec66a051ecd85625518cfd13
 
-Discussions about future development and features in [Pull Requests](https://github.com/darklab8/darklab_autogit/issues)
+Discussions about future development and features in [Pull Requests](https://github.com/darklab8/autogit/issues)

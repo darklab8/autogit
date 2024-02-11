@@ -52,7 +52,7 @@ as a result of the tool work, you have decreased toll on release documentation w
 
 ## video version:
 
-https://github.com/darklab8/darklab_autogit/assets/20555918/44a05f9b-393f-4f6c-aea5-f4732f4fde73
+https://github.com/darklab8/autogit/assets/20555918/44a05f9b-393f-4f6c-aea5-f4732f4fde73
 
 # Installation
 
@@ -62,17 +62,17 @@ https://github.com/darklab8/darklab_autogit/assets/20555918/44a05f9b-393f-4f6c-a
 
 - install curl if not installed.(`apt update && apt install -y curl` for debian/ubuntu)
 - install git if not present (`apt update && apt install -y git` for debian/ubuntu)
-- install autogit with `rm $(which autogit) ; curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/darklab_autogit/releases/latest | sed "s/releases\/tag/releases\/download/")/autogit-linux-amd64 -o /usr/local/bin/autogit && chmod 777 /usr/local/bin/autogit`
+- install autogit with `rm $(which autogit) ; curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/autogit/releases/latest | sed "s/releases\/tag/releases\/download/")/autogit-linux-amd64 -o /usr/local/bin/autogit && chmod 777 /usr/local/bin/autogit`
 - check installation with `autogit version` command. Expect to see `OK autogit version: v{version}`
 
 ### install specific version
 
-- install with `rm $(which autogit) ; curl -L https://github.com/darklab8/darklab_autogit/releases/download/v{VERSION}/autogit-linux-amd64 -o /usr/local/bin/autogit && chmod 777 /usr/local/bin/autogit`
+- install with `rm $(which autogit) ; curl -L https://github.com/darklab8/autogit/releases/download/v{VERSION}/autogit-linux-amd64 -o /usr/local/bin/autogit && chmod 777 /usr/local/bin/autogit`
 
 ## Windows
 
 - install [Git Bash](https://git-scm.com/downloads)
-- install lautogit `mkdir -p ~/bin ; rm $(which autogit) ; curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/darklab_autogit/releases/latest | sed "s/releases\/tag/releases\/download/")/autogit-windows-amd64.exe -o ~/bin/autogit.exe && chmod 777 ~/bin/autogit.exe`
+- install lautogit `mkdir -p ~/bin ; rm $(which autogit) ; curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/autogit/releases/latest | sed "s/releases\/tag/releases\/download/")/autogit-windows-amd64.exe -o ~/bin/autogit.exe && chmod 777 ~/bin/autogit.exe`
 - check installation with `autogit version` command. Expect to see `OK autogit version: v{version}`
 
 P.S. `~/bin/autogit.exe` must be any valid bin path (`echo $PATH`, `echo %PATH%` to get the list) accessable by your tool from where u are going to use it.
@@ -118,5 +118,5 @@ flowchart TD
 # Contacts
 
 - [@dd84ai](https://github.com/dd84ai) at `dark.dreamflyer@gmail.com`
-- open [Pull Requests with question](https://github.com/darklab8/darklab_autogit/issues)
+- open [Pull Requests with question](https://github.com/darklab8/autogit/issues)
 - [Darklab Discord server](https://discord.gg/aukHmTK82J)
