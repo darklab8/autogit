@@ -22,7 +22,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const ToolName = "github.com/darklab8/autogit"
+const ToolName = "autogit"
 
 var HookFolderName = fmt.Sprintf(".%s-hooks", ToolName)
 
@@ -53,7 +53,7 @@ type ConfigScheme struct {
 
 // var ProjectConfigPath types.ConfigPath
 
-const ConfigFileName types.ConfigPath = "github.com/darklab8/autogit.yml"
+const ConfigFileName types.ConfigPath = "autogit.yml"
 
 var cachedConfigFile []byte = []byte{}
 
@@ -167,7 +167,7 @@ func configRead(file []byte) *ConfigScheme {
 	err = yaml.Unmarshal(merged_config_as_bytes, &config)
 	logus.Log.CheckError(err, `unable to unmarshal merged config.
 	Your autogit.yml settings file is having invalue key: value pairs.
-	Try to remove previous autogit.yml settings files and generate a new one with "github.com/darklab8/autogit init [--global] command"`)
+	Try to remove previous autogit.yml settings files and generate a new one with "autogit init [--global] command"`)
 
 	return &config
 }
@@ -197,9 +197,9 @@ func check_file_is_not_having_invalid[T comparable](example map[T]interface{}, c
 
 		// if key is present in additions hasmap
 		if example_value, is_present := example[checkable_key]; !is_present {
-			logus.Log.Error(fmt.Sprintf(`autogit.yml file is having not allowed user settings key
+			logus.Log.Error(`autogit.yml file is having not allowed user settings key
 			Please, remove previous autogit.yml local in your repository and user global one and generate new one
-			with "github.com/darklab8/autogit init [--global]" command :). Or remove the specified "settings_key"`), logus.SettingsKey(checkable_key))
+			with "autogit init [--global]" command :). Or remove the specified "settings_key"`, logus.SettingsKey(checkable_key))
 		} else {
 			if reflect.TypeOf(example_value) != reflect.TypeOf(checkable_value) {
 				logus.Log.Fatal(fmt.Sprintf(

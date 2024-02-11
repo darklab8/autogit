@@ -11,7 +11,7 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "github.com/darklab8/autogit",
+	Use:   "autogit",
 	Short: "Git tool for validation of conventional commits, changelog generation and semantic version generation",
 	// Uncomment the following line if your bare application
 	// has an action associated with it:

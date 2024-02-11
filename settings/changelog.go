@@ -35,12 +35,12 @@ type ChangelogScheme struct {
 
 func (conf ConfigScheme) changelogValidate() {
 	if conf.Changelog.CommitURL == "" {
-		logus.Log.Fatal("github.com/darklab8/autogit.yml->Changelog.CommitUrl is empty")
+		logus.Log.Fatal("autogit.yml->Changelog.CommitUrl is empty")
 	}
 	if conf.Changelog.CommitRangeURL == "" {
-		logus.Log.Fatal("github.com/darklab8/autogit.yml->Changelog.CommitRangeURL is empty")
+		logus.Log.Fatal("autogit.yml->Changelog.CommitRangeURL is empty")
 	}
 	if conf.Changelog.IssueURL == "" {
-		logus.Log.Fatal("github.com/darklab8/autogit.yml->Changelog.IssueURL is empty")
+		logus.Log.Fatal("autogit.yml->Changelog.IssueURL is empty")
 	}
 }

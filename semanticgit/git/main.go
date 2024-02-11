@@ -11,6 +11,7 @@ import (
 	"github.com/darklab8/autogit/settings/envs"
 	"github.com/darklab8/autogit/settings/logus"
 	"github.com/darklab8/autogit/settings/types"
+	"github.com/darklab8/go-typelog/typelog"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/config"
@@ -182,7 +183,7 @@ func (r *Repository) PushTag(name types.TagName) {
 	sshPath := filepath.Join(string(envs.PathUserHome), ".ssh", string(r.sshPath))
 	sshKey, _ := os.ReadFile(sshPath)
 	publicKey, keyError := ssh.NewPublicKeys("git", []byte(sshKey), "")
-	logus.Log.CheckFatal(keyError, "failed initializing git ssh keys")
+	logus.Log.CheckFatal(keyError, "failed initializing git ssh keys", typelog.String("key_path", string(sshPath)))
 
 	refs := []config.RefSpec{
 		config.RefSpec("+refs/tags/" + name + ":refs/tags/" + name),
