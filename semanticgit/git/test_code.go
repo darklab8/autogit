@@ -4,7 +4,7 @@ import (
 	"autogit/settings/logus"
 	"fmt"
 
-	"github.com/darklab8/darklab_goutils/goutils/utils"
+	"github.com/darklab8/go-utils/goutils/utils"
 	"github.com/go-git/go-billy/v5/memfs"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"

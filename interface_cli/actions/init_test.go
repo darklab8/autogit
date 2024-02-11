@@ -8,11 +8,11 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/darklab8/darklab_goutils/goutils/utils"
+	"github.com/darklab8/go-utils/goutils/utils"
 )
 
 func TestWriteCommentedConfig(t *testing.T) {
-	current_folder := utils.GetCurrrentFolder()
+	current_folder := utils.GetCurrentFolder()
 	temp_data := filepath.Join(string(current_folder), "temp_data")
 	err := os.MkdirAll(temp_data, os.ModePerm)
 	logus.Log.CheckFatal(err, "failed to create temp_data folder")

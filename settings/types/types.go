@@ -1,6 +1,6 @@
 package types
 
-import "github.com/darklab8/darklab_goutils/goutils/utils/utils_types"
+import "github.com/darklab8/go-utils/goutils/utils/utils_types"
 
 type ConfigPath utils_types.FilePath
 

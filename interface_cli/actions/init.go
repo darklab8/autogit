@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/darklab8/darklab_goutils/goutils/utils"
+	"github.com/darklab8/go-utils/goutils/utils"
 )
 
 const (

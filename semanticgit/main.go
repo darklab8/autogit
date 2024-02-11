@@ -14,7 +14,7 @@ import (
 	"autogit/settings/logus"
 	"autogit/settings/types"
 
-	"github.com/darklab8/darklab_goutils/goutils/logus_core"
+	"github.com/darklab8/go-typelog/typelog"
 )
 
 type SemanticGit struct {
@@ -38,7 +38,7 @@ func (g *SemanticGit) GetCurrentVersion() *semvertype.SemVer {
 		vers, err := semver.Parse(tag.Name)
 
 		if err != nil {
-			logus.Log.Warn("failed to parse tag=", logus.TagName(tag.Name), logus_core.OptError(err))
+			logus.Log.Warn("failed to parse tag=", logus.TagName(tag.Name), typelog.OptError(err))
 			return git.ShouldWeStopIteration(false)
 		}
 

@@ -9,9 +9,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/darklab8/darklab_goutils/goutils/logus_core"
-	"github.com/darklab8/darklab_goutils/goutils/utils"
-	"github.com/darklab8/darklab_goutils/goutils/utils/utils_types"
+	"github.com/darklab8/go-utils/goutils/utils"
+	"github.com/darklab8/go-utils/goutils/utils/utils_logus"
+	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
 
 func CommmitMsg(args []string) {
@@ -22,7 +22,7 @@ func CommmitMsg(args []string) {
 	conf := settings.GetConfig()
 
 	inputFile := utils_types.FilePath(filepath.Join(string(utils.GetProjectDir()), args[0]))
-	logus.Log.Debug("Received CommitFile", logus_core.FilePath(inputFile))
+	logus.Log.Debug("Received CommitFile", utils_logus.FilePath(inputFile))
 
 	file, err := os.ReadFile(string(inputFile))
 	logus.Log.CheckFatal(err, "Could not read the file due to this error")

@@ -10,7 +10,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/darklab8/darklab_goutils/goutils/utils"
+	"github.com/darklab8/go-utils/goutils/utils"
 )
 
 type Templates struct {

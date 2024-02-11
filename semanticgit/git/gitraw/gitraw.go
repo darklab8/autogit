@@ -3,7 +3,7 @@ package gitraw
 import (
 	"autogit/settings/logus"
 
-	"github.com/darklab8/darklab_goutils/goutils/utils"
+	"github.com/darklab8/go-utils/goutils/utils"
 	"github.com/go-git/go-git/v5"
 )
 

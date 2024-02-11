@@ -14,8 +14,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/darklab8/darklab_goutils/goutils/logus_core"
-	"github.com/darklab8/darklab_goutils/goutils/utils/utils_types"
+	"github.com/darklab8/go-typelog/typelog"
+	"github.com/darklab8/go-utils/goutils/utils/utils_logus"
+	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 
 	"gopkg.in/yaml.v3"
 )
@@ -71,10 +72,10 @@ func readSettingsfile(configPath types.ConfigPath) []byte {
 	local_file_is_not_found := false
 	if err != nil {
 		if is_file_missing(err) {
-			logus.Log.Debug("not found at path repository local file with config. Fallback to global config", logus_core.FilePath(configPath.ToFilePath()), logus_core.OptError(err))
+			logus.Log.Debug("not found at path repository local file with config. Fallback to global config", utils_logus.FilePath(configPath.ToFilePath()), typelog.OptError(err))
 			local_file_is_not_found = true
 		} else {
-			logus.Log.CheckFatal(err, "Could not read the file due to error", logus.ConfigPath(configPath), logus_core.OptError(err))
+			logus.Log.CheckFatal(err, "Could not read the file due to error", logus.ConfigPath(configPath), typelog.OptError(err))
 		}
 	} else {
 		logus.Log.Debug("succesfuly read config from local repository project path", logus.ConfigPath(configPath))
@@ -85,10 +86,10 @@ func readSettingsfile(configPath types.ConfigPath) []byte {
 		file, err = os.ReadFile(string(GetGlobalConfigPath()))
 		if err != nil {
 			if is_file_missing(err) {
-				logus.Log.Debug("not found at path repository global file with config. Fallback to other in memory config", logus_core.FilePath(configPath.ToFilePath()), logus_core.OptError(err))
+				logus.Log.Debug("not found at path repository global file with config. Fallback to other in memory config", utils_logus.FilePath(configPath.ToFilePath()), typelog.OptError(err))
 				global_file_is_not_found = true
 			} else {
-				logus.Log.CheckFatal(err, "Could not read the file due to error", logus.ConfigPath(configPath), logus_core.OptError(err))
+				logus.Log.CheckFatal(err, "Could not read the file due to error", logus.ConfigPath(configPath), typelog.OptError(err))
 			}
 		}
 	}

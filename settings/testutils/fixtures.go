@@ -5,11 +5,11 @@ import (
 	"autogit/settings/types"
 	"path/filepath"
 
-	"github.com/darklab8/darklab_goutils/goutils/utils"
+	"github.com/darklab8/go-utils/goutils/utils"
 )
 
 func FixtureSettings() {
-	workdir := utils.GetCurrrentFolder()
+	workdir := utils.GetCurrentFolder()
 	originalSettingsPath := workdir
 	rootFolder := filepath.Dir(string(originalSettingsPath))
 	testSettingsPath := types.ConfigPath(filepath.Join(rootFolder, "settings", "autogit.example.yml"))
