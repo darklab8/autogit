@@ -5,4 +5,3 @@ filepath=`pwd`
 cd /home/naa/repos/pet_projects/autogit
 go build -o autogit ./main.go
 AUTOGIT_PROJECT_FOLDER=$filepath ./autogit $@
-echo $?
