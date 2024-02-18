@@ -47,11 +47,17 @@ func Changelog(params ChangelogParams, gitw *git.Repository) string {
 	rendered_changelog := changelogus.Render()
 
 	if params.Validate {
+		var anyError error = nil
+
 		log_commits := g.GetChangelogByTag(types.TagName(params.Tag), false)
 		for _, commit := range log_commits {
 			err := validation.Validate(commit, conf)
-			logus.Log.CheckError(err, "failed to validate", logus.Commit(commit.ParsedCommit))
+			if logus.Log.CheckError(err, "failed to validate", logus.Commit(commit.ParsedCommit)) {
+				anyError = err
+			}
 		}
+
+		logus.Log.CheckFatal(anyError, "encountered at least one error during changelog validation")
 	}
 
 	return rendered_changelog

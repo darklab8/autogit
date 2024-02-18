@@ -69,13 +69,12 @@ tasks:
 
   hook:dev:
     cmds:
-      - git config --global core.hooksPath $(pwd)/.autogit-hooks-dev
-
       - sudo rm /usr/local/bin/autogit | true
 
-      - echo -e '#!/bin/bash\nset -x\nset -e\nfilepath=`pwd`\ncd /home/naa/repos/pet_projects/autogit && AUTOGIT_PROJECT_FOLDER=$filepath go run . $@' | sudo tee /usr/local/bin/autogit
+      - sudo ln -s {{.PWD}}/docs/dev/autogit /usr/local/bin/autogit
       - sudo chmod 777 /usr/local/bin/autogit
 
+      - go run . hook activate --global
   hook:prod:
     cmds:
       - sudo rm /usr/local/bin/autogit | true
