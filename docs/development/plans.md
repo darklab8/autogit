@@ -9,3 +9,15 @@
 - https://gist.github.com/qoomon/5dfcdf8eec66a051ecd85625518cfd13
 
 Discussions about future development and features in [Pull Requests](https://github.com/darklab8/autogit/issues)
+
+
+# Add TUI interface
+
+As idea perhaps to make this tool for longevity with Sqlite3 and some TUI interface:
+- https://www.reddit.com/r/golang/comments/p1ncc0/tui_in_golang/
+- https://github.com/nsf/termbox-go
+- https://github.com/charmbracelet/bubbletea
+- https://github.com/gdamore/tcell
+- https://github.com/rivo/tview/
+- https://github.com/jesseduffield/gocui
+- https://github.com/avelino/awesome-go#advanced-console-uis

@@ -120,3 +120,9 @@ flowchart TD
 - [@dd84ai](https://github.com/dd84ai) at `dark.dreamflyer@gmail.com`
 - open [Pull Requests with question](https://github.com/darklab8/autogit/issues)
 - [Darklab Discord server](https://discord.gg/aukHmTK82J)
+
+# License
+
+autogit was originally created by Andrei Novoselov (aka darkwind, aka dd84ai)
+The work is released under GPL license, free to modify, copy and etc. as long as you keep code open source and mentioned original author.
+See [LICENSE](./LICENSE) file for details.
