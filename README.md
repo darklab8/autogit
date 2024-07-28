@@ -56,6 +56,10 @@ https://github.com/darklab8/autogit/assets/20555918/44a05f9b-393f-4f6c-aea5-f473
 
 # Installation
 
+## Through golang
+
+- `go install github.com/darklab8/autogit/v2@latest`
+
 ## Linux
 
 ### Install latest
