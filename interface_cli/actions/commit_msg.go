@@ -10,9 +10,9 @@ import (
 	"github.com/darklab8/autogit/v2/settings/logus"
 	"github.com/darklab8/autogit/v2/settings/types"
 
-	"github.com/darklab8/go-utils/goutils/utils"
-	"github.com/darklab8/go-utils/goutils/utils/utils_logus"
-	"github.com/darklab8/go-utils/goutils/utils/utils_types"
+	"github.com/darklab8/go-utils/utils/utils_logus"
+	"github.com/darklab8/go-utils/utils/utils_os"
+	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
 func CommmitMsg(args []string) {
@@ -22,7 +22,7 @@ func CommmitMsg(args []string) {
 
 	conf := settings.GetConfig()
 
-	inputFile := utils_types.FilePath(filepath.Join(string(utils.GetProjectDir()), args[0]))
+	inputFile := utils_types.FilePath(filepath.Join(string(utils_os.GetProjectDir()), args[0]))
 	logus.Log.Debug("Received CommitFile", utils_logus.FilePath(inputFile))
 
 	file, err := os.ReadFile(string(inputFile))

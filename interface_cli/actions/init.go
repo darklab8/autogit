@@ -8,7 +8,7 @@ import (
 	"github.com/darklab8/autogit/v2/settings/logus"
 	"github.com/darklab8/autogit/v2/settings/types"
 
-	"github.com/darklab8/go-utils/goutils/utils"
+	"github.com/darklab8/go-utils/utils"
 )
 
 const (

@@ -3,8 +3,8 @@ package settings
 import (
 	"regexp"
 
-	"github.com/darklab8/go-utils/goutils/utils"
-	"github.com/darklab8/go-utils/goutils/utils/utils_types"
+	"github.com/darklab8/go-utils/utils/regexy"
+	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
 type RegexScheme struct {
@@ -39,16 +39,16 @@ func (conf *ConfigScheme) regexCompile() {
 	if len(RegexConventionalCommit) == 0 {
 		for _, regex_expression := range conf.Regex.ConventionalCommit.Headers {
 			regex := &regexp.Regexp{}
-			utils.InitRegexExpression(&regex, regex_expression)
+			regexy.InitRegexExpression(&regex, regex_expression)
 			RegexConventionalCommit = append(RegexConventionalCommit, regex)
 		}
 	}
 
-	utils.InitRegexExpression(&RegexBodyFooter, conf.Regex.ConventionalCommit.BodyFooter)
-	utils.InitRegexExpression(&RegexIssue, conf.Regex.Issue)
-	utils.InitRegexExpression(&RegexSemVer, conf.Regex.SemVer)
-	utils.InitRegexExpression(&RegexScope, conf.Regex.Validation.Scope.Lowercase)
-	utils.InitRegexExpression(&RegexType, conf.Regex.Validation.Type.Lowercase)
-	utils.InitRegexExpression(&RegexPrerelease, conf.Regex.Prerelease)
-	utils.InitRegexExpression(&RegexPullRequest, conf.Regex.PullRequestRegex)
+	regexy.InitRegexExpression(&RegexBodyFooter, conf.Regex.ConventionalCommit.BodyFooter)
+	regexy.InitRegexExpression(&RegexIssue, conf.Regex.Issue)
+	regexy.InitRegexExpression(&RegexSemVer, conf.Regex.SemVer)
+	regexy.InitRegexExpression(&RegexScope, conf.Regex.Validation.Scope.Lowercase)
+	regexy.InitRegexExpression(&RegexType, conf.Regex.Validation.Type.Lowercase)
+	regexy.InitRegexExpression(&RegexPrerelease, conf.Regex.Prerelease)
+	regexy.InitRegexExpression(&RegexPullRequest, conf.Regex.PullRequestRegex)
 }

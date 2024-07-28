@@ -16,8 +16,8 @@ import (
 	"github.com/darklab8/autogit/v2/settings/types"
 
 	"github.com/darklab8/go-typelog/typelog"
-	"github.com/darklab8/go-utils/goutils/utils/utils_logus"
-	"github.com/darklab8/go-utils/goutils/utils/utils_types"
+	"github.com/darklab8/go-utils/utils/utils_logus"
+	"github.com/darklab8/go-utils/utils/utils_types"
 
 	"gopkg.in/yaml.v3"
 )

@@ -5,7 +5,7 @@ import (
 	"github.com/darklab8/autogit/v2/semanticgit/conventionalcommits/conventionalcommitstype"
 	"github.com/darklab8/autogit/v2/settings/logus"
 
-	"github.com/darklab8/go-utils/goutils/utils/utils_types"
+	"github.com/darklab8/go-utils/utils/utils_types"
 )
 
 type ChangelogScheme struct {
