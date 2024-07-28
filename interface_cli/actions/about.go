@@ -3,7 +3,7 @@ package actions
 import (
 	"strings"
 
-	"github.com/darklab8/autogit/settings"
+	"github.com/darklab8/autogit/v2/settings"
 )
 
 func About() string {

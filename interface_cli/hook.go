@@ -6,7 +6,7 @@ package interface_cli
 import (
 	"fmt"
 
-	"github.com/darklab8/autogit/interface_cli/actions"
+	"github.com/darklab8/autogit/v2/interface_cli/actions"
 
 	"github.com/spf13/cobra"
 )

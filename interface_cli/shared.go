@@ -3,7 +3,7 @@ package interface_cli
 import (
 	"fmt"
 
-	"github.com/darklab8/autogit/settings/logus"
+	"github.com/darklab8/autogit/v2/settings/logus"
 
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/spf13/cobra"

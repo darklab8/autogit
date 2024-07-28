@@ -6,9 +6,9 @@ package interface_cli
 import (
 	"fmt"
 
-	"github.com/darklab8/autogit/interface_cli/actions"
-	"github.com/darklab8/autogit/semanticgit/git"
-	"github.com/darklab8/autogit/settings"
+	"github.com/darklab8/autogit/v2/interface_cli/actions"
+	"github.com/darklab8/autogit/v2/semanticgit/git"
+	"github.com/darklab8/autogit/v2/settings"
 
 	"github.com/spf13/cobra"
 )

@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/darklab8/autogit/interface_cli/actions/changelog/changelog_types"
-	"github.com/darklab8/autogit/interface_cli/actions/changelog/templates"
-	"github.com/darklab8/autogit/semanticgit"
-	"github.com/darklab8/autogit/semanticgit/conventionalcommits"
-	"github.com/darklab8/autogit/semanticgit/conventionalcommits/conventionalcommitstype"
-	"github.com/darklab8/autogit/semanticgit/semver/semvertype"
-	"github.com/darklab8/autogit/settings"
-	"github.com/darklab8/autogit/settings/types"
+	"github.com/darklab8/autogit/v2/interface_cli/actions/changelog/changelog_types"
+	"github.com/darklab8/autogit/v2/interface_cli/actions/changelog/templates"
+	"github.com/darklab8/autogit/v2/semanticgit"
+	"github.com/darklab8/autogit/v2/semanticgit/conventionalcommits"
+	"github.com/darklab8/autogit/v2/semanticgit/conventionalcommits/conventionalcommitstype"
+	"github.com/darklab8/autogit/v2/semanticgit/semver/semvertype"
+	"github.com/darklab8/autogit/v2/settings"
+	"github.com/darklab8/autogit/v2/settings/types"
 )
 
 type ChangelogMarkdown struct {

@@ -6,11 +6,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/darklab8/autogit/semanticgit/git/gitraw"
-	"github.com/darklab8/autogit/settings"
-	"github.com/darklab8/autogit/settings/envs"
-	"github.com/darklab8/autogit/settings/logus"
-	"github.com/darklab8/autogit/settings/types"
+	"github.com/darklab8/autogit/v2/semanticgit/git/gitraw"
+	"github.com/darklab8/autogit/v2/settings"
+	"github.com/darklab8/autogit/v2/settings/envs"
+	"github.com/darklab8/autogit/v2/settings/logus"
+	"github.com/darklab8/autogit/v2/settings/types"
 	"github.com/darklab8/go-typelog/typelog"
 
 	"github.com/go-git/go-git/v5"

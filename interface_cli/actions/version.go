@@ -1,10 +1,10 @@
 package actions
 
 import (
-	"github.com/darklab8/autogit/semanticgit"
-	"github.com/darklab8/autogit/semanticgit/git"
-	"github.com/darklab8/autogit/semanticgit/semver/semvertype"
-	"github.com/darklab8/autogit/settings/types"
+	"github.com/darklab8/autogit/v2/semanticgit"
+	"github.com/darklab8/autogit/v2/semanticgit/git"
+	"github.com/darklab8/autogit/v2/semanticgit/semver/semvertype"
+	"github.com/darklab8/autogit/v2/settings/types"
 
 	"github.com/spf13/cobra"
 )

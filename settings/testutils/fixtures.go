@@ -3,8 +3,8 @@ package testutils
 import (
 	"path/filepath"
 
-	"github.com/darklab8/autogit/settings"
-	"github.com/darklab8/autogit/settings/types"
+	"github.com/darklab8/autogit/v2/settings"
+	"github.com/darklab8/autogit/v2/settings/types"
 
 	"github.com/darklab8/go-utils/goutils/utils"
 )

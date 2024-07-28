@@ -3,8 +3,8 @@ package valerrors
 import (
 	"fmt"
 
-	"github.com/darklab8/autogit/semanticgit/conventionalcommits"
-	"github.com/darklab8/autogit/settings"
+	"github.com/darklab8/autogit/v2/semanticgit/conventionalcommits"
+	"github.com/darklab8/autogit/v2/settings"
 )
 
 type errorInvalidMaxLength struct {

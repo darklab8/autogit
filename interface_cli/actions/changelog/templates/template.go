@@ -5,11 +5,11 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/darklab8/autogit/semanticgit/conventionalcommits"
-	"github.com/darklab8/autogit/semanticgit/conventionalcommits/conventionalcommitstype"
-	"github.com/darklab8/autogit/settings"
-	"github.com/darklab8/autogit/settings/logus"
-	"github.com/darklab8/autogit/settings/types"
+	"github.com/darklab8/autogit/v2/semanticgit/conventionalcommits"
+	"github.com/darklab8/autogit/v2/semanticgit/conventionalcommits/conventionalcommitstype"
+	"github.com/darklab8/autogit/v2/settings"
+	"github.com/darklab8/autogit/v2/settings/logus"
+	"github.com/darklab8/autogit/v2/settings/types"
 
 	"github.com/darklab8/go-utils/goutils/utils"
 )

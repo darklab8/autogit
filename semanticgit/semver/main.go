@@ -4,9 +4,9 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/darklab8/autogit/semanticgit/semver/semvertype"
-	"github.com/darklab8/autogit/settings"
-	"github.com/darklab8/autogit/settings/types"
+	"github.com/darklab8/autogit/v2/semanticgit/semver/semvertype"
+	"github.com/darklab8/autogit/v2/settings"
+	"github.com/darklab8/autogit/v2/settings/types"
 )
 
 func ParseToInt(msg string) int {

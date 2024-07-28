@@ -4,11 +4,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/darklab8/autogit/interface_cli/actions/validation"
-	"github.com/darklab8/autogit/semanticgit/conventionalcommits"
-	"github.com/darklab8/autogit/settings"
-	"github.com/darklab8/autogit/settings/logus"
-	"github.com/darklab8/autogit/settings/types"
+	"github.com/darklab8/autogit/v2/interface_cli/actions/validation"
+	"github.com/darklab8/autogit/v2/semanticgit/conventionalcommits"
+	"github.com/darklab8/autogit/v2/settings"
+	"github.com/darklab8/autogit/v2/settings/logus"
+	"github.com/darklab8/autogit/v2/settings/types"
 
 	"github.com/darklab8/go-utils/goutils/utils"
 	"github.com/darklab8/go-utils/goutils/utils/utils_logus"

@@ -1,15 +1,15 @@
 package validation
 
 import (
-	"github.com/darklab8/autogit/settings/testutils"
-	_ "github.com/darklab8/autogit/settings/testutils/autouse"
+	"github.com/darklab8/autogit/v2/settings/testutils"
+	_ "github.com/darklab8/autogit/v2/settings/testutils/autouse"
 
 	"testing"
 
-	"github.com/darklab8/autogit/semanticgit/conventionalcommits"
-	"github.com/darklab8/autogit/semanticgit/conventionalcommits/conventionalcommitstype"
-	"github.com/darklab8/autogit/settings"
-	"github.com/darklab8/autogit/settings/logus"
+	"github.com/darklab8/autogit/v2/semanticgit/conventionalcommits"
+	"github.com/darklab8/autogit/v2/semanticgit/conventionalcommits/conventionalcommitstype"
+	"github.com/darklab8/autogit/v2/settings"
+	"github.com/darklab8/autogit/v2/settings/logus"
 
 	"github.com/stretchr/testify/assert"
 )

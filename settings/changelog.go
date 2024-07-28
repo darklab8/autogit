@@ -1,9 +1,9 @@
 package settings
 
 import (
-	"github.com/darklab8/autogit/interface_cli/actions/changelog/changelog_types"
-	"github.com/darklab8/autogit/semanticgit/conventionalcommits/conventionalcommitstype"
-	"github.com/darklab8/autogit/settings/logus"
+	"github.com/darklab8/autogit/v2/interface_cli/actions/changelog/changelog_types"
+	"github.com/darklab8/autogit/v2/semanticgit/conventionalcommits/conventionalcommitstype"
+	"github.com/darklab8/autogit/v2/settings/logus"
 
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )

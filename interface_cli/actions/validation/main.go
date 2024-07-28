@@ -3,9 +3,9 @@ package validation
 import (
 	"strings"
 
-	"github.com/darklab8/autogit/interface_cli/actions/validation/valerrors"
-	"github.com/darklab8/autogit/semanticgit/conventionalcommits"
-	"github.com/darklab8/autogit/settings"
+	"github.com/darklab8/autogit/v2/interface_cli/actions/validation/valerrors"
+	"github.com/darklab8/autogit/v2/semanticgit/conventionalcommits"
+	"github.com/darklab8/autogit/v2/settings"
 )
 
 func Validate(commit conventionalcommits.ConventionalCommit, conf settings.ConfigScheme) error {

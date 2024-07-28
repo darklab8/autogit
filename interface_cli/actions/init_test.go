@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/darklab8/autogit/settings/logus"
-	"github.com/darklab8/autogit/settings/types"
+	"github.com/darklab8/autogit/v2/settings/logus"
+	"github.com/darklab8/autogit/v2/settings/types"
 
 	"github.com/darklab8/go-utils/goutils/utils"
 )

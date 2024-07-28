@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/darklab8/autogit/settings/types"
+	"github.com/darklab8/autogit/v2/settings/types"
 )
 
 type OptionsSemVer struct {
