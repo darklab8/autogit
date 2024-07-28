@@ -66,12 +66,12 @@ https://github.com/darklab8/autogit/assets/20555918/44a05f9b-393f-4f6c-aea5-f473
 
 - install curl if not installed.(`apt update && apt install -y curl` for debian/ubuntu)
 - install git if not present (`apt update && apt install -y git` for debian/ubuntu)
-- install autogit with `rm $(which autogit) ; curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/autogit/releases/latest | sed "s/releases\/tag/releases\/download/")/autogit-linux-amd64 -o /usr/local/bin/autogit && chmod 777 /usr/local/bin/autogit`
+- install autogit with `sudo rm $(which autogit) ; sudo rm /usr/local/bin/autogit ; sudo curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/autogit/releases/latest | sed "s/releases\/tag/releases\/download/")/autogit-linux-amd64 -o /usr/local/bin/autogit && sudo chmod 777 /usr/local/bin/autogit`
 - check installation with `autogit version` command. Expect to see `OK autogit version: v{version}`
 
 ### install specific version
 
-- install with `rm $(which autogit) ; curl -L https://github.com/darklab8/autogit/releases/download/v{VERSION}/autogit-linux-amd64 -o /usr/local/bin/autogit && chmod 777 /usr/local/bin/autogit`
+- install with `sudo rm $(which autogit) ; sudo rm /usr/local/bin/autogit ; sudo curl -L https://github.com/darklab8/autogit/releases/download/v{VERSION}/autogit-linux-amd64 -o /usr/local/bin/autogit && sudo chmod 777 /usr/local/bin/autogit`
 
 ## Windows
 
