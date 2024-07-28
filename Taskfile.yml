@@ -23,7 +23,7 @@ tasks:
 
   build-version:
     cmds:
-      - autogit semver --publish > settings/version.txt || echo 'not installed autogit' > settings/version.txt
+      - AUTOGIT_LOG_LEVEL=WARN autogit semver --publish > settings/version.txt || echo 'not installed autogit' > settings/version.txt
 
   build:test:
     cmds:

@@ -3,7 +3,6 @@
 __debug_bin
 **/tempdata/*
 !.gitkeep
-version.txt
 testfile.txt
 /autogit.yml
 cover.out
