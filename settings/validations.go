@@ -39,6 +39,7 @@ type ValidationScheme struct {
 				Allowlists TypeAllowLists `yaml:"allowlists"`
 			} `yaml:"type"`
 			Scope struct {
+				AnyMustBePresent bool                            `yaml:"any_must_be_present"`
 				EnforcedForTypes []conventionalcommitstype.Type  `yaml:"enforced_for_commit_types"`
 				Lowercase        bool                            `yaml:"lowercase"`
 				Allowlist        []conventionalcommitstype.Scope `yaml:"allowlist"`

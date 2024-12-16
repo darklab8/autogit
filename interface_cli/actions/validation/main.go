@@ -31,6 +31,12 @@ func Validate(commit conventionalcommits.ConventionalCommit, conf settings.Confi
 		}
 	}
 
+	if conf.Validation.Rules.Header.Scope.AnyMustBePresent {
+		if commit.Scope == "" {
+			return valerrors.NewErrorCommitScopeMustBeDefined(commit)
+		}
+	}
+
 	if commit.Scope != "" {
 		if conf.Validation.Rules.Header.Scope.Lowercase {
 			if !settings.RegexScope.MatchString(string(commit.Scope)) {

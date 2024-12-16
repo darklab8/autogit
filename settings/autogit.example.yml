@@ -94,6 +94,7 @@ validation:
             - "merge" # Commits to merge branches. Usually we use lowcase ones to update dev branch with master commits
       scope:
         # feat(scope): smth. Forces to write scope of a commit. Participes in changelog generation
+        any_must_be_present: false
         enforced_for_commit_types: []
           # add any commit type for which u wish to enforce scope being present
           # or set enforced_for_commit_types: [], for disabling it
