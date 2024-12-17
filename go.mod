@@ -4,7 +4,7 @@ go 1.22.5
 
 require (
 	github.com/darklab8/go-typelog v0.6.1
-	github.com/darklab8/go-utils v0.18.1
+	github.com/darklab8/go-utils v0.21.0
 	github.com/go-git/go-billy/v5 v5.3.1
 	github.com/go-git/go-git/v5 v5.5.0
 	github.com/spf13/cobra v1.6.1
