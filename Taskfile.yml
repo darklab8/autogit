@@ -43,7 +43,7 @@ tasks:
       # - GOOS=linux GOARCH=arm go build -v -o dist/autogit-linux-arm main.go
 
       - GOOS=windows GOARCH=amd64 go build -v -o dist/autogit-windows-amd64.exe main.go
-      - GOOS=windows GOARCH=arm64 go build -v -o dist/autogit-windows-arm64.exe main.go
+      # - GOOS=windows GOARCH=arm64 go build -v -o dist/autogit-windows-arm64.exe main.go
       # - GOOS=windows GOARCH=386 go build -v -o dist/autogit-windows-386.exe main.go
       # - GOOS=windows GOARCH=arm go build -v -o dist/autogit-windows-arm.exe main.go
       

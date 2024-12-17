@@ -22,7 +22,7 @@ jobs:
 
     - name: Install Autogit
       run: |
-        curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/autogit/releases/latest | sed "s/releases\/tag/releases\/download/")/autogit-linux-amd64 -o /usr/local/bin/autogit && chmod 777 /usr/local/bin/autogit
+        curl -L https://github.com/darklab8/autogit/releases/download/v2.2.1/autogit-linux-amd64 -o /usr/local/bin/autogit && chmod 777 /usr/local/bin/autogit
     - name: Checkout git repo with tags and commits for autogit
       uses: actions/checkout@v3
       with:
@@ -31,14 +31,18 @@ jobs:
     - name: build
       run: task build
 
+    - name: Print release changelog
+      id: changelog
+      run: echo "artifact='$(autogit changelog)'" >> "$GITHUB_OUTPUT"
+
     - name: upload binaries to release
       uses: softprops/action-gh-release@v2
       if: ${{startsWith(github.ref, 'refs/tags/') }}
       with:
+          body: ${{ steps.changelog.outputs.artifact }}
           files: |
             dist/autogit-linux-amd64
             dist/autogit-linux-arm64
             dist/autogit-macos-amd64
             dist/autogit-macos-arm64
             dist/autogit-windows-amd64.exe
-            dist/autogit-windows-arm64.exe
