@@ -33,7 +33,6 @@ jobs:
 
     - name: Print release changelog
       id: changelog
-      shell: python
       run: |
         echo 'artifact<<EOF' >> $GITHUB_OUTPUT
         autogit changelog >> "$GITHUB_OUTPUT"
