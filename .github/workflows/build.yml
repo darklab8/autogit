@@ -32,7 +32,7 @@ jobs:
       run: task build
 
     - name: Use the Upload Artifact GitHub Action
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with: 
         name: assets-for-download
         path: dist
