@@ -33,8 +33,11 @@ jobs:
 
     - name: Print release changelog
       id: changelog
-      run: echo "artifact='$(autogit changelog)'" >> "$GITHUB_OUTPUT"
-
+      shell: python
+      run: |
+        echo 'artifact<<EOF' >> $GITHUB_OUTPUT
+        autogit changelog >> "$GITHUB_OUTPUT"
+        echo 'EOF' >> $GITHUB_OUTPUT
     - name: upload binaries to release
       uses: softprops/action-gh-release@v2
       if: ${{startsWith(github.ref, 'refs/tags/') }}
