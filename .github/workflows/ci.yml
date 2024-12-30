@@ -16,16 +16,13 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Install Task
-      run: |
-        sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+    - name: Install Taskfile
+      uses: darklab8/infra/.github/actions/install-taskfile@master
 
     - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: '^1.22.5'
+      uses: darklab8/infra/.github/actions/install-go@master
 
-    - name: Setu pdeps
+    - name: Setup deps
       run: |
         echo 'ci version' > settings/version.txt
 

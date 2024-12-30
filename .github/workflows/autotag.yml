@@ -7,18 +7,13 @@ jobs:
   deploy:
     runs-on: ubuntu-22.04
     steps:
-    - name: Install Task
-      run: |
-        sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
-
+    - name: Install Taskfile
+      uses: darklab8/infra/.github/actions/install-taskfile@master
     - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: '^1.22.5'
+      uses: darklab8/infra/.github/actions/install-go@master
 
-    - name: Install Autogit
-      run: |
-        curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/autogit/releases/latest | sed "s/releases\/tag/releases\/download/")/autogit-linux-amd64 -o /usr/local/bin/autogit && chmod 777 /usr/local/bin/autogit
+    - name: Install autogit
+      uses: darklab8/infra/.github/actions/install-autogit@master
 
     - name: Checkout repostiory with commit history!
       uses: actions/checkout@v3

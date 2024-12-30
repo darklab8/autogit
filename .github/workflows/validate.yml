@@ -13,9 +13,10 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Install Autogit
-      run: |
-        curl -L $(curl -Ls -o /dev/null -w %{url_effective} https://github.com/darklab8/autogit/releases/latest | sed "s/releases\/tag/releases\/download/")/autogit-linux-amd64 -o /usr/local/bin/autogit && chmod 777 /usr/local/bin/autogit
+    - name: Set up Go
+      uses: darklab8/infra/.github/actions/install-go@master
+    - name: Install autogit
+      uses: darklab8/infra/.github/actions/install-autogit@master
     - name: Validate changelogs
       env:
         AUTOGIT_CONFIG_VALIDATION_RULES_HEADER_SUBJECT_MIN_WORDS: "2"
