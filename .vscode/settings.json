@@ -5,7 +5,9 @@
     "AUTOGIT_CONFIG_SSH_PATH": "id_rsa.dd84ai",
     "AUTOGIT_CONFIG_CHANGELOG_REPOSITORY_OWNER": "darklab8",
     "AUTOGIT_CONFIG_CHANGELOG_REPOSITORY_NAME": "autogit",
-    "AUTOGIT_CONFIG_VALIDATION_RULES_HEADER_SUBJECT_MIN_WORDS": "2"
+    "AUTOGIT_CONFIG_VALIDATION_RULES_HEADER_SUBJECT_MIN_WORDS": "2",
+    // In case needing to debug a project
+    // "AUTOGIT_PROJECT_FOLDER": "/home/naa/repos/pet_projects/fl-darkstat"
   },
   // Show .git folder
     "files.exclude": {
