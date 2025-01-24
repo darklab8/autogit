@@ -59,19 +59,44 @@ func (r *Repository) ForeachTag(callback func(tag Tag) ShouldWeStopIteration) {
 	logus.Log.CheckFatal(err, "unable to get git log")
 
 	tags := r.getUnorderedTags()
+	tags_by_hash := make(map[plumbing.Hash]*Tag)
+	for _, tag := range tags {
+		tags_by_hash[tag.Hash] = &tag
+	}
 	// ... just iterates over the commits, printing it
 	c, _ := cIter.Next()
 	for ; c != nil; c, _ = cIter.Next() {
 		// iterating until next tag
-		for _, tag := range tags {
-			if tag.Hash == c.Hash {
-				shouldWeStop := callback(tag)
-				if shouldWeStop {
-					return
+
+		// Also searching up to 200 commits in git branches
+		func(c *object.Commit) {
+			if c == nil {
+				return
+			}
+			parent_hashes_len := len(c.ParentHashes)
+			if parent_hashes_len > 1 {
+				for i := 1; i < parent_hashes_len; i++ {
+					cIter, err := r.repo.Log(&git.LogOptions{From: c.ParentHashes[i]})
+					logus.Log.CheckFatal(err, "unable to get git log")
+					for ; c != nil; c, _ = cIter.Next() {
+						if found_tag, ok := tags_by_hash[c.Hash]; ok {
+							shouldWeStop := callback(*found_tag)
+							if shouldWeStop {
+								return
+							}
+						}
+					}
 				}
 			}
-		}
 
+		}(c)
+
+		if found_tag, ok := tags_by_hash[c.Hash]; ok {
+			shouldWeStop := callback(*found_tag)
+			if shouldWeStop {
+				return
+			}
+		}
 	}
 }
 
