@@ -25,6 +25,7 @@ func (v *VersionParams) Bind(cmd *cobra.Command) {
 	cmd.PersistentFlags().BoolVar(&v.Beta, "beta", false, "Enable next version as beta")
 	cmd.PersistentFlags().BoolVar(&v.Rc, "rc", false, "Enable next version as prerelease")
 	cmd.PersistentFlags().BoolVar(&v.Publish, "publish", false, "Breaking from 0.x.x to 1+.x.x versions")
+	cmd.PersistentFlags().StringVar(&v.Override, "override", "", "Override version with your own")
 }
 
 type ActionVersionParams struct {
